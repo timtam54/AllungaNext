@@ -1,113 +1,532 @@
-import Image from "next/image";
+"use client"
+import { getToken } from "@/msal/msal";//, msalInstance
+import Header from '@/components/header'
 
+//import { confirmAlert } from 'react-confirm-alert'; 
+import moment from 'moment';
+//import { bearerToken } from './index'
+import { Circles } from 'react-loader-spinner'
+
+import SearchIcon from '@mui/icons-material/Search';
+import AddIcon from '@mui/icons-material/Add';
+import SignOutButton from '@/components/SignOutButton'
+import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
+import { ChangeEvent, useEffect, useState } from "react";
+import Link from "next/link";
+import DeleteIcon from '@mui/icons-material/Delete';
+import DataTable from "react-data-table-component";
+ interface series{
+  ExposureType:string;
+  RackNo:number;
+  SiteName:string;
+  Locked:boolean;
+  ReturnsReq:boolean;
+  DateIn:Date;
+  Active:boolean;
+  ShortDescription:string;
+  DateNextReturn:Date;
+  EquivalentSamples:number;
+  CntSamplesOnSite:number;
+  clientreference:string;
+  AllungaReference:string;
+  seriesid:number;
+  Abbreviation:string;
+  companyname:string;
+  Complete:boolean;
+  DateNextReport:Date;
+}
 export default function Home() {
+  //const user = msalInstance.getActiveAccount();
+  const [actives,setActives] = useState(true);
+  const [inactives,setInactives] = useState(false);
+  const [fields,setFields] = useState("All");
+  const [loading,setLoading] = useState(false);
+  const [results,setResults] = useState<series[]>([]);
+  
+ const [isOpen, setIsOpen] = useState(false);
+  useEffect(() => {
+    ssearch(actives,inactives,fields);
+  }, []);
+  const [search,setSearch] = useState("");
+  const ssearch = async (act:boolean,del:boolean,flds:string) =>{  
+    setLoading(true);
+  
+    const token = await getToken()
+    console.log(token);
+    const headers = new Headers()
+    const bearer = `Bearer ${token}`
+    headers.append('Authorization', bearer)
+    const options = {
+      method: 'GET',
+      headers: headers,
+    }
+    var endPoint='';
+  
+    if (search=='')
+      endPoint = `https://allungawebapi.azurewebsites.net/api/Series/~,` + (act?`1`:`0`)+`,`+ (del?`1`:`0`)+`,`+flds;
+    else
+      endPoint = `https://allungawebapi.azurewebsites.net/api/Series/`+search + `,` + (act?`1`:`0`)+`,`+ (del?`1`:`0`)+`,`+flds;
+    console.log('endPoint:  '+endPoint);
+    const response = fetch(endPoint,options);
+    var ee=await response;
+    //alert('ok:'+ee.ok);
+    if (!ee.ok)
+    {
+      console.log('status:'+ee.statusText);
+      return;
+      ;//throw Error((ee).statusText);
+    }
+    const json=await ee.json();
+    console.log(json);
+    setResults(json);
+    setIsOpen(true);
+    setLoading(false);
+  }
+  const [fieldlist] = useState(["All","AllungaRef","BookPage","Client","ClientRef","Exposure"]);
+  const handledel = (e:any) => {
+
+    setActives(e.target.checked);
+  
+    ssearch(e.target.checked,inactives,fields);
+  }
+  const setsorted = (e:any) => {
+    const val=e.target.name;
+    setsortedx(val);
+    //todotim const sorted = results.sort((a, b) => b[val] < a[val]);
+    //todotim  console.log(sorted);
+    //todotim  setResults(sorted);
+  
+  }
+  const colourstyle = (active:boolean, complete:boolean,dteNextRpt:Date,dteNextRtrn:Date,CntSamplesOnSite:number,locked:Boolean) => 
+    {
+      const dte=new Date();
+      if (active)
+      {
+        if (locked!=null)
+        {
+          return 'LockedSearch'
+        }
+        if (complete)
+        {
+          return 'CmpltSearch'
+        }
+        if (dteNextRpt!=null)
+        {
+        if (moment(dteNextRpt)<moment(dte))//,dteNextRtrn
+        {
+          return 'SearchOvrdu'
+        }
+      }
+        if (dteNextRtrn!=null)
+        {
+        if (moment(dteNextRtrn)<moment(dte))//,dteNextRtrn
+        {
+          return 'SearchOvrdu'
+        }
+      }
+        if (CntSamplesOnSite==0)//,dteNextRtrn
+        {
+          return 'SearchOffSite'
+        }
+        return 'SearchActive'
+      }
+      return 'SearchInactive'
+    }
+  const [sortedx,setsortedx]=useState("SeriesID");
+  const handleinact= (e:any) => {
+
+    setInactives(e.target.checked);
+  
+    ssearch(actives,e.target.checked,fields);
+  }
+  const handlefield= (e: ChangeEvent<HTMLSelectElement>) => {
+
+    setFields(e.target.value);
+  
+    ssearch(actives,inactives,e.target.value);
+  }
+  const handleSearch = async (e:any)=>{
+
+    e.preventDefault();
+    
+   ssearch(actives,inactives,fields);
+  }
+
+  const onDelete = async (id:number)=>{
+    const confirm = {
+      title: 'Delete',
+      message: 'Are you sure you wish to delete this series',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => DeleteSeries(id)
+        },
+        {
+          label: 'No',
+          onClick: () => alert('Delete Cancelled')
+        }
+      ],
+      closeOnEscape: true,
+      closeOnClickOutside: true,
+      keyCodeForClose: [8, 32],
+      willUnmount: () => {},
+      afterClose: () => {},
+      onClickOutside: () => {},
+      onKeypress: () => {},
+      onKeypressEscape: () => {},
+      overlayClassName: "overlay-custom-class-name"
+    }; 
+    //todotim confirmAlert(confirm);
+  }
+
+  const DeleteSeries = async (id:number)=>{
+    setLoading(true);
+    //const id='6048';
+    const token = await getToken()
+    const headers = new Headers()
+    const bearer = `Bearer ${token}`
+    headers.append('Authorization', bearer)
+    const options = {
+      method: 'DELETE',
+      headers: headers,
+    }
+    const endPoint= `https://allungawebapi.azurewebsites.net/api/Series/`+id;
+    
+    const response = fetch(endPoint,options);
+    var ee=await response;
+    if (!ee.ok)
+    {
+      throw Error((ee).statusText);
+    }
+    const json=await ee.json();
+    await ssearch(actives,inactives,fields);
+    
+    return false;
+  }
+  const conditionalRowStyles = [
+    {
+      when: (row:series) => true,
+      style:  (row:series) => ({
+        color: row.Complete?'red':'blue',
+      })
+    }
+  ];
+
+  const customStyles = {
+    headCells: {
+      style: {
+        paddingLeft: '4px', // override the cell padding for head cells
+        paddingRight: '4px',
+        size:'12px',
+      },
+      
+    },
+    cells: {
+      style: {
+        paddingLeft: '4px', // override the cell padding for data cells
+        paddingRight: '4px',
+        
+      },
+    },
+  }
+  const columns =[
+    {
+      name:'Complete',
+      sortable: true,
+      width: "60px",  
+      wrap:true,  
+      selector: (row:series)=>row.Complete
+    }
+    ,
+    {
+        name:'Company Name',
+        sortable: true,
+        width: "130px",    
+        selector: (row:series)=>row.companyname,
+        cell:   (row:series) => row.companyname    
+    }
+    ,
+    {
+        name:'Code',
+        sortable: true,
+        width: "70px",    
+        selector: (row:series) => row.Abbreviation  ,
+        cell:   (row:series) => row.Abbreviation  
+    },
+    {
+        name:'Allunga Series',
+        sortable: true,
+        width: "130px",    
+       // selector: row=>row.JobNo
+        cell:   (row:series) =><Link href={{pathname:"/seriestab",query:{id:row.seriesid,seriesname:row.AllungaReference}}}><u>{row.AllungaReference}</u></Link>
+        //href={{pathname:"/seriestab",  query:{id: result.seriesid,name:result.AllungaReference }}}
+    } ,
+    {
+        name:'Client Series',
+        sortable: true,
+        width: "130px",    
+       // selector: row=>row.JobNo
+        cell:   (row:series) => row.clientreference
+    },
+    {
+        name:'No of Samples On Site',
+        sortable: true,
+        width: "130px",    
+       // selector: row=>row.JobNo
+        cell:   (row:series) => row.CntSamplesOnSite  
+    }
+    ,
+    {
+        name:'Equiv Samples',
+        sortable: true,
+        width: "130px",    
+        cell:   (row:series) => row.EquivalentSamples
+    }
+    ,
+    {
+        name:'Next Report',
+        sortable: true,
+        width: "130px",    
+        cell:   (row:series) => FormatDate(row.DateNextReport)
+    }
+    ,
+    {
+        name:'Next Return',
+        sortable: true,
+        width: "130px",    
+        cell:   (row:series) => FormatDate(row.DateNextReturn)
+    },
+    {
+        name:'Short Descriptions',
+        sortable: true,
+        width: "130px",    
+        cell:   (row:series) => row.ShortDescription
+    },
+    {
+        name:'Active',
+        sortable: true,
+        width: "130px",    
+        cell:   (row:series) => row.Active
+    } 
+    ,
+    {
+        name:'Date In',
+        sortable: true,
+        width: "130px",    
+        cell:   (row:series) => FormatDate(row.DateIn)
+    } 
+    ,
+    {
+        name:'Returns Req',
+        sortable: true,
+        width: "130px",    
+        cell:   (row:series) => row.ReturnsReq
+    } 
+    ,
+    {
+        name:'Exposure',
+        sortable: true,
+        width: "130px",    
+        cell:   (row:series) => row.ExposureType
+    } 
+    ,
+    {
+        name:'Rack No',
+        sortable: true,
+        width: "130px",    
+        cell:   (row:series) => row.RackNo
+    } 
+    ,
+    {
+        name:'Site Name',
+        sortable: true,
+        width: "130px",    
+        cell:   (row:series) => row.SiteName
+    } 
+    ,
+    {
+        name:'Locked',
+        sortable: true,
+        width: "130px",    
+        cell:   (row:series) => row.Locked
+    } 
+  ]
+
+  const FormatDate=(date:any)=>  {
+    if (date==null) return "";
+   const dte= new Date(date);
+    return dte.getFullYear().toString()+'-'+(dte.getMonth()+1).toString().padStart(2,'0')+'-'+(dte.getDate()).toString().padStart(2,'0');
+  }
+  
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+   <>
+   <Header/>
+   
 
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+    <div className="search">
+<br/>
+  <form onSubmit={handleSearch}>
+        <table style={{border:"0px"}}>
+       
+         <tr>
+            <td>
+          <h3 style={{color:'#944780'}}>Search Client Series</h3>
+          </td>
+          <td width={60}></td>
+          <td><Link  title='Add New Series' href='/addseries'><AddIcon/></Link></td>
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
 
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+          <td>
+          <select name="Fields" onChange={handlefield}>
+          {
+          fieldlist.map((ep,i)=>{
+            return (
+              <option value={ep} selected={(ep==fields)?true:false} >{ep}</option>
+            )})
+          }
+          </select>
+      </td>
+      <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+        <input type='text' placeholder="-Search Client/Series-" value={search} onChange={e=>setSearch(e.target.value)} />
+        </td>
+        <td><SearchIcon onClick={handleSearch} />click to search</td>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td>
+        <table border={1}>
+            <tr>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+        <th>
+          Active
+        </th>
+        <td>
+          <input type="CheckBox" onClick={handledel} checked={actives}></input>
+          </td>
+          </tr>
+          <tr>
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
+<th style={{backgroundColor:'black',color:'white'}} >
+  Inactive
+</th>
+<td style={{backgroundColor:'black',color:'white'}} >
+  <input type="CheckBox" onClick={handleinact} checked={inactives}></input>
+  </td>
+  </tr>
+          </table>
+        </td>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+          <td style={{fontSize:'8'}}>
+            <table border={1}>
+              <tr>
+              <td style={{backgroundColor:'rgb(247, 179, 147)'}}><b>Return / Report overdue</b>
+         </td>
+         <td style={{backgroundColor:'yellow'}}><b>Locked</b></td>
+         <td rowSpan={2} style={{backgroundColor:'#aef3a8',color:'black'}} ><b>
+          Return / Report<br/>Complete</b>
+         </td>
+        
+              </tr>
+              <tr>
+              <td style={{backgroundColor:'rgb(243, 233, 233)',color:'black'}}><b>
+          All Samples off site</b>
+         </td><td style={{backgroundColor:'black',color:'white'}}><b>
+         Inactive</b>
+         </td>
+              </tr>
+            </table>
+          </td>
+        
+              </tr>
+        </table>
+        <br/>
+        </form>
+        {loading ? 
+     <div className="container">
+     <Circles
+     height="200"
+     width="200"
+     color="silver"
+     ariaLabel="circles-loading"
+     wrapperStyle={{}}
+     wrapperClass=""
+     visible={true}
+   />
+   </div>
+:
+     
+<DataTable columns={columns}
+        fixedHeader
+        pagination
+        dense
+        customStyles={customStyles}        
+        data={results}
+        conditionalRowStyles={conditionalRowStyles} >
+        </DataTable>
+      }
+    </div>
+</>
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
   );
 }
+
+
+/*
+    <div style={{
+           zIndex:-1,
+           position:"fixed",
+           width:"100vw",
+           height:"100vh"
+         }}>
+                   <Image alt="Tech Interface - Equipment Service Repair" layout="fill" objectFit="cover" src="/background.jpg"/>
+<h4>You are logged in</h4>
+
+         </div>
+*/
+
+
+/* todo button on delete
+<tr>
+          <th><Button onClick={() => {alert("This button marks Series as deleted only if there are no samples or reports referencing the series");}}>?</Button></th>
+      
+        </tr>*/
+
+        /*
+          <table style={{width:"100%"}} id="table2">
+        
+
+
+        {
+          results.map((result,i)=>{
+            return (
+              <tr key={i} className={colourstyle(result.Active,result.Complete,result.DateNextReport,result.DateNextReturn,result.CntSamplesOnSite,result.Locked)} >
+                <td align='center'><div style={{border:'none'}} onClick={() => onDelete(result.seriesid)}><DeleteIcon/></div></td>
+                <td align='center'><input type='checkbox' checked={result.Complete}/></td>
+                <td>{result.companyname}</td>
+                <td>{result.Abbreviation}</td>
+                <td> <Link href={{pathname:"/seriestab",  query:{id: result.seriesid,name:result.AllungaReference }}}>{result.AllungaReference}</Link></td>
+                <td>{result.clientreference}</td>
+                <td>{result.CntSamplesOnSite}</td>
+                <td>{result.EquivalentSamples}</td>
+                {(result.DateNextReport==null)?<td></td>:
+                (new Date(result.DateNextReport ).getFullYear()==2100)?<td></td>:
+                <td>{new Date(result.DateNextReport ).toLocaleDateString()}</td>
+            }
+
+{(result.DateNextReturn==null)?<td></td>:(new Date(result.DateNextReport ).getFullYear()==2100)?<td></td>:
+                <td>{new Date(result.DateNextReturn ).toLocaleDateString()}</td>
+          }
+                <td>{result.ShortDescription}</td>      
+                  <td><input type='checkbox' checked={result.Active}/></td>    
+                <td>{new Date(result.DateIn ).toLocaleDateString()}</td>
+              
+                <td><input type='checkbox' checked={result.ReturnsReq}/></td>
+                <td>{result.ExposureType}</td>
+                <td>{result.RackNo}</td>
+                <td>{result.SiteName}</td>   
+                <td>{result.Locked}</td>        
+              </tr>  
+            )
+          })
+        }
+        
+      </table>*/
