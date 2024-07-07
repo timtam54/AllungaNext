@@ -365,9 +365,10 @@ return 'L';
         <div></div>
         <h3 style={{color:'#944780'}}>Series Name:{seriesname}</h3>
         <div></div>
-        <b>Series Details</b>
+        <Link href={"/seriestab?id="+SeriesID.toString()+"&seriesname="+seriesname} >Series Details</Link>
         <Link href={"/samples?id="+SeriesID.toString()+"&seriesname="+seriesname} >Samples</Link>
         <Link href={"/reports?id="+SeriesID.toString()+"&seriesname="+seriesname} >Reports</Link>
+        <Link href={"/dispatch?id="+SeriesID.toString()+"&seriesname="+seriesname} >Dispatch</Link>
         </div>
       
           

@@ -7,17 +7,17 @@ import Link from "next/link";
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import { getToken } from "@/msal/msal";
 import DataTable from "react-data-table-component";
-interface reportrow{
-    reportid:number;
-    reportname:string;
-    date:Date;
-    status:string;
-    bookandpage:string;
-    DaysInLab:number;
-    comment:string;
-   
+interface samplerow{
+    Staff:string;
+    Dte:Date;
+    Description:string;
+    FullReturn_ElsePart:boolean;
+    ByRequest:boolean;
+    ReexposureDate:Date;
+    Comments:string;
+    Status:string;
 }
-export default function Samples()
+export default function Dispatch()
 {    const searchParams = useSearchParams();
     const seriesname=searchParams!.get("seriesname");
     const SeriesID =parseInt( searchParams!.get("id")!);
@@ -46,92 +46,95 @@ export default function Samples()
       }
       const conditionalRowStyles = [
         {
-          when: (row:reportrow) => true,
-          style:  (row:reportrow) => ({
-            color: row.reportid?'red':'blue',
+          when: (row:samplerow) => true,
+          style:  (row:samplerow) => ({
+            color: row.Reportable?'red':'blue',
           })
         }
       ];
     const getalldata=async()=>{
-        await fetchReport();
+        await fetchSample();
         setLoading(false);
-    }
-    const FormatDate=(date:any)=>  {
-      if (date==null) return "";
-     const dte= new Date(date);
-      return dte.getFullYear().toString()+'-'+(dte.getMonth()+1).toString().padStart(2,'0')+'-'+(dte.getDate()).toString().padStart(2,'0');
     }
     const columns =[
         {
-          name:'ID',
+          name:'Staff',
           sortable: true,
           width: "60px",  
           wrap:true,  
-          selector: (row:reportrow)=>row.reportid
+          selector: (row:samplerow)=>row.Staff
         },
         {
-          name:'Description',
-          sortable: true,
-          width: "230px",  
-          wrap:true,  
-          cell:   (row:reportrow) => <Link target="_blank" href={{
-            pathname:'/reporttab',query:{id:row.reportid,seriesid:SeriesID}}}><u>{row.reportname}</u></Link>,//,dataReport:results
-        
-          selector: (row:reportrow)=>row.reportname
-        },
-        {
-          name:'Date',
-          sortable: true,
-          width: "90px",  
-          wrap:true,  
-          selector: (row:reportrow)=>FormatDate( row.date)
-        }
-        ,
-        {
-          name:'Status',
-          sortable: true,
-          width: "80px",  
-          wrap:true,  
-          selector: (row:reportrow)=> row.status
-        }
-        ,
-        {
-          name:'Book & Page',
-          sortable: true,
-          width: "100px",  
-          wrap:true,  
-          selector: (row:reportrow)=> row.bookandpage
-        }
-        ,
-        {
-          name:'Days In Lab',
-          sortable: true,
-          width: "80px",  
-          wrap:true,  
-          selector: (row:reportrow)=> row.DaysInLab
-        }
-        ,
-        {
-          name:'Comments',
-          sortable: true,
-          width: "320px",  
-          wrap:true,  
-          selector: (row:reportrow)=> row.comment
-        }
+            name:'Date',
+            sortable: true,
+            width: "100px",  
+            wrap:true,  
+            selector: (row:samplerow)=>row.Dte
+          }
+          ,
+          {
+              name:'Description',
+              sortable: true,
+              width: "150px",  
+              wrap:true,  
+              selector: (row:samplerow)=>row.Description
+            },
+            {
+                name:'Full Return',
+                sortable: true,
+                width: "130px",  
+                wrap:true,  
+                selector: (row:samplerow)=>row.FullReturn_ElsePart
+              }
+              ,
+            {
+                name:'Status',
+                sortable: true,
+                width: "130px",  
+                wrap:true,  
+                selector: (row:samplerow)=>row.Status
+              }
+              ,
+            {
+                name:'By Request',
+                sortable: true,
+                width: "130px",  
+                wrap:true,  
+                selector: (row:samplerow)=>row.ByRequest
+              }
+             ,
+            {
+                name:'ReexposureDate',
+                sortable: true,
+                width: "130px",  
+                wrap:true,  
+                selector: (row:samplerow)=>row.ReexposureDate
+              },
+              {
+                  name:'Comments',
+                  sortable: true,
+                  width: "130px",  
+                  wrap:true,  
+                  
+                    selector:  (row:samplerow)=>row.Comments
+                  }
     ]
-    const [results, setDataReport] = useState<reportrow[]>([]);
-const fetchReport = async ()=>{
+    const [results, setDataSample] = useState<samplerow[]>([]);
+const fetchSample = async ()=>{
+  
   setLoading(true);
+  const urlSample = `https://allungawebapi.azurewebsites.net/api/dispatches/`+SeriesID;
   const token = await getToken()
   const headers = new Headers()
   const bearer = `Bearer ${token}`
+
   headers.append('Authorization', bearer)
 
   const options = {
     method: 'GET',
     headers: headers,
   }  
-  const response = fetch('https://allungawebapi.azurewebsites.net/api/Reports/'+SeriesID,options);
+  const response = fetch(urlSample,options);
   var ee=await response;
   if (!ee.ok)
   {
@@ -139,7 +142,9 @@ const fetchReport = async ()=>{
   }
   const json=await ee.json();
   console.log(json);
-  setDataReport(json);
+  setDataSample(json);
+  //setLoading(false);
+
 
   }
     return (
