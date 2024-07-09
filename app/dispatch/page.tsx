@@ -53,7 +53,7 @@ export default function Dispatch()
         {
           when: (row:samplerow) => true,
           style:  (row:samplerow) => ({
-            color: row.Reportable?'red':'blue',
+            color: row.FullReturn_ElsePart?'red':'blue',
           })
         }
       ];
