@@ -168,7 +168,7 @@ const fetchReport = async ()=>{
     fetchReport();
 }
 
-const [currentReport,setCurrentReport]=useState<reportrow>({reportid:0,reportname:'',date:new Date(),status:'',bookandpage:'',DaysInLab:0,comment:''});
+const [currentReport,setCurrentReport]=useState<reportrow>();
 
     return (
         <body style={{backgroundColor:'white'}}>
