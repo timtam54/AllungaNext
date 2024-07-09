@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import MyMsalProvider from '@/msal/MyMsalProvider'
 
-import UserAvatar from '@/components/UserAvatar'
+//import UserAvatar from '@/components/UserAvatar'
 
 const inter = Inter({ subsets: ['latin'] })
 
