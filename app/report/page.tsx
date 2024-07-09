@@ -188,12 +188,12 @@ const [dataSample, setDataSample] = React.useState([]);
             
            // let xx:NumberCell=(prevPeople[colord].cells[roword] as NumberCell);
             //xx.value =parseInt( change.newCell.text);
-            prevPeople[colord].cells[roword].value =parseFloat( change.newCell.text);
-            //(prevPeople[colord].cells[roword] as NumberCell).value =parseInt( change.newCell.text);
+            //prevPeople[colord].cells[roword].value =parseFloat( change.newCell.text);
+            (prevPeople[colord].cells[roword] as NumberCell).value =parseFloat( change.newCell.text);
           }
           else
           {
-            prevPeople[colord].cells[roword].text = change.newCell.text;
+            (prevPeople[colord].cells[roword] as  TextCell).text = change.newCell.text;
             //prevPeople.push({ rowId:personIndex, });
             ;//(prevPeople[colord].cells[roword] as TextCell).text = +change.newCell.text.replace(',','').toString();
  //           prevPeople[personIndex][fieldName]
