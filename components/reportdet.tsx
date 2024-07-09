@@ -3,6 +3,8 @@ import { ChangeEvent, useEffect, useState } from "react";
 import DatePicker from 'react-date-picker';
 import 'react-date-picker/dist/DatePicker.css'
 import { getToken } from "@/msal/msal";
+import Button from '@mui/material/Button';
+
 type Props = {
     report: reportrow;
     closeModal:  () => void;
@@ -104,7 +106,7 @@ const ReportDet =({report, closeModal}:Props) => {
         
                 <b>Report Date:</b>
                   <DatePicker format="dd/MM/yyyy" onSelect={setReportDate}  value={reportDate} />
-              <a href={'https://allungardlc.azurewebsites.net/Matrix.aspx?ReportID='+data!.reportid} target="new"><button variant="outlined">Report/Print</button></a>
+              <a href={'https://allungardlc.azurewebsites.net/Matrix.aspx?ReportID='+data!.reportid} target="new"><Button variant="outlined">Report/Print</Button></a>
        </div>
        <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>                   
                 <b>Name:</b>
