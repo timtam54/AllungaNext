@@ -8,8 +8,13 @@ import { Circles } from 'react-loader-spinner'
 import { getToken } from "@/msal/msal";
 import moment from 'moment';
 import DatePicker from 'react-date-picker';
+import 'react-date-picker/dist/DatePicker.css'
 import Button from '@mui/material/Button';
 import ExposureEndDate from '../ExposureEndDate.js';
+import SendTimeExtensionIcon from '@mui/icons-material/SendTimeExtension';
+import SummarizeIcon from '@mui/icons-material/Summarize';
+import GrainIcon from '@mui/icons-material/Grain';
+import DetailsIcon from '@mui/icons-material/Details';
 interface SeriesEvent{
   EventDesc:string;
   EventType:string;
@@ -32,6 +37,8 @@ interface seriesrow{
     ExposureDurationVal:number;
     ExposureDurationUnit:string;
     DateIn:Date;
+    ExposureEnd:Date;
+    LogBookLetterDate:Date;
     ReturnsFrequencyVal:number;
     ReturnsFrequencyUnit:string;
     FrequencyVal:number;
@@ -39,6 +46,8 @@ interface seriesrow{
     SamplesReturned:boolean;
     LogBookCorrespType:string;
     ExposureSpecification:string;
+    VisualReporting:boolean;
+    Photos:boolean;
 }
 interface clientrow{
     clientid:number;
@@ -105,9 +114,27 @@ export default function SeriesTab()
     }
    };
 
-   function validatePage() {
+   /*function validatePage(): boolean {
    var vld=true;
      setvldtAllungaReference('');
+    if (data!.AllungaReference==null) {
+      setvldtAllungaReference('Please Enter an AEL Ref');
+      vld=false;
+      return false;
+    }
+    else
+    {
+    if (data!.AllungaReference=='') {
+      setvldtAllungaReference('Please Enter an AEL Ref');
+      vld=false;
+      return false;
+    }
+  }
+   }*/
+
+  function validatePage():boolean {
+    var vld=true;
+    setvldtAllungaReference('');
     if (data!.AllungaReference==null) {
       setvldtAllungaReference('Please Enter an AEL Ref');
       vld=false;
@@ -119,7 +146,51 @@ export default function SeriesTab()
       vld=false;
     }
   }
-   }
+
+  setvldtExposureDurationVal('');
+    if (data!.ExposureDurationVal==null) {
+      setvldtExposureDurationVal('Please Enter Exposure Duration');
+      vld=false;
+    }
+    else
+    {
+    if (data!.ExposureDurationVal==null) {
+      setvldtExposureDurationVal('Please Enter Exposure Duration');
+      vld=false;
+    }
+  }
+
+  setvldtShortDescription('');
+  if (data!.ShortDescription==null) {
+    setvldtShortDescription('Please Enter Short Description');
+    vld=false;
+  }
+  else
+  {
+  if (data!.ShortDescription=='') {
+    setvldtShortDescription('Please Enter Short Description');
+    vld=false;
+  }
+}
+
+
+setvldtReturnsFrequencyVal('');
+if (data!.ReturnsFrequencyVal==null) {
+  setvldtReturnsFrequencyVal('Please Enter Returns Frequency');
+  vld=false;
+}
+else
+{
+if (data!.ReturnsFrequencyVal==null) {
+  setvldtReturnsFrequencyVal('Please Enter Returns Frequency');
+  vld=false;
+}
+}
+    return vld;
+  };
+  
+  const [vldtShortDescription,setvldtShortDescription] = useState('');
+
    const [isOpen, setIsOpen] = useState(false);
     const fetchClient = async()=>{
         const token = await getToken();
@@ -141,9 +212,87 @@ export default function SeriesTab()
         setClient(json);
       }
 
+      
 
-
+      const handleSubmit = async (e:any) => {
+        if (!validatePage())
+            return;
+          e.preventDefault();
+          const dtfrmt="YYYY-MM-DDT00:00:00";
+        data!.DateIn = new Date(DateIn);//DateIn
+        data!.ExposureEnd =  new Date(ExposureEnd);//moment(ExposureEnd).format(dtfrmt)
+         data!.LogBookLetterDate =new Date(LogBookLetterDate);//  moment(LogBookLetterDate).format(dtfrmt);
+       setLoading(true);
+         const token = await getToken()
+        const headers = new Headers()
+        const bearer = `Bearer ${token}`
+        headers.append('Authorization', bearer)
+        headers.append('Content-type', "application/json; charset=UTF-8")
+        if (SeriesID==0)
+        {
+          const options = {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: headers,
+          }  
+          const response = fetch(`https://allungawebapi.azurewebsites.net/api/Series`,options);
+         var ee=await response;
+          if (!ee.ok)
+          {
+            throw Error((ee).statusText);
+          }
+          const json=await ee.json();
+          console.log(json);
+          setSeriesID(json.SeriesID);
+          await setData(json);
+          fetchSeriesEvent();
+        }
+        else
+        {
+        const options = {
+          method: 'PUT',
+          body: JSON.stringify(data),
+          headers: headers,
+        }  
+      
+        const response = fetch(`https://allungawebapi.azurewebsites.net/api/Series/`+SeriesID,options);
+       var ee=await response;
+        if (!ee.ok)
+        {
+          throw Error((ee).statusText);
+        }
+      
+      }
+      
+     await handleSubmitSeriesEvent();
+      
+    }
  
+    const handleSubmitSeriesEvent  = async () => {
+
+      const token = await getToken()
+     const headers = new Headers()
+     const bearer = `Bearer ${token}`
+     headers.append('Authorization', bearer)
+     headers.append('Content-type', "application/json; charset=UTF-8")
+     const options = {
+      method: 'PUT',
+      body: JSON.stringify(dataSeriesEvent),
+      headers: headers,
+      
+     }
+    const response = fetch(`https://allungawebapi.azurewebsites.net/api/SeriesEvent/`+SeriesID,options);
+   var ee=await response;
+    if (!ee.ok)
+    {
+      throw Error((ee).statusText);
+    }
+    const json=await ee.json();
+    console.log(json);
+    setdataSeriesEvent(json);
+    setLoading(false);
+       alert('saved');
+     }
 
     const [client, setClient] = useState<clientrow[]>([]);
     const [data, setData] = useState<seriesrow>();
@@ -341,7 +490,7 @@ return 'L';
       const [site,setSite] =useState<siterow[]>([]);
     const [loading,setLoading] = useState(true);
     const searchParams = useSearchParams();
-    const SeriesID =parseInt( searchParams!.get("id")!);
+    const [SeriesID,setSeriesID]=useState(parseInt( searchParams!.get("id")!));
     const seriesname=searchParams!.get("seriesname");
     return (
         <body style={{backgroundColor:'white'}}>
@@ -365,10 +514,12 @@ return 'L';
         <div></div>
         <h3 style={{color:'#944780'}}>Series Name:{seriesname}</h3>
         <div></div>
-        <Link href={"/seriestab?id="+SeriesID.toString()+"&seriesname="+seriesname} >Series Details</Link>
-        <Link href={"/samples?id="+SeriesID.toString()+"&seriesname="+seriesname} >Samples</Link>
-        <Link href={"/reports?id="+SeriesID.toString()+"&seriesname="+seriesname} >Reports</Link>
-        <Link href={"/dispatch?id="+SeriesID.toString()+"&seriesname="+seriesname} >Dispatch</Link>
+        <div>
+        <Link href={"/seriestab?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button  style={{width:'200px'}}  variant='contained'><DetailsIcon/>Details</Button></Link>
+        <Link href={"/samples?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='outlined'><GrainIcon/>Samples</Button></Link>
+        <Link href={"/reports?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='outlined'><SummarizeIcon/>Reports</Button></Link>
+        <Link href={"/dispatch?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='outlined'><SendTimeExtensionIcon/>Dispatch</Button></Link>
+        </div>
         </div>
       
           
@@ -405,7 +556,7 @@ return 'L';
        
       <b>Active:</b><input type="checkbox" name="Active" onChange={handleCheck} style={{color:'black'}} checked={data!.Active} />
       
-      <b>Deleted:</b>\<input name="Deleted" type="checkbox" onChange={handleCheck} checked={data!.Deleted} />
+      <b>Deleted:</b><input name="Deleted" type="checkbox" onChange={handleCheck} checked={data!.Deleted} />
       <div></div>
         </div>
     <div><br/></div>
@@ -459,13 +610,13 @@ return 'L';
       <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',color:'white'}}>
       <b>Exposed:</b>
 
-<DatePicker format="dd/MM/yyyy" onChange={setDateIn} value={DateIn} />
+<DatePicker format="dd/MM/yyyy" onSelect={setDateIn} value={DateIn} />
         
 <b>End:</b>
 
-<DatePicker format="dd/MM/yyyy"  onChange={setExposureEnd} value={ExposureEnd} />
+<DatePicker format="dd/MM/yyyy"  onSelect={setExposureEnd} value={ExposureEnd} />
 
-  <Button variant="outlined" onClick={() => setIsOpen(true)}>
+  <Button style={{color:'white'}} variant="outlined" onClick={() => setIsOpen(true)}>
   End Date
 </Button>
 
@@ -535,6 +686,24 @@ return 'L';
   }
    </table>
 
+
+   <table  id="table1" >
+      <tr>
+        <td>&nbsp;</td>
+        </tr>
+      <tr className='super-app-theme' >
+        <td>VisualReporting</td>
+        <td><input type="checkbox" name="VisualReporting" onChange={handleCheck} checked={data!.VisualReporting} /></td>
+      </tr>
+      <tr className='super-app-theme' >
+        <td>&nbsp;</td>
+      </tr>
+      <tr className='super-app-theme' >
+        <td>Photos</td>
+        <td><input type="checkbox" name="Photos" onChange={handleCheck} checked={data!.Photos} /></td>
+    
+      </tr>
+    </table>
       </div>
 </div>
 <div style={{color:'white',backgroundColor:'black'}} className="bg-white rounded-lg">
@@ -568,6 +737,11 @@ return 'L';
       <b>Exposure Spec:</b>
       <textarea style={{width:'500px',color:'black'}} rows={10} cols={120}  name="ExposureSpecification" onChange={handleChangeTextArea} value={data!.ExposureSpecification} />
       <div></div>
+</div>
+<div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',color:'white'}}>
+<Button variant="outlined" onClick={handleSubmit}>
+          Submit
+        </Button>
 </div>
 <div><br/></div>
 </div>

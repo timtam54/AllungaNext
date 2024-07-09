@@ -5,8 +5,14 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from 'react';
 import Link from "next/link";
 import ArrowBack from '@mui/icons-material/ArrowBack';
+import ReportDet from "@/components/reportdet";
 import { getToken } from "@/msal/msal";
 import DataTable from "react-data-table-component";
+import Button from '@mui/material/Button';
+import SendTimeExtensionIcon from '@mui/icons-material/SendTimeExtension';
+import SummarizeIcon from '@mui/icons-material/Summarize';
+import GrainIcon from '@mui/icons-material/Grain';
+import DetailsIcon from '@mui/icons-material/Details';
 interface reportrow{
     reportid:number;
     reportname:string;
@@ -54,7 +60,7 @@ export default function Samples()
       ];
     const getalldata=async()=>{
         await fetchReport();
-        setLoading(false);
+       
     }
     const FormatDate=(date:any)=>  {
       if (date==null) return "";
@@ -74,9 +80,12 @@ export default function Samples()
           sortable: true,
           width: "230px",  
           wrap:true,  
-          cell:   (row:reportrow) => <Link target="_blank" href={{
-            pathname:'/reporttab',query:{id:row.reportid,seriesid:SeriesID}}}><u>{row.reportname}</u></Link>,//,dataReport:results
-        
+          cell: (row:reportrow) =><button onClick={(e)=>{
+            e.preventDefault();
+            const res=results.filter((i:reportrow)=>i.reportid===row.reportid);
+            setCurrentReport(res[0]); 
+            openChat();
+          }}><u>{row.reportname}</u></button> ,
           selector: (row:reportrow)=>row.reportname
         },
         {
@@ -84,7 +93,8 @@ export default function Samples()
           sortable: true,
           width: "90px",  
           wrap:true,  
-          selector: (row:reportrow)=>FormatDate( row.date)
+          selector: (row:reportrow)=><Link href={{
+            pathname:"/report/",query:{id:row.reportid}}} ><u>{FormatDate( row.date)}</u></Link>
         }
         ,
         {
@@ -140,8 +150,19 @@ const fetchReport = async ()=>{
   const json=await ee.json();
   console.log(json);
   setDataReport(json);
-
+  setLoading(false);
   }
+  const openChat=()=>{
+    setModalOpen(true);
+}
+  const [modalOpen,setModalOpen] = useState(false);
+  const closeChat=()=>{
+    setModalOpen(false);
+    fetchReport();
+}
+
+const [currentReport,setCurrentReport]=useState<reportrow>();
+
     return (
         <body style={{backgroundColor:'white'}}>
              
@@ -160,27 +181,33 @@ const fetchReport = async ()=>{
 :
 <>
         <Header/>
+
+        {modalOpen && <ReportDet report={currentReport} closeModal={closeChat}/>}
+
+
         <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',backgroundColor:'white'}}>
         <Link href="/"><ArrowBack/>back</Link>
         <div></div>
         <h3 style={{color:'#944780'}}>Series Name:{seriesname}</h3>
         <div></div>
-        <Link href={"/seriestab?id="+SeriesID.toString()+"&seriesname="+seriesname} >Series Details</Link>
-        <Link href={"/samples?id="+SeriesID.toString()+"&seriesname="+seriesname}>Samples</Link>
-        <Link href={"/reports?id="+SeriesID.toString()+"&seriesname="+seriesname} >Reports</Link>
-        <Link href={"/dispatch?id="+SeriesID.toString()+"&seriesname="+seriesname} >Dispatch</Link>
+        <div>
+        <Link href={"/seriestab?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button  style={{width:'200px'}}  variant='outlined'><DetailsIcon/>Details</Button></Link>
+        <Link href={"/samples?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='outlined'><GrainIcon/>Samples</Button></Link>
+        <Link href={"/reports?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='contained'><SummarizeIcon/>Reports</Button></Link>
+        <Link href={"/dispatch?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='outlined'><SendTimeExtensionIcon/>Dispatch</Button></Link>
         </div>
+         </div>
 
         <div className="grid grid-cols-1 gap-4 px-4 my-4">
         <div style={{color:'white',backgroundColor:'navy'}} className="bg-white rounded-lg">
-        <DataTable columns={columns}
+        {!modalOpen && <DataTable columns={columns}
         fixedHeader
         pagination
         dense
         customStyles={customStyles}        
         data={results}
         conditionalRowStyles={conditionalRowStyles} >
-        </DataTable>
+        </DataTable>}
         </div>
 
             </div>

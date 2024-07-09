@@ -2,6 +2,7 @@
 import React,{ useState, useEffect } from 'react';
 import moment from 'moment';
 import DatePicker from 'react-date-picker';
+import 'react-date-picker/dist/DatePicker.css'
 function ExposureEndDate({ text,StartDate, closePopup , DurationVal, DurationUnit}) {
   const [endDate,setEndDate] = useState(new Date());
   useEffect(() => {

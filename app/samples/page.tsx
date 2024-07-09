@@ -7,6 +7,11 @@ import Link from "next/link";
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import { getToken } from "@/msal/msal";
 import DataTable from "react-data-table-component";
+import Button from '@mui/material/Button';
+import SendTimeExtensionIcon from '@mui/icons-material/SendTimeExtension';
+import SummarizeIcon from '@mui/icons-material/Summarize';
+import GrainIcon from '@mui/icons-material/Grain';
+import DetailsIcon from '@mui/icons-material/Details';
 interface samplerow{
     SampleID:number;
     Number:number;
@@ -184,11 +189,12 @@ const fetchSample = async ()=>{
         <div></div>
         <h3 style={{color:'#944780'}}>Series Name:{seriesname}</h3>
         <div></div>
-        <Link href={"/seriestab?id="+SeriesID.toString()+"&seriesname="+seriesname} >Series Details</Link>
-        <Link href={"/samples?id="+SeriesID.toString()+"&seriesname="+seriesname}>Samples</Link>
-        <Link href={"/reports?id="+SeriesID.toString()+"&seriesname="+seriesname} >Reports</Link>
-        <Link href={"/dispatch?id="+SeriesID.toString()+"&seriesname="+seriesname} >Dispatch</Link>
-        </div>
+        <div>
+        <Link href={"/seriestab?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button  style={{width:'200px'}}  variant='outlined'><DetailsIcon/>Details</Button></Link>
+        <Link href={"/samples?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='contained'><GrainIcon/>Samples</Button></Link>
+        <Link href={"/reports?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='outlined'><SummarizeIcon/>Reports</Button></Link>
+        <Link href={"/dispatch?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='outlined'><SendTimeExtensionIcon/>Dispatch</Button></Link>
+        </div> </div>
 
         <div className="grid grid-cols-1 gap-4 px-4 my-4">
         <div style={{color:'white',backgroundColor:'navy'}} className="bg-white rounded-lg">

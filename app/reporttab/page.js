@@ -5,7 +5,6 @@ import Tab from '@mui/material/Tab';
 import Link from "next/link";
 import { Circles } from 'react-loader-spinner'
 
-//import { confirmAlert } from 'react-confirm-alert'; 
 import { useSearchParams } from "next/navigation";
 
 import ArrowBack from '@mui/icons-material/ArrowBack';
@@ -497,7 +496,7 @@ export default function ReportTab() {
   return (
     <Box sx={{ width: '100%', typography: 'body1' }}>
       <Link
-        to={"/seriestab"}
+        href={"/seriestab"}
         state={{ id: seriesid, name: '' }}><ArrowBack />back</Link>
       {
         dataReport.map((result, i) => {
@@ -517,15 +516,15 @@ export default function ReportTab() {
        <td key={0} align='center'>
         <Button variant="outlined" onClick={() => selectreport(0)}>New</Button>
         </td>
-      <TabContext value={value}>
+  
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <TabList onChange={handleChange}>
+    
             <Tab label="Report Detail" value="1" />
             <Tab label="Parameters" value="2" />
             <Tab label="Readings" value="3" />
-          </TabList>
+         
         </Box>
-        <TabPanel value="1">
+       
           {loading ?
    <div class="container">
             <Circles
@@ -599,10 +598,10 @@ export default function ReportTab() {
               </tr>
             </table>
           }
-        </TabPanel>
+      
 
 
-        <TabPanel value="2">
+   
           {loading ?
  <div class="container">
  <Circles
@@ -641,8 +640,8 @@ export default function ReportTab() {
               </table>
             </div>
           }
-        </TabPanel>
-         <TabPanel value="3">
+ 
+   
           {loading ?
            <div class="container">
            <Circles
@@ -717,11 +716,11 @@ export default function ReportTab() {
             </table>
             </div>
           }
-        </TabPanel>
+  
 
 
 
-      </TabContext>
+
     </Box>
   );
 }
