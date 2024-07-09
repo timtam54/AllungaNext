@@ -185,14 +185,7 @@ const fetchSample = async ()=>{
 
         <div className="grid grid-cols-1 gap-4 px-4 my-4">
         <div style={{color:'white',backgroundColor:'navy'}} className="bg-white rounded-lg">
-        <DataTable columns={columns}
-        fixedHeader
-        pagination
-        dense
-        customStyles={customStyles}        
-        data={results}
-        conditionalRowStyles={conditionalRowStyles} >
-        </DataTable>
+       
         </div>
 
             </div>
@@ -201,3 +194,15 @@ const fetchSample = async ()=>{
             </body>
     )
 }
+
+/*
+ <DataTable
+        
+         columns={columns}
+        fixedHeader
+        pagination
+        dense
+        customStyles={customStyles}        
+        data={results}
+        conditionalRowStyles={conditionalRowStyles} >
+        </DataTable>*/
