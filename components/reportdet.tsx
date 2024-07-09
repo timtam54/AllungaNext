@@ -18,6 +18,7 @@ type Props = {
     comment:string;
     completedDate:Date;
     date:Date;
+    DaysInLab:number;
   }
 const ReportDet =({report, closeModal}:Props) => {
   const [reportDate, setReportDate] = useState(new Date());

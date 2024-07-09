@@ -16,11 +16,18 @@ import DetailsIcon from '@mui/icons-material/Details';
 interface reportrow{
     reportid:number;
     reportname:string;
-    date:Date;
-    status:string;
     bookandpage:string;
-    DaysInLab:number;
+    reportstatus:string;//todotim should it be status
+    return_elsereport:boolean;
+    deleted:boolean;
     comment:string;
+    completedDate:Date;
+    date:Date;
+    
+    
+    DaysInLab:number;
+    
+    
    
 }
 export default function Samples()
@@ -102,7 +109,7 @@ export default function Samples()
           sortable: true,
           width: "80px",  
           wrap:true,  
-          selector: (row:reportrow)=> row.status
+          selector: (row:reportrow)=> row.reportstatus//.status
         }
         ,
         {
@@ -161,7 +168,7 @@ const fetchReport = async ()=>{
     fetchReport();
 }
 
-const [currentReport,setCurrentReport]=useState<reportrow>();
+const [currentReport,setCurrentReport]=useState<reportrow>({reportid:0,reportname:'',date:new Date(),status:'',bookandpage:'',DaysInLab:0,comment:''});
 
     return (
         <body style={{backgroundColor:'white'}}>
