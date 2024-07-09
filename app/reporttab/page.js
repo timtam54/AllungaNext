@@ -541,7 +541,7 @@ export default function ReportTab() {
               <tr>
                 <th>Report Date:</th>
                 <td>
-                  <DatePicker format="dd/MM/yyyy" onChange={setReportDate} value={reportDate} />
+                  <DatePicker format="dd/MM/yyyy" onSelect={setReportDate} value={reportDate} />
 
                 </td>
                 <td>
@@ -583,7 +583,7 @@ export default function ReportTab() {
               </tr>
               <tr>
                 <th>Completed Date</th><td>
-                  <DatePicker format="dd/MM/yyyy" onChange={setCompletedDate} value={completedDate} />
+                  <DatePicker format="dd/MM/yyyy" onSelect={setCompletedDate} value={completedDate} />
                 </td>
               </tr>
               <tr><td colSpan={2}>

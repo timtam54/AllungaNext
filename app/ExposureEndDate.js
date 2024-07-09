@@ -72,9 +72,9 @@ function ExposureEndDate({ text,StartDate, closePopup , DurationVal, DurationUni
      <div className="popup-body">
       <h1>{text}</h1>
       
-      <div><b>From:</b><DatePicker format="dd/MM/yyyy"  onChange={setStartDate} value={StartDate} /></div>
+      <div><b>From:</b><DatePicker format="dd/MM/yyyy" onSelect={setStartDate} value={StartDate} /></div>
       <div><b>Duration:</b>{DurationVal} {DurationUnit}</div>
-      <div><b>To:</b><DatePicker format="dd/MM/yyyy"  onChange={setEndDate} value={endDate} /></div>
+      <div><b>To:</b><DatePicker format="dd/MM/yyyy"  onSelect={setEndDate} value={endDate} /></div>
       <button onClick={closePopup}>Close X</button>
      </div>
     </div>

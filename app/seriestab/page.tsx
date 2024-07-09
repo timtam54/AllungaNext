@@ -711,7 +711,7 @@ return 'L';
 <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',color:'white'}}>
 
 <b>Letter Ref Date</b>
-          <DatePicker format="dd/MM/yyyy" onChange={setLogBookLetterDate} value={LogBookLetterDate} />
+          <DatePicker format="dd/MM/yyyy" onSelect={setLogBookLetterDate} value={LogBookLetterDate} />
         
           <b>Communication Type</b>
             <input type="text" style={{color:'black'}} name="LogBookCorrespType" onChange={handleChangeText} value={data!.LogBookCorrespType } />
