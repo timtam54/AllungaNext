@@ -94,7 +94,8 @@ export default function Samples()
             openChat();
           }}><u>{row.reportname}</u></button> ,
           selector: (row:reportrow)=>row.reportname
-        },
+        }
+        /*,
         {
           name:'Date',
           sortable: true,
@@ -134,7 +135,7 @@ export default function Samples()
           width: "320px",  
           wrap:true,  
           selector: (row:reportrow)=> row.comment
-        }
+        }*/
     ]
     const [results, setDataReport] = useState<reportrow[]>([]);
 const fetchReport = async ()=>{
@@ -189,7 +190,7 @@ const [currentReport,setCurrentReport]=useState<reportrow>();
 <>
         <Header/>
 
-        {modalOpen && <ReportDet report={currentReport} closeModal={closeChat}/>}
+        {modalOpen && <ReportDet report={currentReport!} closeModal={closeChat}/>}
 
 
         <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',backgroundColor:'white'}}>

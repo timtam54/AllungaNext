@@ -68,7 +68,7 @@ export default function Dispatch()
           width: "60px",  
           wrap:true,  
           selector: (row:samplerow)=>row.Staff
-        },
+        }/*,
         {
             name:'Date',
             sortable: true,
@@ -122,7 +122,7 @@ export default function Dispatch()
                   wrap:true,  
                   
                     selector:  (row:samplerow)=>row.Comments
-                  }
+                  }*/
     ]
     const [results, setDataSample] = useState<samplerow[]>([]);
 const fetchSample = async ()=>{
@@ -185,18 +185,7 @@ const fetchSample = async ()=>{
 
         <div className="grid grid-cols-1 gap-4 px-4 my-4">
         <div style={{color:'white',backgroundColor:'navy'}} className="bg-white rounded-lg">
-       
-        </div>
-
-            </div>
-            </>
-               }
-            </body>
-    )
-}
-
-/*
- <DataTable
+        <DataTable
         
          columns={columns}
         fixedHeader
@@ -205,4 +194,12 @@ const fetchSample = async ()=>{
         customStyles={customStyles}        
         data={results}
         conditionalRowStyles={conditionalRowStyles} >
-        </DataTable>*/
+        </DataTable>
+        </div>
+
+            </div>
+            </>
+               }
+            </body>
+    )
+}
