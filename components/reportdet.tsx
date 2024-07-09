@@ -106,7 +106,7 @@ const ReportDet =({report, closeModal}:Props) => {
         
                 <b>Report Date:</b>
                   <DatePicker format="dd/MM/yyyy" onSelect={setReportDate}  value={reportDate} />
-              <a href={'https://allungardlc.azurewebsites.net/Matrix.aspx?ReportID='+data!.reportid} target="new"><button>Report/Print</button></a>
+              <a href={'https://allungardlc.azurewebsites.net/Matrix.aspx?ReportID='+data!.reportid} target="new"><Button variant="outlined">Report/Print</Button></a>
        </div>
        <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>                   
                 <b>Name:</b>

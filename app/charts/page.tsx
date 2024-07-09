@@ -205,7 +205,7 @@ const fetchAllData=async ()=>
         )
       }
     const data= {
-      labels: ci.map(it=>it.date.toString()),
+      labels: ci.map(it=>DateFormat( it.date)),
 
       datasets:dss
       
@@ -248,7 +248,7 @@ const fetchAllData=async ()=>
     //setCE('https://quickchart.io/chart?c='+json3);
   }
 //  const [ce,setCE] = useState('');
-  
+
 const emailcustomer=async(event: React.MouseEvent<HTMLButtonElement>)=>{
   event.preventDefault();
   
