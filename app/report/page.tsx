@@ -166,7 +166,7 @@ const [dataSample, setDataSample] = React.useState([]);
         setLoading(false);
       }
 //
-      const handleChanges = (changes: CellChange<TextCell>[]) => { 
+      const handleChanges = (changes: any) => {//CellChange<TextCell>[] 
         applyChangesToPeople(changes,rows);
         //setRows((prevPeople) => applyChangesToPeople(changes, prevPeople)); 
 
@@ -218,7 +218,7 @@ const [dataSample, setDataSample] = React.useState([]);
           var dd = dataReading.find(i => i.Paramid == pid && i.sampleid == sid);
           if (dd==null)
           {
-            dataReading.push({Readingid:0,Paramid:parseInt( pid), sampleid:parseInt(sid), value:change.newCell.text.toString(), reportid:reportid, deleted:false });
+            dataReading.push({Readingid:0,Paramid:parseInt( pid.toString()), sampleid:parseFloat(sid.toString()), value:change.newCell.text.toString(), reportid:reportid, deleted:false });
             /*
             Readingid:number;
   Paramid:number;
