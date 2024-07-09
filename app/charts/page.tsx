@@ -100,7 +100,7 @@ const serviceCols =[
       width: "600px",    
      // selector: row=>row.JobNo
       cell:   (row:ChartItem) => <Link   href={{
-        pathname:'/RepairSearch',query:{date:row.date, title:row.title}}} ><u>{row.date}</u></Link>
+        pathname:'/RepairSearch',query:{date:DateFormat(row.date), title:row.title}}} ><u>{DateFormat(row.date)}</u></Link>
     
   },
   {
@@ -113,9 +113,11 @@ const serviceCols =[
   
 ];
 
-//const branchobj=searchParams.get("branchid");
-//const branchid=parseInt( branchobj!);
-//const [branches, setBranches]=useState<branchesEng[]>([]);
+const DateFormat=(date:any)=>  {
+  if (date==null) return "";
+ const dte= new Date(date);
+  return dte.getFullYear().toString()+'-'+(dte.getMonth()+1).toString().padStart(2,'0')+'-'+(dte.getDate()).toString().padStart(2,'0');
+}
 
 async function AddHeaderBearerToEndpoint(endpoint:string) {
   const token = await getToken();
