@@ -527,7 +527,7 @@ return 'L';
 <div style={{color:'white',backgroundColor:'black'}} className="bg-white rounded-lg">
     <div><br/></div>
 <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>
-        <Link href={"/client"} query={{id: data!.clientid}}></Link><Button variant="outlined">Client:</Button>
+        <Link href={"/client?id="+ data!.clientid}></Link><Button variant="outlined">Client:</Button>
   <div> 
           <select style={{color:'black'}} name="clientid" onChange={handleChange}>
           {
