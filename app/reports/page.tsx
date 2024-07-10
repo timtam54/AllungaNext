@@ -94,6 +94,23 @@ export default function Samples()
             openChat();
           }}><u>{row.reportname}</u></button> ,
           selector: (row:reportrow)=>row.reportname
+        },
+        {
+          name:'Date',
+          sortable: true,
+          width: "90px",  
+          wrap:true,  
+          cell: (row:reportrow) =><button onClick={(e)=>{
+            e.preventDefault();
+            //const res=results.filter((i:reportrow)=>i.reportid===row.reportid);
+            window.open("/report?id="+row.reportid); 
+            //openChat();
+          }}><u>{FormatDate( row.date)}</u></button> 
+         // selector: (row:reportrow)=><button onClick={(e)=>{
+           // e.preventDefault();
+            //window.open("/Report?id="+row.date); 
+          //}}><u>{row.reportname}</u></button>
+          
         }
         /*,
         {
@@ -104,14 +121,14 @@ export default function Samples()
           selector: (row:reportrow)=><Link href={{
             pathname:"/report/",query:{id:row.reportid}}} ><u>{FormatDate( row.date)}</u></Link>
         }*/
-          /*  ,
+            ,
             {
               name:'Date',
               sortable: true,
               width: "80px",  
               wrap:true,  
-              selector: (row:reportrow)=><Link href={"/report?id="+row.reportid}><u>{FormatDate( row.date)}</u></Link>
-            }*/
+              cell: (row:reportrow)=><Link href={"/report?id="+row.reportid}><u>{FormatDate( row.date)}</u></Link>
+            }
         ,
         {
           name:'Status',
@@ -136,14 +153,14 @@ export default function Samples()
           wrap:true,  
           selector: (row:reportrow)=> row.DaysInLab
         }
-       /* ,
+       ,
         {
           name:'Comments',
           sortable: true,
           width: "320px",  
           wrap:true,  
           selector: (row:reportrow)=> row.comment
-        }*/
+        }
     ]
     const [results, setDataReport] = useState<reportrow[]>([]);
 const fetchReport = async ()=>{

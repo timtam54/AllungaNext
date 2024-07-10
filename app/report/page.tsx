@@ -84,7 +84,7 @@ const [dataSample, setDataSample] = React.useState([]);
         }
         const json = await ee.json();
         console.log(json);
-        //todotim sort setDatacol(json.sort((a, b) => a.Ordering > b.Ordering));
+        setDatacol(json.sort((a:Param,b:Param) => a.Ordering > b.Ordering));
         const urlReading = `https://allungawebapi.azurewebsites.net/api/Readings/` + reportid;
 
         
@@ -124,11 +124,11 @@ const [dataSample, setDataSample] = React.useState([]);
         cells.push({ type: "header", text: "Name" });
         cols.push({ columnId: 1, width: 120 , resizable: true});
         
-      //todotim   json.sort((a, b) => a.Ordering > b.Ordering).forEach((element:Param) => {
-       //todotim      cells.push({ type: "header", text: element.ParamName });
-       //todotim      cols.push({ columnId: element.ParamID, width: 60 , resizable: true});
+      json.sort((a:Param, b:Param) => a.Ordering > b.Ordering).forEach((element:Param) => {
+       cells.push({ type: "header", text: element.ParamName });
+       cols.push({ columnId: element.ParamID, width: 60 , resizable: true});
   
-      //todotim   });
+      });
         const headerRow: Row  = {
           rowId: "header",
           cells: cells
@@ -144,22 +144,22 @@ const [dataSample, setDataSample] = React.useState([]);
          
           bodys.push({ type: "text", text: elementSample.Number.toString() });
           bodys.push({ type: "text", text: elementSample.description.toString() });
-      //todotim   json.sort((a, b) => a.Ordering > b.Ordering).forEach((element:Param) => {//datacol
-       //todotim    var xx = jsonReadings.filter((i:Reading) => i.Paramid   === element.ParamID && i.sampleid === elementSample.SampleID);
-        //todotim   if (xx.length > 0) {
-        //todotim     bodys.push({ type: "text", text: xx[0].value.toString() });
-        //todotim   }
-      //todotim     else
-      //todotim     {
-       //todotim      bodys.push({ type: "text", text: '' });//jj
-     //todotim      }
+        json.sort((a:Param, b:Param) => a.Ordering > b.Ordering).forEach((element:Param) => {//datacol
+        var xx = jsonReadings.filter((i:Reading) => i.Paramid   === element.ParamID && i.sampleid === elementSample.SampleID);
+        if (xx.length > 0) {
+          bodys.push({ type: "text", text: xx[0].value.toString() });
+        }
+        else
+        {
+            bodys.push({ type: "text", text: '' });//jj
+        }
             jj++;
-      //todotim   });
-     //todotim    const bodyRow: Row  = {
-    //todotim       rowId: elementSample.SampleID,
-      //todotim     cells: bodys
-    //todotim     };
-     //todotim    rows.push(bodyRow);
+      });
+     const bodyRow: Row  = {
+     rowId: elementSample.SampleID,
+     cells: bodys
+       };
+      rows.push(bodyRow);
         ii++;
       });
         setColumns(cols);
