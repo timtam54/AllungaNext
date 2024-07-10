@@ -89,14 +89,14 @@ export default function Home() {
   
     ssearch(e.target.checked,inactives,fields);
   }
-  const setsorted = (e:any) => {
+ /* const setsorted = (e:any) => {
     const val=e.target.name;
     setsortedx(val);
-    //todotim const sorted = results.sort((a, b) => b[val] < a[val]);
-    //todotim  console.log(sorted);
-    //todotim  setResults(sorted);
+     const sorted = results.sort((a, b) => b[val] < a[val]);
+     console.log(sorted);
+     setResults(sorted);
   
-  }
+  }*/
   const colourstyle = (active:boolean, complete:boolean,dteNextRpt:Date,dteNextRtrn:Date,CntSamplesOnSite:number,locked:Boolean) => 
     {
       const dte=new Date();
@@ -176,7 +176,7 @@ export default function Home() {
       onKeypressEscape: () => {},
       overlayClassName: "overlay-custom-class-name"
     }; 
-    //todotim confirmAlert(confirm);
+    alert(confirm);
   }
 
   const DeleteSeries = async (id:number)=>{

@@ -1,0 +1,23 @@
+.result{
+    border: 1px;
+    border-radius: 3px;
+    border-color: black;
+    border-style: ridge;
+  }
+
+.table1 table {
+    border: 1px solid;border-color: black;
+  }
+  .table1 th
+  {
+    color: black;
+    font-weight: 500;
+    background-color: 	#D8D8D8;
+    border: 1px solid;border-color:black;
+  }
+  .table1 tr:nth-child(even) {
+    background-color: #F8F8F8;
+  }
+  .table1 td{
+    border: 1px solid;border-color:black;
+  }

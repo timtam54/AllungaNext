@@ -17,7 +17,7 @@ interface reportrow{
     reportid:number;
     reportname:string;
     bookandpage:string;
-    reportstatus:string;//todotim should it be status
+    reportstatus:string;
     return_elsereport:boolean;
     deleted:boolean;
     comment:string;
