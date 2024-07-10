@@ -104,14 +104,14 @@ export default function Samples()
           selector: (row:reportrow)=><Link href={{
             pathname:"/report/",query:{id:row.reportid}}} ><u>{FormatDate( row.date)}</u></Link>
         }*/
-            ,
+          /*  ,
             {
               name:'Date',
               sortable: true,
               width: "80px",  
               wrap:true,  
               selector: (row:reportrow)=><Link href={"/report?id="+row.reportid}><u>{FormatDate( row.date)}</u></Link>
-            }
+            }*/
         ,
         {
           name:'Status',
@@ -136,14 +136,14 @@ export default function Samples()
           wrap:true,  
           selector: (row:reportrow)=> row.DaysInLab
         }
-        ,
+       /* ,
         {
           name:'Comments',
           sortable: true,
           width: "320px",  
           wrap:true,  
           selector: (row:reportrow)=> row.comment
-        }
+        }*/
     ]
     const [results, setDataReport] = useState<reportrow[]>([]);
 const fetchReport = async ()=>{
