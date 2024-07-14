@@ -183,6 +183,7 @@ export default function clientsearch()
     return (
       <>
       <Header/>
+      <h1 style={{fontSize:"22px"}}>Clients</h1>
         <DataTable columns={columns}
         fixedHeader
         pagination

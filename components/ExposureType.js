@@ -137,10 +137,11 @@ function ExposureType({closeModal,exposuretypeid}) {
     */
 return (
   <div className="modal-container">
-      <div className="modal" style={{backgroundColor:'lightgray'}} >
-  <h1 style={{fontSize:'24px',fontWeight:'bold'}}>Sample Details</h1>
+      <div className="modal" style={{backgroundColor:'whitesmoke'}} >
+  <h1 style={{fontSize:'24px',fontWeight:'bold'}}>Exposure Type Details</h1>
   
-      <button onClick={(e)=>{e.preventDefault();closeModal()}}>Close</button>
+      
+<Button type="submit" variant="outlined" onClick={(e)=>{e.preventDefault();closeModal()}}>Close</Button>
       <form>
     {loading ? 
  <Circles
@@ -176,7 +177,7 @@ return (
     </tr>
     
     <tr>
-      <th>SortOrder:</th>
+      <th>Sort Order:</th>
       <td>
       <input type="text" name="SortOrder" onChange={handleChange} value={data.SortOrder} />
       </td>

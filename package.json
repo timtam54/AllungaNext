@@ -1,10 +1,10 @@
 {
   "name": "allunganext",
   "version": "0.1.0",
-  "private": true,
   "engines": {
     "node": "18.17.1"
   },
+  "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -31,6 +31,7 @@
     "react-chartjs-2": "^5.2.0",
     "react-data-table-component": "^7.6.2",
     "react-date-picker": "^11.0.0",
+    "react-datepicker": "^7.3.0",
     "react-dom": "^18",
     "react-loader-spinner": "^6.1.6",
     "react-router-dom": "^6.24.1",

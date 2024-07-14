@@ -7,8 +7,8 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import { Circles } from 'react-loader-spinner'
 import { getToken } from "@/msal/msal";
 import moment from 'moment';
-import DatePicker from 'react-date-picker';
-import 'react-date-picker/dist/DatePicker.css'
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import Button from '@mui/material/Button';
 import ExposureEndDate from '../ExposureEndDate.js';
 import SendTimeExtensionIcon from '@mui/icons-material/SendTimeExtension';
@@ -492,6 +492,23 @@ return 'L';
     const searchParams = useSearchParams();
     const [SeriesID,setSeriesID]=useState(parseInt( searchParams!.get("id")!));
     const seriesname=searchParams!.get("seriesname");
+
+    const setExposureEndX=async(value:any)=>{
+      if (value==null)return;
+      setExposureEnd(value!);
+      //await fetch....;
+   }
+    const setDateInX=async(value:any)=>{
+      if (value==null)return;
+      setDateIn(value!);
+      //await fetch....;
+   }
+
+   const setLogBookLetterDateX=async(value:any)=>{
+    if (value==null)return;
+    setLogBookLetterDate(value!);
+    //await fetch....;
+ }
     return (
         <body style={{backgroundColor:'white'}}>
              {loading ? 
@@ -611,12 +628,13 @@ return 'L';
       <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',color:'white'}}>
       <b>Exposed:</b>
 
-<DatePicker format="dd/MM/yyyy" onSelect={setDateIn} value={DateIn} />
-        
+<div style={{color:'black'}}>
+<DatePicker  className="datePicker" dateFormat="dd/MM/yyyy" onChange={setDateInX} selected={DateIn} />
+</div>   
 <b>End:</b>
-
-<DatePicker format="dd/MM/yyyy"  onSelect={setExposureEnd} value={ExposureEnd} />
-
+<div style={{color:'black'}}>
+<DatePicker className="datePicker" dateFormat="dd/MM/yyyy" onChange={setExposureEndX} selected={ExposureEnd} />
+</div>
   <Button style={{color:'white'}} variant="outlined" onClick={() => setIsOpen(true)}>
   End Date
 </Button>
@@ -712,8 +730,9 @@ return 'L';
 <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',color:'white'}}>
 
 <b>Letter Ref Date</b>
-          <DatePicker format="dd/MM/yyyy" onSelect={setLogBookLetterDate} value={LogBookLetterDate} />
-        
+<div style={{color:'black'}}>
+          <DatePicker className="datePicker" dateFormat="dd/MM/yyyy" onChange={setLogBookLetterDateX} selected={LogBookLetterDate} />
+          </div>
           <b>Communication Type</b>
             <input type="text" style={{color:'black'}} name="LogBookCorrespType" onChange={handleChangeText} value={data!.LogBookCorrespType } />
 <div></div>

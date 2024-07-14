@@ -49,7 +49,7 @@ export default function Page()
   }
 //  const endpoint = `https://allungacorewebapi.azurewebsites.net/api/ReportParams/`+id;
   const endpoint=`https://allungawebapicore.azurewebsites.net/api/ReportParams/{id}?SeriesID=`+id;
-
+//`https://localhost:7115/api/ReportParams/{id}?SeriesID=`+id;//
   console.log(endpoint);
   const response = fetch(endpoint,options);
  var ee=await response;
@@ -108,31 +108,43 @@ export default function Page()
         const xx=e.target.name.split('~');
         const rid=Number(xx[0]);
         const pid=Number(xx[1]);
-        const temp=[...dataParRepSeries];
-        var dd=temp.find((i:ParRepSeriesRow)=>i.paramid===pid && i.reportid===rid);
-        if (dd==null)
+        var temp=[...dataParRepSeries];
+
+      //  alert(temp.length);
+        temp=temp.filter((i:ParRepSeriesRow)=>i.paramid!=pid || i.reportid!=rid);
+      //  alert(temp.length);
+
+//        var dd=temp.find((i:ParRepSeriesRow)=>i.paramid===pid && i.reportid===rid);
+  //      if (dd!=null)
+    //      delete dd[0];
+      //  alert(e.target.checked);
         {
-          if (e.target.value)
+          if (e.target.checked)
           {
+           // alert('checked');
+
             const obj = {'paramid':pid, 'reportid':rid,'deleted':false};//null
             setDataParRepSeries([...temp, obj]);
           }
           else{
-            ;//do nothing
+           // alert('not checked');
+            const obj = {'paramid':pid, 'reportid':rid,'deleted':true};//null
+            setDataParRepSeries([...temp, obj]);
           }
         }
-        else
+       /* else
         {
-          if (e.target.value)
+          alert('found' + e.target.checked);
+          if (e.target.checked)
           {
-            dd.deleted=false;//null
+            dd={dd,'deleted':false};//.deleted=true;//null
           }
           else
           {
-            dd.deleted=true;
+            dd.deleted=false;
           }
-        setDataParRepSeries([...temp]);
-        }
+        setDataParRepSeries([...temp,dd]);
+        }*/
       };
       const [dataParams, setDataParams] = useState<Param[]>([]);
       const fetchParRepSeries = async ()=>{
@@ -189,7 +201,7 @@ export default function Page()
         var xx=dataParRepSeries.filter((i)=>i.paramid===ParamID && i.reportid===reportid );
         if (xx.length>0)
         {
-      return true;
+      return !xx[0].deleted;
       }
       return false;
       }

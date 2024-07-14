@@ -2,6 +2,7 @@
 import { Circles } from 'react-loader-spinner';
 import Header from '@/components/header'
 import Sample from '@/components/Sample'
+import SampleExplode from '@/components/SampleExplode'
 import SampleHistory from '@/components/SampleHistory'
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from 'react';
@@ -55,7 +56,7 @@ export default function Samples()
         {
           when: (row:samplerow) => true,
           style:  (row:samplerow) => ({
-            color: row.Reportable?'red':'blue',
+            color: row.Reportable?'navy':'red',
           })
         }
       ];
@@ -81,7 +82,7 @@ export default function Samples()
             cell: (row:samplerow) =><button onClick={(e)=>{
               e.preventDefault();
                setSampID(row.SampleID); 
-              setModelOpen(true);
+              setModalOpen(true);
               
             }}><u>{row.Number}</u></button> ,
             
@@ -97,7 +98,7 @@ export default function Samples()
               cell: (row:samplerow) =><button onClick={(e)=>{
                 e.preventDefault();
                  setSampID(row.SampleID); 
-                 setmodelOpenHist(true);
+                 setmodalOpenHist(true);
                 
               }}><u>{row.description}</u></button> ,
               //
@@ -129,9 +130,9 @@ export default function Samples()
             {
                 name:'Reportable',
                 sortable: true,
-                width: "130px",  
+                width: "80px",  
                 wrap:true,  
-                selector: (row:samplerow)=>row.Reportable
+                selector: (row:samplerow)=><input type='checkbox' checked={row.Reportable}></input>
               }
               ,
             {
@@ -141,19 +142,19 @@ export default function Samples()
                 wrap:true,  
                 selector: (row:samplerow)=>row.SampleOrder
               },
-              {
-                  name:'History',
-                  sortable: true,
-                  width: "130px",  
-                  wrap:true,  
-                  selector:  (row:samplerow)=>"button"
-                },
+             
                 {
                     name:'Explode',
                     sortable: true,
                     width: "130px",  
                     wrap:true,  
-                    selector:  (row:samplerow)=>"button"
+                    selector:  (row:samplerow)=>"Explode",
+                    cell: (row:samplerow) =><button onClick={(e)=>{
+                      e.preventDefault();
+                       //setSampID(row.SampleID); 
+                       setmodalOpenExplode(true);
+                      
+                    }}><u>{row.description}</u></button> ,
                   }
     ]
     const [results, setDataSample] = useState<samplerow[]>([]);
@@ -184,8 +185,9 @@ const fetchSample = async ()=>{
 
 
   }
-  const [modelOpen,setModelOpen]=useState(false);
-  const [modelOpenHist,setmodelOpenHist]=useState(false);
+  const [modalOpenExplode,setmodalOpenExplode]=useState(false);
+  const [modalOpen,setModalOpen]=useState(false);
+  const [modalOpenHist,setmodalOpenHist]=useState(false);
   const [sampID,setSampID]=useState(0);
     return (
         <body style={{backgroundColor:'white'}}>
@@ -215,6 +217,7 @@ const fetchSample = async ()=>{
         <Link href={"/samples?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='contained'><GrainIcon/>Samples</Button></Link>
         <Link href={"/reports?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='outlined'><SummarizeIcon/>Reports</Button></Link>
         <Link href={"/dispatch?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='outlined'><SendTimeExtensionIcon/>Dispatch</Button></Link>
+        <Link href={"/reportparam?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='outlined'><SendTimeExtensionIcon/>Params</Button></Link>
         </div> </div>
 
         <div className="grid grid-cols-1 gap-4 px-4 my-4">
@@ -230,8 +233,9 @@ const fetchSample = async ()=>{
         </div>
 
             </div>
-            {modelOpen && <Sample sampleid={sampID} closeModal={()=>{setModelOpen(false);fetchSample()}} SeriesID={SeriesID} />}
-            {modelOpenHist && <SampleHistory sampleid={sampID} closeModal={()=>setmodelOpenHist(false)} SeriesID={SeriesID} />}
+            {modalOpen && <Sample sampleid={sampID} closeModal={()=>{setModalOpen(false);fetchSample()}} SeriesID={SeriesID} />}
+            {modalOpenHist && <SampleHistory sampleid={sampID} closeModal={()=>setmodalOpenHist(false)} SeriesID={SeriesID} />}
+            {modalOpenExplode && <SampleExplode closeModal={()=>setmodalOpenExplode(false)} />}
             </>
                }
             </body>

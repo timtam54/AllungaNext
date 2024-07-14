@@ -139,7 +139,7 @@ export default function exposuretype()
         {
             name:'Description',
             sortable: true,
-            width: "60px",  
+            width: "300px",  
             wrap:true,  
             selector: (row:exposuretyperow)=>row.Description,
             cell: (row:exposuretyperow) =><button onClick={(e)=>{
@@ -162,7 +162,9 @@ export default function exposuretype()
         const [modelOpen,setModelOpen]=useState(false);
         return (
             <>
+           
             <Header/>
+            <h1 style={{fontSize:"22px"}}>Exposure Types</h1>
               <DataTable columns={columns}
               fixedHeader
               pagination

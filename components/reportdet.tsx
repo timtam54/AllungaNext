@@ -97,10 +97,11 @@ const ReportDet =({report, closeModal}:Props) => {
   }
 
     return  <div className="modal-container">
-    <div className="modal" style={{backgroundColor:'lightgray'}} >
+    <div className="modal" style={{backgroundColor:'whitesmoke'}} >
 <h1 style={{fontSize:'24px',fontWeight:'bold'}}>Report Details</h1>
 
-    <button onClick={(e)=>{e.preventDefault();closeModal()}}>Close</button>
+
+<Button type="submit" variant="outlined" onClick={(e)=>{e.preventDefault();closeModal()}}>Close</Button>
     <form>
     <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>
         
