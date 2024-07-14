@@ -200,7 +200,7 @@ export const Sample  = ({  closeModal, sampleid,SeriesID }:Props) => {
 :
 <>
 
-<table border="1">
+<table border={1}>
   <tr>
 
 </tr>
