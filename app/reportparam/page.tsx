@@ -26,7 +26,7 @@ interface Param {
 interface ParRepSeriesRow{
   paramid:number;
   reportid:number;
-  deleted:string;
+  deleted:boolean;
 }
 export default function Page()
 {
@@ -40,12 +40,18 @@ export default function Page()
   const bearer = `Bearer ${token}`
   headers.append('Authorization', bearer);
   console.table(dataParRepSeries);
+  const jsondata=JSON.stringify(dataParRepSeries);
+  console.log(jsondata);
   const options = {
     method: 'PUT',
-    body: JSON.stringify(dataParRepSeries),
-    headers: headers,
+    body: jsondata,
+    headers: {'Content-type': "application/json"},
   }
-  const response = fetch(`https://allungawebapi.azurewebsites.net/api/ReportParams/`+id,options);
+//  const endpoint = `https://allungacorewebapi.azurewebsites.net/api/ReportParams/`+id;
+  const endpoint=`https://allungawebapicore.azurewebsites.net/api/ReportParams/{id}?SeriesID=`+id;
+
+  console.log(endpoint);
+  const response = fetch(endpoint,options);
  var ee=await response;
   if (!ee.ok)
   {
@@ -84,6 +90,7 @@ export default function Page()
             method: 'GET',
             headers: headers,
           }
+          
           const endPoint =`https://allungawebapi.azurewebsites.net/api/Params/`;
           const response = fetch(endPoint,options);
           var ee=await response;
@@ -138,7 +145,10 @@ export default function Page()
           method: 'GET',
           headers: headers,
         }
-        const endPoint = `https://allungawebapi.azurewebsites.net/api/ReportParams/int/`+id;
+       
+        const endPoint = `https://allungacorewebapi.azurewebsites.net/api/ReportParams/id?SeriesID=`+id;
+        //`https://allungawebapi.azurewebsites.net/api/ReportParams/int/`+id;
+        console.log(endPoint);
         const response = fetch(endPoint,options);
         var ee=await response;
         if (!ee.ok)

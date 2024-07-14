@@ -1,6 +1,8 @@
 "use client"
 import { Circles } from 'react-loader-spinner';
 import Header from '@/components/header'
+import Sample from '@/components/Sample'
+import SampleHistory from '@/components/SampleHistory'
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from 'react';
 import Link from "next/link";
@@ -74,7 +76,15 @@ export default function Samples()
             sortable: true,
             width: "100px",  
             wrap:true,  
-            selector: (row:samplerow)=>row.Number
+            selector: (row:samplerow)=>row.Number,
+
+            cell: (row:samplerow) =><button onClick={(e)=>{
+              e.preventDefault();
+               setSampID(row.SampleID); 
+              setModelOpen(true);
+              
+            }}><u>{row.Number}</u></button> ,
+            
           }
           ,
           {
@@ -82,7 +92,15 @@ export default function Samples()
               sortable: true,
               width: "90px",  
               wrap:true,  
-              selector: (row:samplerow)=>row.description
+              selector: (row:samplerow)=>row.description,
+
+              cell: (row:samplerow) =><button onClick={(e)=>{
+                e.preventDefault();
+                 setSampID(row.SampleID); 
+                 setmodelOpenHist(true);
+                
+              }}><u>{row.description}</u></button> ,
+              //
             },
             {
                 name:'Description',
@@ -166,6 +184,9 @@ const fetchSample = async ()=>{
 
 
   }
+  const [modelOpen,setModelOpen]=useState(false);
+  const [modelOpenHist,setmodelOpenHist]=useState(false);
+  const [sampID,setSampID]=useState(0);
     return (
         <body style={{backgroundColor:'white'}}>
              
@@ -209,6 +230,8 @@ const fetchSample = async ()=>{
         </div>
 
             </div>
+            {modelOpen && <Sample sampleid={sampID} closeModal={()=>{setModelOpen(false);fetchSample()}} SeriesID={SeriesID} />}
+            {modelOpenHist && <SampleHistory sampleid={sampID} closeModal={()=>setmodelOpenHist(false)} SeriesID={SeriesID} />}
             </>
                }
             </body>

@@ -3,6 +3,7 @@ import Header from "@/components/header";
 import { getToken } from "@/msal/msal";
 import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
+import Client from '@/components/Client'
 interface clientrow{
     clientid:number;   
     companyname:string;
@@ -22,8 +23,9 @@ export default function clientsearch()
         searchClient()
    
     } , []);
-    const [loading,setLoading] = useState(false);
+    
     const [search,setSearch] = useState("");
+    const [loading,setLoading] = useState(false);
     const [results,setResults] = useState<clientrow[]>([]);
     const handleSearch = async (e:any)=>{
 
@@ -32,7 +34,7 @@ export default function clientsearch()
         { setSearch('~');
       }
     }
-
+    const [modelOpen,setModelOpen]=useState(false);
     const searchClient=async ()=>{
         setLoading(true);
         const token = await getToken()
@@ -56,7 +58,7 @@ export default function clientsearch()
         setResults(json);
         setLoading(false);
       }
-
+      const [cliid,setCliID]=useState(0);
     const customStyles = {
         headCells: {
           style: {
@@ -95,7 +97,13 @@ export default function clientsearch()
             sortable: true,
             width: "60px",  
             wrap:true,  
-            selector: (row:clientrow)=>row.companyname
+            selector: (row:clientrow)=>row.companyname,          
+            cell: (row:clientrow) =><button onClick={(e)=>{
+              e.preventDefault();
+               setCliID(row.clientid); 
+              setModelOpen(true);
+              
+            }}><u>{row.companyname}</u></button> ,
           }
           ,
         {
@@ -183,6 +191,9 @@ export default function clientsearch()
         data={results}
         conditionalRowStyles={conditionalRowStyles} >
         </DataTable>
+        {modelOpen && <Client clientid={cliid} closeModal={()=>{setModelOpen(false);searchClient()}} />}
+        
         </>
     )
 }
+
