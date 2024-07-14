@@ -46,7 +46,7 @@ export default function exposuretype()
         setLoading(false);
       }
 
-      const customStyles = {
+     /* const customStyles = {
         noData: {
           style: {
             display: 'flex',
@@ -101,7 +101,24 @@ export default function exposuretype()
             cursor: 'pointer',
           },
         },
-      };
+      };*/
+      const customStyles = {
+        headCells: {
+          style: {
+            paddingLeft: '4px', // override the cell padding for head cells
+            paddingRight: '4px',
+            size:'12px',
+          },
+          
+        },
+        cells: {
+          style: {
+            paddingLeft: '4px', // override the cell padding for data cells
+            paddingRight: '4px',
+            
+          },
+        },
+      }
     const conditionalRowStyles = [
         {
           when: (row:exposuretyperow) => true,
