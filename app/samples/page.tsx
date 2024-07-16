@@ -72,7 +72,7 @@ export default function Samples()
           width: "60px",  
           wrap:true,  
           selector: (row:samplerow)=>row.SampleID
-        },
+        } ,
         {
             name:'AEL Ref',
             sortable: true,
@@ -88,7 +88,7 @@ export default function Samples()
             }}><u>{row.Number}</u></button> ,
             
           }
-          ,
+        ,
           {
               name:'Client id',
               sortable: true,
@@ -103,7 +103,7 @@ export default function Samples()
                 
               }}><u>{row.description}</u></button> ,
               //
-            },
+            }/* ,
             {
                 name:'Description',
                 sortable: true,
@@ -156,7 +156,7 @@ export default function Samples()
                        setmodalOpenExplode(true);
                       
                     }}><u>{row.description}</u></button> ,
-                  }
+                  }*/
     ]
     const [results, setDataSample] = useState<samplerow[]>([]);
 const fetchSample = async ()=>{
