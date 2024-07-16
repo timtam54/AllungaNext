@@ -526,7 +526,8 @@ export default function ReportTab() {
         </Box>
        
           {loading ?
-   <div class="container">
+          <div className="relative h-16">
+  <div className="absolute p-4 text-center transform -translate-x-1/2 translate-y-1/2 border top-1/2 left-1/2">
             <Circles
               height="200"
               width="200"
@@ -535,7 +536,7 @@ export default function ReportTab() {
               wrapperStyle={{}}
               wrapperClass=""
               visible={true}
-            /></div>
+            /></div></div>
             :
             <table>
               <tr>
@@ -603,7 +604,8 @@ export default function ReportTab() {
 
    
           {loading ?
- <div class="container">
+          <div className="relative h-16">
+  <div className="absolute p-4 text-center transform -translate-x-1/2 translate-y-1/2 border top-1/2 left-1/2">
  <Circles
    height="200"
    width="200"
@@ -612,7 +614,7 @@ export default function ReportTab() {
    wrapperStyle={{}}
    wrapperClass=""
    visible={true}
- /></div>
+ /></div></div>
             :
             <div>
               {dirty?
@@ -643,7 +645,8 @@ export default function ReportTab() {
  
    
           {loading ?
-           <div class="container">
+             <div className="relative h-16">
+  <div className="absolute p-4 text-center transform -translate-x-1/2 translate-y-1/2 border top-1/2 left-1/2">
            <Circles
              height="200"
              width="200"
@@ -652,7 +655,7 @@ export default function ReportTab() {
              wrapperStyle={{}}
              wrapperClass=""
              visible={true}
-           /></div>
+           /></div></div>
             :
             <div>
               <table>

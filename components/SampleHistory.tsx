@@ -186,7 +186,8 @@ export const Sample  = ({  closeModal, sampleid,SeriesID }:Props) => {
 
     
         {loading ? 
-    <div className="container">
+          <div className="relative h-16">
+  <div className="absolute p-4 text-center transform -translate-x-1/2 translate-y-1/2 border top-1/2 left-1/2">
     <Circles
     height="200"
     width="200"
@@ -196,7 +197,7 @@ export const Sample  = ({  closeModal, sampleid,SeriesID }:Props) => {
     wrapperClass=""
     visible={true}
   />
-  </div>
+  </div></div>
 :
 <>
 

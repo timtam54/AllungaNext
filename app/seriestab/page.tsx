@@ -15,6 +15,7 @@ import SendTimeExtensionIcon from '@mui/icons-material/SendTimeExtension';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import GrainIcon from '@mui/icons-material/Grain';
 import DetailsIcon from '@mui/icons-material/Details';
+import AppsIcon from '@mui/icons-material/Apps';
 interface SeriesEvent{
   EventDesc:string;
   EventType:string;
@@ -328,7 +329,7 @@ if (data!.ReturnsFrequencyVal==null) {
             await setData(json);
             if (json.Lock_ComputerName!='' && json.Lock_ComputerName!=null)
             {
-              alert('locked by '+json.Lock_ComputerName);
+             ;//todotim alert('locked by '+json.Lock_ComputerName);
             }
             var xx=moment(json.DateIn).toDate();
             setDateIn(xx);
@@ -510,10 +511,12 @@ return 'L';
     //await fetch....;
  }
     return (
-        <body style={{backgroundColor:'white'}}>
+        <body style={{backgroundColor:'whitesmoke'}}>
              {loading ? 
-      <div className="container">
-      <Circles
+              <div className="relative h-16" style={{backgroundColor:'whitesmoke'}}>
+  <div style={{backgroundColor:'whitesmoke'}} className="absolute p-4 text-center transform -translate-x-1/2 translate-y-1/2 border top-1/2 left-1/2">
+ 
+      <Circles 
       height="200"
       width="200"
       color="silver"
@@ -522,7 +525,7 @@ return 'L';
       wrapperClass=""
       visible={true}
     />
-    </div>
+    </div> </div>
 :
 <>
         <Header/>
@@ -536,7 +539,7 @@ return 'L';
         <Link href={"/samples?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='outlined'><GrainIcon/>Samples</Button></Link>
         <Link href={"/reports?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='outlined'><SummarizeIcon/>Reports</Button></Link>
         <Link href={"/dispatch?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='outlined'><SendTimeExtensionIcon/>Dispatch</Button></Link>
-        <Link href={"/reportparam?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='outlined'><SendTimeExtensionIcon/>Params</Button></Link>
+        <Link href={"/reportparam?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='outlined'><AppsIcon/>Params</Button></Link>
         </div>
         </div>
       

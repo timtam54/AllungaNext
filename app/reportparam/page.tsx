@@ -5,6 +5,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Header from "@/components/header";
 import Button from '@mui/material/Button';
+import AppsIcon from '@mui/icons-material/Apps';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import SendTimeExtensionIcon from '@mui/icons-material/SendTimeExtension';
 import SummarizeIcon from '@mui/icons-material/Summarize';
@@ -234,13 +235,16 @@ export default function Page()
         <Link href={"/samples?id="+id.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='outlined'><GrainIcon/>Samples</Button></Link>
         <Link href={"/reports?id="+id.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='outlined'><SummarizeIcon/>Reports</Button></Link>
         <Link href={"/dispatch?id="+id.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='outlined'><SendTimeExtensionIcon/>Dispatch</Button></Link>
-        <Link href={"/reportparam?id="+id.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='contained'><SendTimeExtensionIcon/>Params</Button></Link>
+        <Link href={"/reportparam?id="+id.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='contained'><AppsIcon/>Params</Button></Link>
         </div>
         </div>
-
+        <div style={{alignItems: 'center',display:'flex',justifyContent:'space-between'}}>
+        <h1 style={{fontSize:"22px"}}>Parameters</h1>
           <Button type="submit" variant='outlined' onClick={handleSubmitParam}>
           Submit
         </Button>
+        <div></div>
+        </div>
         <table className="table1" > 
         <tr>
         <th>Parameters</th>

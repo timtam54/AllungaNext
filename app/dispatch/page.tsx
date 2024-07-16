@@ -4,6 +4,7 @@ import Header from '@/components/header'
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from 'react';
 import Link from "next/link";
+import AppsIcon from '@mui/icons-material/Apps';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import { getToken } from "@/msal/msal";
 import DataTable from "react-data-table-component";
@@ -156,7 +157,8 @@ const fetchSample = async ()=>{
         <body style={{backgroundColor:'white'}}>
              
              {loading ? 
-      <div className="container">
+              <div className="relative h-16">
+  <div className="absolute p-4 text-center transform -translate-x-1/2 translate-y-1/2 border top-1/2 left-1/2">
       <Circles
       height="200"
       width="200"
@@ -166,7 +168,7 @@ const fetchSample = async ()=>{
       wrapperClass=""
       visible={true}
     />
-    </div>
+    </div></div>
 :
 <>
         <Header/>
@@ -180,7 +182,7 @@ const fetchSample = async ()=>{
         <Link href={"/samples?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='outlined'><GrainIcon/>Samples</Button></Link>
         <Link href={"/reports?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='outlined'><SummarizeIcon/>Reports</Button></Link>
         <Link href={"/dispatch?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='contained'><SendTimeExtensionIcon/>Dispatch</Button></Link>
-        <Link href={"/reportparam?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='outlined'><SendTimeExtensionIcon/>Params</Button></Link>
+        <Link href={"/reportparam?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='outlined'><AppsIcon/>Params</Button></Link>
         </div>
         </div>
 

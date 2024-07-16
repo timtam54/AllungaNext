@@ -95,7 +95,7 @@ export default function clientsearch()
         {
             name:'Name',
             sortable: true,
-            width: "60px",  
+            width: "180px",  
             wrap:true,  
             selector: (row:clientrow)=>row.companyname,          
             cell: (row:clientrow) =><button onClick={(e)=>{
@@ -109,7 +109,7 @@ export default function clientsearch()
         {
             name:'GroupName',
             sortable: true,
-            width: "160px",  
+            width: "120px",  
             wrap:true,  
             selector: (row:clientrow)=>row.GroupName
           }
@@ -138,7 +138,7 @@ export default function clientsearch()
               {
                   name:'Abbreviation',
                   sortable: true,
-                  width: "160px",  
+                  width: "90px",  
                   wrap:true,  
                   selector: (row:clientrow)=>row.Abbreviation
                 },

@@ -232,6 +232,8 @@ setLoading(false);
 
 
         {loading ? 
+<div className="relative h-16">
+  <div className="absolute p-4 text-center transform -translate-x-1/2 translate-y-1/2 border top-1/2 left-1/2">
      <Circles
      height="300"
      width="300"
@@ -240,7 +242,7 @@ setLoading(false);
      wrapperStyle={{}}
      wrapperClass=""
      visible={true}
-   />
+   /></div></div>
 :
 <>
       <table width="100%">
