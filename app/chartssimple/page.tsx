@@ -1,18 +1,18 @@
 "use client"
 
-
+//import { useSearchParams } from "next/navigation";
 import { Circles } from 'react-loader-spinner'
-
+//import { useRouter } from 'next/navigation'
 import React, { ChangeEvent, useEffect, useRef, useState ,MouseEvent} from 'react';
 import Link from "next/link";
 import { getToken, msalInstance } from "@/msal/msal";
 import BarChartIcon from '@mui/icons-material/BarChart';
-
+//import SignOutButton from '@/components/SignOutButton';
 import DataTable from "react-data-table-component";
-
+//import { NextResponse, NextRequest } from 'next/server'
 import { CategoryScale, Chart as ChartJS, LinearScale, BarElement,PointElement,  LineElement,  Legend,  Tooltip ,InteractionItem} from "chart.js";
 import {Bar, Line,getElementAtEvent,Chart } from 'react-chartjs-2';
-
+//import UserAvatar from '@/components/UserAvatar';
 
 ChartJS.register(
   LinearScale,
@@ -25,8 +25,6 @@ ChartJS.register(
 );
 
 interface ChartItem{
-  //id:number;
-  date:Date;
   cnt:number;
   
   title:string;
@@ -42,10 +40,9 @@ interface dssx{
     data: Array<number>;
 }
 
-export default function Page()
+export default function ChartsSimple()
 {
   
-
   const user = msalInstance.getActiveAccount();
 
  const dta= {
@@ -66,9 +63,6 @@ export default function Page()
 const [loading,setLoading] = useState(true);
 const [custcode,setCustcode] = useState('all');
 
-//const searchParams = useSearchParams();
-
-
 const serviceCols =[
   {
     name:'id',
@@ -77,16 +71,7 @@ const serviceCols =[
     wrap:true,  
     selector: (row:ChartItem)=>row.title
   }
-  ,
-  {
-      name:'Date',
-      sortable: true,
-      width: "600px",    
-     // selector: row=>row.JobNo
-      cell:   (row:ChartItem) => <Link   href={{
-        pathname:'/RepairSearch',query:{date:DateFormat(row.date), title:row.title}}} ><u>{DateFormat(row.date)}</u></Link>
-    
-  },
+ ,
   {
     name:'Count',
     sortable: true,
@@ -97,11 +82,7 @@ const serviceCols =[
   
 ];
 
-const DateFormat=(date:any)=>  {
-  if (date==null) return "";
- const dte= new Date(date);
-  return dte.getFullYear().toString()+'-'+(dte.getMonth()+1).toString().padStart(2,'0')+'-'+(dte.getDate()).toString().padStart(2,'0');
-}
+
 
 async function AddHeaderBearerToEndpoint(endpoint:string) {
   const token = await getToken();
@@ -153,7 +134,7 @@ const fetchAllData=async ()=>
   const [data,setData]=useState<ChartItem[]>([]);
   const fetchData = async(cc:string)=>{
     setLoading(true);
-    const endpoint ='https://allungawebapicore.azurewebsites.net/api/ReportsPerDay';// process.env.NEXT_PUBLIC_MDSAPI+'TechCustomerEquipRepairs/'+branchid.toString()+'/'+cc;
+    const endpoint ='https://allungawebapicore.azurewebsites.net/api/ParamReports';// process.env.NEXT_PUBLIC_MDSAPI+'TechCustomerEquipRepairs/'+branchid.toString()+'/'+cc;
     console.log(endpoint);
     const result = await AddHeaderBearerToEndpoint(endpoint);
     setData( result);
@@ -170,7 +151,7 @@ const fetchAllData=async ()=>
       
     for(let i=0;i<result.length;i++)
       {
-        ci.push({cnt:result[i].cnt,title:result[i].title, date:result[i].date});
+        ci.push({cnt:result[i].cnt,title:result[i].title});
       }
       console.table( ci);
       const dss:dssx[]=[];
@@ -189,7 +170,7 @@ const fetchAllData=async ()=>
         )
       }
     const data= {
-      labels: ci.map(it=>DateFormat( it.date)),
+      labels: ci.map(it=> it.title),
 
       datasets:dss
       
@@ -236,7 +217,7 @@ const fetchAllData=async ()=>
 const emailcustomer=async(event: React.MouseEvent<HTMLButtonElement>)=>{
   event.preventDefault();
   
-  await sendChartEmail(customerEmail, 'No of Reports/Samples per day - over last 12 months');
+  await sendChartEmail(customerEmail, 'No of Params reported over last 12 months');
 }
 const [customerEmail,setCustomerEmail]=useState('');
 async function sendChartEmail(chartdata: string, title: string) {
@@ -301,19 +282,7 @@ const options = {
   },
 };
 const [Titles,setTitles]=useState<string[]>([]);
-  return   loading?
-  <div className="relative h-16">
-  <div className="absolute p-4 text-center transform -translate-x-1/2 translate-y-1/2 border top-1/2 left-1/2">
-           <Circles
-             height="200"
-             width="200"
-             color="silver"
-             ariaLabel="circles-loading"
-             wrapperStyle={{}}
-             wrapperClass=""
-             visible={true}
-           /></div></div>
-           :<div className="grid grid-cols-1 gap-4 px-4 my-4">
+  return    <div className="grid grid-cols-1 gap-4 px-4 my-4">
  <div className="bg-white rounded-lg">
  <button onClick={emailcustomer}><a href=""><u>Email to me</u></a></button>
      <Bar

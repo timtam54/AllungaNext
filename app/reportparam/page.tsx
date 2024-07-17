@@ -13,6 +13,7 @@ import GrainIcon from '@mui/icons-material/Grain';
 import "./style.css"
 import Link from "next/link";
 import DetailsIcon from '@mui/icons-material/Details';
+import ChartSampleParam from '@/components/chartsampleparam'
 interface reportrow{
     reportname:string;
     date:Date;
@@ -48,7 +49,6 @@ export default function Page()
     body: jsondata,
     headers: {'Content-type': "application/json"},
   }
-//  const endpoint = `https://allungacorewebapi.azurewebsites.net/api/ReportParams/`+id;
   const endpoint=`https://allungawebapicore.azurewebsites.net/api/ReportParams/{id}?SeriesID=`+id;
 //`https://localhost:7115/api/ReportParams/{id}?SeriesID=`+id;//
   console.log(endpoint);
@@ -113,12 +113,7 @@ export default function Page()
 
       //  alert(temp.length);
         temp=temp.filter((i:ParRepSeriesRow)=>i.paramid!=pid || i.reportid!=rid);
-      //  alert(temp.length);
 
-//        var dd=temp.find((i:ParRepSeriesRow)=>i.paramid===pid && i.reportid===rid);
-  //      if (dd!=null)
-    //      delete dd[0];
-      //  alert(e.target.checked);
         {
           if (e.target.checked)
           {
@@ -133,19 +128,7 @@ export default function Page()
             setDataParRepSeries([...temp, obj]);
           }
         }
-       /* else
-        {
-          alert('found' + e.target.checked);
-          if (e.target.checked)
-          {
-            dd={dd,'deleted':false};//.deleted=true;//null
-          }
-          else
-          {
-            dd.deleted=false;
-          }
-        setDataParRepSeries([...temp,dd]);
-        }*/
+
       };
       const [dataParams, setDataParams] = useState<Param[]>([]);
       const fetchParRepSeries = async ()=>{
@@ -159,7 +142,7 @@ export default function Page()
           headers: headers,
         }
        
-        const endPoint = `https://allungacorewebapi.azurewebsites.net/api/ReportParams/id?SeriesID=`+id;
+        const endPoint = `https://allungawebapicore.azurewebsites.net/api/ReportParams/id?SeriesID=`+id;
         //`https://allungawebapi.azurewebsites.net/api/ReportParams/int/`+id;
         console.log(endPoint);
         const response = fetch(endPoint,options);
@@ -196,7 +179,7 @@ export default function Page()
       setLoading(false);
       }
     const [dataReport,setDataReport]=useState<reportrow[]>([]);
-
+    const [chartTitle,setChartTitle]=useState('Hello Chart');
     const GetRepPar = (reportid:number,ParamID:number)=>
       {
         var xx=dataParRepSeries.filter((i)=>i.paramid===ParamID && i.reportid===reportid );
@@ -206,7 +189,8 @@ export default function Page()
       }
       return false;
       }
-
+      const [paramID,setParamID]=useState(0);
+      const [modelOpen,setModelOpen]=useState(false);
       const seriesname=searchParams!.get("seriesname");
       return (
           <body style={{backgroundColor:'white'}}>
@@ -225,6 +209,7 @@ export default function Page()
   :
   <>
           <Header/>
+          {modelOpen && <ChartSampleParam title={chartTitle} seriesid={id} paramID={paramID} closeModal={()=>{setModelOpen(false)}}/>}
           <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',backgroundColor:'white'}}>
         <Link href="/"><ArrowBack/>back</Link>
         <div></div>
@@ -260,7 +245,7 @@ export default function Page()
         dataParams.map((result,i)=>{
           return (
             <tr className='result' key={i} >
-              <td>{result.ParamName}</td>
+              <td style={{alignContent:'center'}}><Button variant="outlined" style={{color:'navy'}} onClick={(e)=>{e.preventDefault();setParamID(result.ParamID);setChartTitle(result.ParamName + ' vs date');setModelOpen(true)}}>{result.ParamName}</Button></td>
     
               {
         dataReport.map((resrep,i)=>{

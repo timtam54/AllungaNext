@@ -662,7 +662,7 @@ export default function ReportTab() {
                 <tr>
                   <td>
 
-               <Link to={"/rprt"} state={{id: reportidx }}><Button variant="outlined">Excel View</Button></Link>
+               <Link to={"/rprt"} state={{id: reportidx }}><Button variant="outlined">Excel View x</Button></Link>
                 </td>
                 <td>
                   {dirty?

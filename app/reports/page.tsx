@@ -113,15 +113,7 @@ export default function Samples()
           //}}><u>{row.reportname}</u></button>
           
         }
-        /*,
-        {
-          name:'Date',
-          sortable: true,
-          width: "90px",  
-          wrap:true,  
-          selector: (row:reportrow)=><Link href={{
-            pathname:"/report/",query:{id:row.reportid}}} ><u>{FormatDate( row.date)}</u></Link>
-        }*/
+        /*
             ,
             {
               name:'Date',
@@ -129,7 +121,7 @@ export default function Samples()
               width: "80px",  
               wrap:true,  
               cell: (row:reportrow)=><Link href={"/report?id="+row.reportid}><u>{FormatDate( row.date)}</u></Link>
-            }
+            }*/
         ,
         {
           name:'Status',
@@ -158,9 +150,26 @@ export default function Samples()
         {
           name:'Comments',
           sortable: true,
-          width: "320px",  
+          width: "420px",  
           wrap:true,  
           selector: (row:reportrow)=> row.comment
+        },
+        {
+          name:'Report',
+          sortable: true,
+          width: "170px",  
+          wrap:true,  
+          cell: (row:reportrow) =><Button variant='outlined' onClick={(e)=>{
+            e.preventDefault();
+            //const res=results.filter((i:reportrow)=>i.reportid===row.reportid);
+            window.open("/report?id="+row.reportid); 
+            //openChat();
+          }}><u>Open</u></Button> 
+         // selector: (row:reportrow)=><button onClick={(e)=>{
+           // e.preventDefault();
+            //window.open("/Report?id="+row.date); 
+          //}}><u>{row.reportname}</u></button>
+          
         }
     ]
     const [results, setDataReport] = useState<reportrow[]>([]);

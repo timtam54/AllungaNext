@@ -42,10 +42,17 @@ const Header = () => {
               href="/charts"
               className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
             >
-              Charts
+              Daily Charts
             </a>
           </MenuItem>
-         
+          <MenuItem>
+            <a
+              href="/chartssimple"
+              className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+            >
+             Param Charts
+            </a>
+          </MenuItem>
           <form action="#" method="POST">
             <MenuItem>
               <button

@@ -16,6 +16,7 @@ import SendTimeExtensionIcon from '@mui/icons-material/SendTimeExtension';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import GrainIcon from '@mui/icons-material/Grain';
 import DetailsIcon from '@mui/icons-material/Details';
+import ChartParamSample from '@/components/chartparamsample'
 interface samplerow{
     SampleID:number;
     Number:number;
@@ -103,15 +104,23 @@ export default function Samples()
                 
               }}><u>{row.description}</u></button> ,
               //
-            }/* ,
+            } ,
             {
                 name:'Description',
                 sortable: true,
                 width: "130px",  
                 wrap:true,  
-                selector: (row:samplerow)=>row.longdescription
+                selector: (row:samplerow)=>row.longdescription,
+                cell: (row:samplerow) =><button onClick={(e)=>{
+                  e.preventDefault();
+                   setSampID(row.SampleID);
+                   setChartTitle(row.description + ' vs date') 
+                   setModelOpen(true);
+                  
+                }}><u>{row.description}</u></button> ,
+                //;setParamID(result.ParamID);setChartTitle(result.ParamName + ' vs date');setModelOpen(true)}}
               }
-              ,
+            /*  ,
             {
                 name:'Equiv Samples / Alltrack cms',
                 sortable: true,
@@ -186,6 +195,9 @@ const fetchSample = async ()=>{
 
 
   }
+  //const [sampleID,setSampleID]=useState(0);
+  const [chartTitle,setChartTitle]=useState('Hello Chart');
+  const [modelOpen,setModelOpen]=useState(false);
   const [modalOpenExplode,setmodalOpenExplode]=useState(false);
   const [modalOpen,setModalOpen]=useState(false);
   const [modalOpenHist,setmodalOpenHist]=useState(false);
@@ -209,6 +221,8 @@ const fetchSample = async ()=>{
 :
 <>
         <Header/>
+        {modelOpen && <ChartParamSample title={chartTitle} seriesid={SeriesID} sampleID={sampID} closeModal={()=>{setModelOpen(false)}}/>}
+      
         <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',backgroundColor:'white'}}>
         <Link href="/"><ArrowBack/>back</Link>
         <div></div>
@@ -224,14 +238,14 @@ const fetchSample = async ()=>{
 
         <div className="grid grid-cols-1 gap-4 px-4 my-4">
         <div style={{color:'white',backgroundColor:'navy'}} className="bg-white rounded-lg">
-        <DataTable columns={columns}
+        {!modelOpen && <DataTable columns={columns}
         fixedHeader
         pagination
         dense
         customStyles={customStyles}        
         data={results}
         conditionalRowStyles={conditionalRowStyles} >
-        </DataTable>
+        </DataTable>}
         </div>
 
             </div>
