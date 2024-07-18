@@ -103,8 +103,11 @@ const Header = () => {
                       src="/tagline.png"/>
 
 
-       <div style={{color:'Navy',alignItems: 'center',display:'flex',justifyContent:'space-between'}} ><UserAvatar/><button onClick={(e)=>{e.preventDefault();handleLogout("redirect");}}><b>{user?.name}</b><LogoutIcon/></button>   </div>
-       <div></div>
+       <div style={{color:'Navy',alignItems: 'center',display:'flex',justifyContent:'space-between'}} ><UserAvatar/><button onClick={(e)=>{e.preventDefault();handleLogout("redirect");}}><b>{user?.name}</b><LogoutIcon/></button>   
+       </div>
+       <div>
+
+       </div>
 </div>
 
    

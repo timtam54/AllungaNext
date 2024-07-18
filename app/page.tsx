@@ -256,7 +256,7 @@ export default function Home() {
         name:'Allunga Series',
         sortable: true,
         width: "130px",    
-       // selector: row=>row.JobNo
+        selector:  (row:series)=>row.AllungaReference,
         cell:   (row:series) =><Link href={{pathname:"/seriestab",query:{id:row.seriesid,seriesname:row.AllungaReference}}}><u>{row.AllungaReference}</u></Link>
         //href={{pathname:"/seriestab",  query:{id: result.seriesid,name:result.AllungaReference }}}
     } ,
@@ -264,14 +264,14 @@ export default function Home() {
         name:'Client Series',
         sortable: true,
         width: "130px",    
-       // selector: row=>row.JobNo
+        selector:  (row:series)=>row.clientreference,
         cell:   (row:series) => row.clientreference
     },
     {
         name:'No of Samples On Site',
         sortable: true,
         width: "130px",    
-       // selector: row=>row.JobNo
+        selector:  (row:series)=>row.CntSamplesOnSite,
         cell:   (row:series) => row.CntSamplesOnSite  
     }
     ,
@@ -279,6 +279,7 @@ export default function Home() {
         name:'Equiv Samples',
         sortable: true,
         width: "130px",    
+        selector:  (row:series)=>row.EquivalentSamples,
         cell:   (row:series) => row.EquivalentSamples
     }
     ,
@@ -286,6 +287,7 @@ export default function Home() {
         name:'Next Report',
         sortable: true,
         width: "130px",    
+        selector:  (row:series)=>row.DateNextReport,
         cell:   (row:series) => FormatDate(row.DateNextReport)
     }
     ,
@@ -293,18 +295,21 @@ export default function Home() {
         name:'Next Return',
         sortable: true,
         width: "130px",    
+        selector:  (row:series)=>row.DateNextReturn,
         cell:   (row:series) => FormatDate(row.DateNextReturn)
     },
     {
         name:'Short Descriptions',
         sortable: true,
         width: "130px",    
+        selector:  (row:series)=>row.ShortDescription,
         cell:   (row:series) => row.ShortDescription
     },
     {
         name:'Active',
         sortable: true,
         width: "130px",    
+        selector:  (row:series)=>row.Active,
         cell:   (row:series) => row.Active
     } 
     ,
@@ -312,6 +317,7 @@ export default function Home() {
         name:'Date In',
         sortable: true,
         width: "130px",    
+        selector:  (row:series)=>row.DateIn,
         cell:   (row:series) => FormatDate(row.DateIn)
     } 
     ,
@@ -319,6 +325,7 @@ export default function Home() {
         name:'Returns Req',
         sortable: true,
         width: "130px",    
+        selector:  (row:series)=>row.ReturnsReq,
         cell:   (row:series) => row.ReturnsReq
     } 
     ,
@@ -326,6 +333,7 @@ export default function Home() {
         name:'Exposure',
         sortable: true,
         width: "130px",    
+        selector:  (row:series)=>row.ExposureType,
         cell:   (row:series) => row.ExposureType
     } 
     ,
@@ -333,6 +341,7 @@ export default function Home() {
         name:'Rack No',
         sortable: true,
         width: "130px",    
+        selector:  (row:series)=>row.RackNo,
         cell:   (row:series) => row.RackNo
     } 
     ,
@@ -340,6 +349,7 @@ export default function Home() {
         name:'Site Name',
         sortable: true,
         width: "130px",    
+        selector:  (row:series)=>row.SiteName,
         cell:   (row:series) => row.SiteName
     } 
     ,
@@ -347,6 +357,7 @@ export default function Home() {
         name:'Locked',
         sortable: true,
         width: "130px",    
+        selector:  (row:series)=>row.Locked,
         cell:   (row:series) => row.Locked
     } 
   ]
@@ -363,13 +374,12 @@ export default function Home() {
    
 
     <div className="search">
-<br/>
   <form onSubmit={handleSearch}>
         <table style={{border:"0px"}}>
        
          <tr>
             <td>
-          <h3 style={{color:'#944780'}}>Search Client Series</h3>
+          <h3 style={{color:'#944780',fontSize:'24px'}}>Search Client Series</h3>
           </td>
           <td width={60}></td>
           <td><Link  title='Add New Series' href='/addseries'><AddIcon/></Link></td>

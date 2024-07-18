@@ -11,13 +11,9 @@ export default function UnauthorizedMessage() {
         <title>Technician Interface</title>
         <img rel="icon" src="/logo.png"/>
         </head>
-        <body style={{backgroundColor:'white'}}>
-      <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>
-     <img style={{height:"83px",width:"342px"}}
-                   src="/logo.png"/>
-       Not Signed In{user?.name}<br/>
-       </div>
-       <div style={{
+
+        <body style={{width:"100%",verticalAlign:'top'}}> 
+        <div style={{
            zIndex:-1,
            position:"fixed",
            width:"100vw",
@@ -26,21 +22,101 @@ export default function UnauthorizedMessage() {
          <Image alt="Tech Interface - Equipment Service Repair" layout="fill" objectFit="cover" src="/background.jpg"/>
 
          </div>
-         <br/>
-         <br/>
-         <br/>
-         <br/>
-           <h3 style={{
-             paddingTop:"10 vh",
-             fontFamily:"monospace",
-             fontSize:"2.5rem",
-             fontWeight:"bold",
-             color:"red",
-             textAlign:"center"
-           }}> <VpnKeyIcon/><SignInButton text="Login"/></h3>
-     
-      
-      </body>
+
+         <div style={{alignItems: 'center',display:'flex',justifyContent:'space-between'}}>
+
+         <img src="logo.png" width={300} height={80} />
+         <img style={{height:"20px",width:"380"}}
+                      src="/tagline.png"/>
+                      <div>
+ <SignInButton text="Login"/>
+
+<VpnKeyIcon/>
+</div>
+
+         </div>
+        <table style={{width:'100%'}}>
+
+<tr>
+  <td></td>
+</tr>
+<tr>
+  <td></td>
+</tr>
+<tr>
+  <td></td>
+</tr>
+<tr>
+  <td></td>
+</tr>
+<tr>
+  <td></td>
+</tr>
+<tr>
+  <td></td>
+</tr>
+<tr>
+  <td></td>
+</tr>
+<tr>
+  <td></td>
+</tr>
+<tr>
+  <td></td>
+</tr>
+<tr>
+  <td></td>
+</tr>
+<tr>
+  <td></td>
+</tr>
+<tr>
+  <td></td>
+</tr>
+<tr>
+  <td></td>
+</tr>
+<tr>
+  <td></td>
+</tr>
+<tr>
+  <td></td>
+</tr>
+<tr>
+  <td align='center' >
+    <div style={{backgroundColor:"#944780",width:"1020px",alignItems: "center",border: "1px solid #000000"}} >
+     <br/>
+     <div style={{color:"white",width:"640px",alignItems: "left"}}>
+      <h2>Allunga Exposure Reporting system</h2>
+    <br/>
+    This web app manages all Client's Samples, Series, site Exposure, Reporting, and transfers.
+      <br/>
+      This cloud based application is written in the following technologies
+      <br/>
+      <ul>
+        <li>The User interface is written in <a href="https://en.wikipedia.org/wiki/React_(JavaScript_library)" target="Other"><u>ReactJS</u></a>, and recently upgrade to <a href="https://en.wikipedia.org/wiki/Next.js" target="other"><u>NextJS</u></a></li>
+        <br/>
+        <li>The Data tier is an asp.net core Web API</li>
+        <br/>
+        <li>The Database is SQL Azure</li>
+        <br/>
+        <li>Secured by Azure active directory and MSAL/JWT - MFA</li>
+      </ul>
+      <br/>
+      Click<SignInButton text="Login"/>
+<VpnKeyIcon/>
+to sign in 
+    </div>
+    <br/>
+    </div>
+  </td>
+  </tr>
+</table>
+
+</body>
+
+
+       
        </>
     )
 }
