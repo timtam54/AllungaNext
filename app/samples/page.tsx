@@ -136,15 +136,16 @@ export default function Samples()
                 wrap:true,  
                 selector: (row:samplerow)=>row.ExposureType
               }
-             /* ,
+              ,
             {
                 name:'Reportable',
                 sortable: true,
                 width: "80px",  
                 wrap:true,  
-                selector: (row:samplerow)=><input type='checkbox' checked={row.Reportable}></input>
+                selector: (row:samplerow)=>row.Reportable,
+                cell: (row:samplerow)=><input type='checkbox' checked={row.Reportable}></input>
               }
-              ,
+             /* ,
             {
                 name:'Sample Order',
                 sortable: true,
