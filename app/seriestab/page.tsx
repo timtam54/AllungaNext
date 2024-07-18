@@ -372,10 +372,10 @@ if (data!.ReturnsFrequencyVal==null) {
     }
     const [vldtReturnsFrequencyVal,setvldtReturnsFrequencyVal] = useState('');
     const handleChangeTextArea = (e: ChangeEvent<HTMLTextAreaElement>) => {
-      setData({ ...data!, [e.target.name]:parseInt( e.target.value) });
+      setData({ ...data!, [e.target.name]:( e.target.value) });
     }
     const handleChangeText = (e: ChangeEvent<HTMLInputElement>) => {
-      setData({ ...data!, [e.target.name]:parseInt( e.target.value) });
+      setData({ ...data!, [e.target.name]: e.target.value });
     }
     const [vldtExposureDurationVal,setvldtExposureDurationVal] = useState('');
     const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -465,7 +465,7 @@ return 'L';
  
       const [exp, setExp] = useState<exposurerow[]>([]);
       const handleChangeNum = (e:ChangeEvent<HTMLInputElement>) => {
-        setData({ ...data!, [e.target.name]: e.target.value.replace(/\D/g, '') });
+        setData({ ...data!, [e.target.name]: parseInt(e.target.value.replace(/\D/g, '')) });
       }
       const fetchSite = async()=>{
         const token = await getToken()
@@ -548,7 +548,7 @@ return 'L';
 <div style={{color:'white',backgroundColor:'black'}} className="bg-white rounded-lg">
     <div><br/></div>
 <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>
-        <Link href={"/client?id="+ data!.clientid}></Link><Button variant="outlined">Client:</Button>
+        <Link href={"/client?id="+ data!.clientid}></Link><Button style={{color:'white',borderColor:'white'}} variant="outlined"><b>Client</b></Button>
   <div> 
           <select style={{color:'black'}} name="clientid" onChange={handleChange}>
           {
@@ -638,8 +638,8 @@ return 'L';
 <div style={{color:'black'}}>
 <DatePicker className="datePicker" dateFormat="dd/MM/yyyy" onChange={setExposureEndX} selected={ExposureEnd} />
 </div>
-  <Button style={{color:'white'}} variant="outlined" onClick={() => setIsOpen(true)}>
-  End Date
+  <Button style={{color:'white',borderColor:'white'}}  variant="outlined" onClick={() => setIsOpen(true)}>
+  <b>End Date</b>
 </Button>
 
 {isOpen && <ExposureEndDate StartDate={data!.DateIn} DurationVal={data!.ExposureDurationVal} DurationUnit={data!.ExposureDurationUnit} text="Exposure End Date" closePopup={() => setIsOpen(false)} />}
@@ -762,8 +762,8 @@ return 'L';
       <div></div>
 </div>
 <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',color:'white'}}>
-<Button variant="outlined" onClick={handleSubmit}>
-          Submit
+<Button variant="outlined" style={{color:'white',borderColor:'white'}}  onClick={handleSubmit}>
+          <b>Submit</b>
         </Button>
 </div>
 <div><br/></div>

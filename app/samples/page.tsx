@@ -120,7 +120,7 @@ export default function Samples()
                 }}><u>{row.description}</u></button> ,
                 //;setParamID(result.ParamID);setChartTitle(result.ParamName + ' vs date');setModelOpen(true)}}
               }
-            /*  ,
+             ,
             {
                 name:'Equiv Samples / Alltrack cms',
                 sortable: true,
@@ -128,7 +128,7 @@ export default function Samples()
                 wrap:true,  
                 selector: (row:samplerow)=>row.EquivalentSamples
               }
-              ,
+               ,
             {
                 name:'Exposure Type',
                 sortable: true,
@@ -136,7 +136,7 @@ export default function Samples()
                 wrap:true,  
                 selector: (row:samplerow)=>row.ExposureType
               }
-              ,
+             /* ,
             {
                 name:'Reportable',
                 sortable: true,
