@@ -36,16 +36,17 @@ export default function Dispatch()
     const customStyles = {
         headCells: {
           style: {
-            paddingLeft: '4px', // override the cell padding for head cells
-            paddingRight: '4px',
+            paddingLeft: '2px', // override the cell padding for head cells
+            paddingRight: '2px',
             size:'12px',
+            fontWeight:'bold'
           },
           
         },
         cells: {
           style: {
-            paddingLeft: '4px', // override the cell padding for data cells
-            paddingRight: '4px',
+            paddingLeft: '2px', // override the cell padding for data cells
+            paddingRight: '2px',
             
           },
         },

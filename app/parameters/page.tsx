@@ -3,15 +3,19 @@ import Header from "@/components/header";
 import { getToken } from "@/msal/msal";
 import { useEffect, useState } from "react";
 import DataTable , { createTheme }from "react-data-table-component";
-import ExposureType from '@/components/ExposureType'
+//import ExposureType from '@/components/ExposureType'
 interface exposuretyperow
 {
-    ExposureTypeID:number;
-    Description:string;
-    SortOrder:number;
+  ParamID:number;
+  ParamName:string;
+  ValueRange:string;
+  EquivalentValues:string;
+  Ordering:number;
+  Unit:string;
+  VisualNoReadings:string;
 }
 
-export default function exposuretype()
+export default function parameters()
 {
     useEffect(() => {
         getexptype()
@@ -34,7 +38,7 @@ export default function exposuretype()
           method: 'GET',
           headers: headers,
         }  
-        const response = fetch(`https://allungawebapi.azurewebsites.net/api/ExposureTypes/`,options);
+        const response = fetch(`https://allungawebapi.azurewebsites.net/api/Params/`,options);
         var ee=await response;
         if (!ee.ok)
         {
@@ -124,7 +128,7 @@ export default function exposuretype()
         {
           when: (row:exposuretyperow) => true,
           style:  (row:exposuretyperow) => ({
-            color: row.ExposureTypeID==0?'red':'blue',
+            color: row.ParamID==0?'red':'blue',
           })
         }
       ];
@@ -135,28 +139,68 @@ export default function exposuretype()
           sortable: true,
           width: "60px",  
           wrap:true,  
-          selector: (row:exposuretyperow)=>row.ExposureTypeID
+          selector: (row:exposuretyperow)=>row.ParamID
         },
         {
-            name:'Description',
+            name:'Name',
             sortable: true,
             width: "300px",  
             wrap:true,  
-            selector: (row:exposuretyperow)=>row.Description,
+            selector: (row:exposuretyperow)=>row.ParamName,
             cell: (row:exposuretyperow) =><button onClick={(e)=>{
               e.preventDefault();
-               setEtid(row.ExposureTypeID); 
+               setEtid(row.ParamID); 
               setModelOpen(true);
               
-            }}><u>{row.Description}</u></button> ,
+            }}><u>{row.ParamName}</u></button> ,
           }
           ,
         {
-            name:'Order',
+            name:'Unit',
             sortable: true,
             width: "160px",  
             wrap:true,  
-            selector: (row:exposuretyperow)=>row.SortOrder
+            selector: (row:exposuretyperow)=>row.Unit
+          }
+          ,
+        {
+            name:'ValueRange',
+            sortable: true,
+            width: "160px",  
+            wrap:true,  
+            selector: (row:exposuretyperow)=>row.ValueRange
+          }
+          ,
+        {
+            name:'Value Range',
+            sortable: true,
+            width: "160px",  
+            wrap:true,  
+            selector: (row:exposuretyperow)=>row.ValueRange
+          }
+          ,
+        {
+            name:'Equivalent Values',
+            sortable: true,
+            width: "160px",  
+            wrap:true,  
+            selector: (row:exposuretyperow)=>row.EquivalentValues
+          }
+          ,
+        {
+            name:'Ordering',
+            sortable: true,
+            width: "160px",  
+            wrap:true,  
+            selector: (row:exposuretyperow)=>row.Ordering
+          }
+          ,
+        {
+            name:'Visual No Readings',
+            sortable: true,
+            width: "160px",  
+            wrap:true,  
+            selector: (row:exposuretyperow)=>row.VisualNoReadings
           }
         ]
 

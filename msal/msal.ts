@@ -33,7 +33,7 @@ export async function getToken() {
   console.log("active account found");
   const authToken = await getCurrentToken(msalInstance);
   console.log("AUTH TOKEN:", authToken);
-  /*if (authToken==null)
+  if (authToken==null)
     {
       console.log("acquire silent");
       const response = await msalInstance.acquireTokenSilent({
@@ -41,7 +41,7 @@ export async function getToken() {
         account: account,
       })
     }
-*/
+
   return authToken;
 }
 export const LoginRequest = {

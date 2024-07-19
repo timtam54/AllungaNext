@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import Link from "next/link";
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import ReportDet from "@/components/reportdet";
+import Report from "@/components/report";
 import AppsIcon from '@mui/icons-material/Apps';
 import { getToken } from "@/msal/msal";
 import DataTable from "react-data-table-component";
@@ -44,16 +45,17 @@ export default function Samples()
     const customStyles = {
         headCells: {
           style: {
-            paddingLeft: '4px', // override the cell padding for head cells
-            paddingRight: '4px',
+            paddingLeft: '2px', // override the cell padding for head cells
+            paddingRight: '2px',
             size:'12px',
+            fontWeight:'bold'
           },
           
         },
         cells: {
           style: {
-            paddingLeft: '4px', // override the cell padding for data cells
-            paddingRight: '4px',
+            paddingLeft: '2px', // override the cell padding for data cells
+            paddingRight: '2px',
             
           },
         },
@@ -103,15 +105,10 @@ export default function Samples()
           wrap:true,  
           cell: (row:reportrow) =><button onClick={(e)=>{
             e.preventDefault();
-            //const res=results.filter((i:reportrow)=>i.reportid===row.reportid);
-            window.open("/report?id="+row.reportid); 
-            //openChat();
-          }}><u>{FormatDate( row.date)}</u></button> 
-         // selector: (row:reportrow)=><button onClick={(e)=>{
-           // e.preventDefault();
-            //window.open("/Report?id="+row.date); 
-          //}}><u>{row.reportname}</u></button>
-          
+            setReportID(row.reportid);
+            setModelOpen(true);
+            //window.open("/report?id="+row.reportid); 
+          }}><u>{FormatDate( row.date)}</u></button>           
         }
         /*
             ,
@@ -161,15 +158,10 @@ export default function Samples()
           wrap:true,  
           cell: (row:reportrow) =><Button variant='outlined' onClick={(e)=>{
             e.preventDefault();
-            //const res=results.filter((i:reportrow)=>i.reportid===row.reportid);
-            window.open("/report?id="+row.reportid); 
-            //openChat();
+            setReportID(row.reportid);
+            setModelOpen(true);
+ //           window.open("/report?id="+row.reportid); 
           }}><u>Open</u></Button> 
-         // selector: (row:reportrow)=><button onClick={(e)=>{
-           // e.preventDefault();
-            //window.open("/Report?id="+row.date); 
-          //}}><u>{row.reportname}</u></button>
-          
         }
     ]
     const [results, setDataReport] = useState<reportrow[]>([]);
@@ -203,9 +195,9 @@ const fetchReport = async ()=>{
     setModalOpen(false);
     fetchReport();
 }
-
+const [reportID,setReportID]=useState(0);
 const [currentReport,setCurrentReport]=useState<reportrow>();
-
+const [modelOpen,setModelOpen]=useState(false);
     return (
         <body style={{backgroundColor:'white'}}>
              
@@ -224,6 +216,7 @@ const [currentReport,setCurrentReport]=useState<reportrow>();
 :
 <>
         <Header/>
+        {modelOpen && <Report reportid={reportID} closeModal={()=>{setModelOpen(false)}}/>}
 
         {modalOpen && <ReportDet report={currentReport!} closeModal={closeChat}/>}
 
@@ -244,7 +237,7 @@ const [currentReport,setCurrentReport]=useState<reportrow>();
 
         <div className="grid grid-cols-1 gap-4 px-4 my-4">
         <div style={{color:'white',backgroundColor:'navy'}} className="bg-white rounded-lg">
-        {!modalOpen && <DataTable columns={columns}
+        {!modelOpen && !modalOpen && <DataTable columns={columns}
         fixedHeader
         pagination
         dense

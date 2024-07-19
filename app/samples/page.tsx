@@ -40,16 +40,17 @@ export default function Samples()
     const customStyles = {
         headCells: {
           style: {
-            paddingLeft: '4px', // override the cell padding for head cells
-            paddingRight: '4px',
+            paddingLeft: '2px', // override the cell padding for head cells
+            paddingRight: '2px',
             size:'12px',
+            fontWeight:'bold'
           },
           
         },
         cells: {
           style: {
-            paddingLeft: '4px', // override the cell padding for data cells
-            paddingRight: '4px',
+            paddingLeft: '2px', // override the cell padding for data cells
+            paddingRight: '2px',
             
           },
         },
@@ -145,13 +146,14 @@ export default function Samples()
                 selector: (row:samplerow)=>row.Reportable,
                 cell: (row:samplerow)=><input type='checkbox' checked={row.Reportable}></input>
               }
-             /* ,
+              ,
             {
                 name:'Sample Order',
                 sortable: true,
                 width: "130px",  
                 wrap:true,  
-                selector: (row:samplerow)=>row.SampleOrder
+                selector: (row:samplerow)=>row.SampleOrder,
+                cell:(row:samplerow)=>row.SampleOrder,
               },
              
                 {
@@ -166,7 +168,7 @@ export default function Samples()
                        setmodalOpenExplode(true);
                       
                     }}><u>{row.description}</u></button> ,
-                  }*/
+                  }/**/
     ]
     const [results, setDataSample] = useState<samplerow[]>([]);
 const fetchSample = async ()=>{
