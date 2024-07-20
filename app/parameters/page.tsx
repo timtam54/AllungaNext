@@ -3,7 +3,7 @@ import Header from "@/components/header";
 import { getToken } from "@/msal/msal";
 import { useEffect, useState } from "react";
 import DataTable , { createTheme }from "react-data-table-component";
-//import ExposureType from '@/components/ExposureType'
+import Param from "@/components/Param";
 interface exposuretyperow
 {
   ParamID:number;
@@ -132,7 +132,7 @@ export default function parameters()
           })
         }
       ];
-      const [etid,setEtid]=useState(0);
+      //const [etid,setEtid]=useState(0);
     const columns =[
         {
           name:'id',
@@ -149,7 +149,7 @@ export default function parameters()
             selector: (row:exposuretyperow)=>row.ParamName,
             cell: (row:exposuretyperow) =><button onClick={(e)=>{
               e.preventDefault();
-               setEtid(row.ParamID); 
+              setParamID(row.ParamID); 
               setModelOpen(true);
               
             }}><u>{row.ParamName}</u></button> ,
@@ -203,12 +203,14 @@ export default function parameters()
             selector: (row:exposuretyperow)=>row.VisualNoReadings
           }
         ]
-
+        const [ParamID,setParamID]=useState(0);
         const [modelOpen,setModelOpen]=useState(false);
         return (
             <>
            
             <Header/>
+            {modelOpen && <Param ParamID={ParamID} closeModal={()=>{setModelOpen(false)}}/>}
+      
             <h1 style={{fontSize:"22px"}}>Exposure Types</h1>
               <DataTable columns={columns}
               fixedHeader
@@ -219,8 +221,7 @@ export default function parameters()
               conditionalRowStyles={conditionalRowStyles} >
               </DataTable>
 
-              {modelOpen && <ExposureType exposuretypeid={etid} closeModal={()=>{setModelOpen(false);getexptype()}} />}
-       
+             
 
               </>
           )

@@ -37,6 +37,10 @@ export default function Samples()
         getalldata()
    
     } , []);
+    const getalldata=async()=>{
+      await fetchSample();
+      setLoading(false);
+  }
     const customStyles = {
         headCells: {
           style: {
@@ -63,10 +67,7 @@ export default function Samples()
           })
         }
       ];
-    const getalldata=async()=>{
-        await fetchSample();
-        setLoading(false);
-    }
+   
     const columns =[
         {
           name:'+',

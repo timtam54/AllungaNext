@@ -8,7 +8,7 @@ import Link from "next/link";
 import { getToken, msalInstance } from "@/msal/msal";
 import Button from '@mui/material/Button';
 
-import DataTable from "react-data-table-component";
+//import DataTable from "react-data-table-component";
 
 import { CategoryScale, Chart as ChartJS, LinearScale, BarElement,PointElement,  LineElement,  Legend,  Tooltip ,InteractionItem} from "chart.js";
 import {Bar, Line,getElementAtEvent,Chart } from 'react-chartjs-2';
