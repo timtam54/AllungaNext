@@ -19,10 +19,11 @@ const Header = () => {
   const [chartSimpleOpen,setChartSimpleOpen] = useState(false);
   const [rackrptOpen,setrackrptOpen] = useState(false);
     const user = msalInstance.getActiveAccount();
+   /* {rackrptOpen && <RptRack closeModal={()=>{setrackrptOpen(false)}}/>}*/
     return (
         <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>
 
-{rackrptOpen && <RptRack closeModal={()=>{setrackrptOpen(false)}}/>}
+
 {chartSimpleOpen && <ChartSimple closeModal={()=>{setChartSimpleOpen(false)}}/>}
         <img style={{height:"83px",width:"342px"}}
                       src="/logo.png"/>
