@@ -17,6 +17,11 @@ import SummarizeIcon from '@mui/icons-material/Summarize';
 import GrainIcon from '@mui/icons-material/Grain';
 import DetailsIcon from '@mui/icons-material/Details';
 import ChartParamSample from '@/components/chartparamsample'
+import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
+import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import AcUnitIcon from '@mui/icons-material/AcUnit';
+import ManageHistoryIcon from '@mui/icons-material/ManageHistory';
 interface samplerow{
     SampleID:number;
     Number:number;
@@ -39,7 +44,7 @@ export default function Samples()
     } , []);
     const getalldata=async()=>{
       await fetchSample();
-      setLoading(false);
+      //setLoading(false);
   }
     const customStyles = {
         headCells: {
@@ -119,7 +124,7 @@ export default function Samples()
                    setChartTitle(row.description + ' vs date') 
                    setModelOpen(true);
                   
-                }}><u>{row.description}</u></button> ,
+                }}><u>{row.longdescription}</u></button> ,
                 //;setParamID(result.ParamID);setChartTitle(result.ParamName + ' vs date');setModelOpen(true)}}
               }
              ,
@@ -149,6 +154,19 @@ export default function Samples()
               }
               ,
             {
+                name:'',
+                sortable: true,
+                width: "30px",  
+                wrap:true,  
+                selector: (row:samplerow)=>row.SampleOrder,
+                cell: (row:samplerow) =><button onClick={(e)=>{
+                  e.preventDefault();
+                  fetch1Sample(row.SampleID,-1);
+                 
+                }}><u><ArrowCircleUpIcon/></u></button>
+              }
+              ,
+            {
                 name:'Sample Order',
                 sortable: true,
                 width: "130px",  
@@ -156,6 +174,18 @@ export default function Samples()
                 selector: (row:samplerow)=>row.SampleOrder,
                 cell:(row:samplerow)=>row.SampleOrder,
               },
+              {
+                  name:'',
+                  sortable: true,
+                  width: "30px",  
+                  wrap:true,  
+                  selector: (row:samplerow)=>row.SampleOrder,
+                  cell: (row:samplerow) =><button onClick={(e)=>{
+                    e.preventDefault();
+                    fetch1Sample(row.SampleID,1);
+                   
+                  }}><u><ArrowCircleDownIcon/></u></button>
+                },
              
                 {
                     name:'Explode',
@@ -168,9 +198,86 @@ export default function Samples()
                        //setSampID(row.SampleID); 
                        setmodalOpenExplode(true);
                       
-                    }}><u>{row.description}</u></button> ,
-                  }/**/
+                    }}><u><AcUnitIcon/></u></button> ,
+                  },
+                  {
+                      name:'Charts',
+                      sortable: true,
+                      width: "130px",  
+                      wrap:true,   
+                      selector: (row:samplerow)=>"Charts",
+                      cell: (row:samplerow) =><button onClick={(e)=>{
+                        e.preventDefault();
+                         setSampID(row.SampleID);
+                         setChartTitle(row.description + ' vs date') 
+                         setModelOpen(true);
+                        
+                      }}><u><BarChartIcon/></u></button> ,
+                      //;setParamID(result.ParamID);setChartTitle(result.ParamName + ' vs date');setModelOpen(true)}}
+                    },
+                    {
+                      name:'History',
+                      sortable: true,
+              width: "90px",  
+              wrap:true,  
+              selector: (row:samplerow)=>row.description,
+
+              cell: (row:samplerow) =><button onClick={(e)=>{
+                e.preventDefault();
+                 setSampID(row.SampleID); 
+                 setmodalOpenHist(true);
+                
+              }}><u><ManageHistoryIcon/></u></button> ,
+                      //
+                    }
     ]
+
+    const fetch1Sample = async (SampleID:number,inc:number)=>{
+      const urlSample = `https://allungawebapi.azurewebsites.net/api/Samples/int/`+SampleID;
+      const token = await getToken()
+      const headers = new Headers()
+      const bearer = `Bearer ${token}`
+    
+      headers.append('Authorization', bearer)
+    
+      const options = {
+        method: 'GET',
+        headers: headers,
+      }  
+      const response = fetch(urlSample,options);
+      var ee=await response;
+      if (!ee.ok)
+      {
+        throw Error((ee).statusText);
+      }
+      var json:samplerow=await ee.json();
+      console.log(json);      
+      var newjson={...json,SampleOrder:json.SampleOrder+inc};
+      console.log(newjson);      
+
+      
+      //////////
+      //const token = await getToken()
+      //const headers = new Headers()
+      //const bearer = `Bearer ${token}`
+      headers.append('Authorization', bearer)
+      headers.append('Content-type', "application/json; charset=UTF-8")
+  
+      const optionsx = {
+        method: 'PUT',
+        body: JSON.stringify(newjson),
+       headers: headers,
+      }  
+
+      const responsex = fetch(`https://allungawebapi.azurewebsites.net/api/Samples/`+SampleID,optionsx);
+      var ee=await responsex;
+      if (!ee.ok)
+      {
+        throw Error((ee).statusText);
+      }
+      fetchSample();
+      }
+
     const [results, setDataSample] = useState<samplerow[]>([]);
 const fetchSample = async ()=>{
   
@@ -192,10 +299,19 @@ const fetchSample = async ()=>{
   {
     throw Error((ee).statusText);
   }
-  const json=await ee.json();
+  const json:samplerow[]=await ee.json();
   console.log(json);
+  json.sort((a:samplerow, b:samplerow) => {
+    if (a.SampleOrder < b.SampleOrder) {
+        return -1;
+    }
+    if (a.SampleOrder > b.SampleOrder) {
+        return 1;
+    }
+    return 0;
+});
   setDataSample(json);
-  //setLoading(false);
+  setLoading(false);
 
 
   }

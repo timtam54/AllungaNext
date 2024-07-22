@@ -102,9 +102,6 @@ export const Sample  = ({  closeModal, sampleid,SeriesID }:Props) => {
     const json=await ee.json();
     console.log(json);
     setData(json);
-    //fetchHistory();
-  
-  
     }
   
   useEffect(() => {
@@ -160,23 +157,19 @@ export const Sample  = ({  closeModal, sampleid,SeriesID }:Props) => {
  const handleSubmit = async (e:any) => {
   setLoading(true);
     e.preventDefault()
-
     if (SampleID==0)
     {
       data!.seriesid=SeriesID;
-
       const token = await getToken()
       const headers = new Headers()
       const bearer = `Bearer ${token}`
       headers.append('Authorization', bearer)
       headers.append('Content-type', "application/json; charset=UTF-8")
-  
       const options = {
         method: 'PUT',
         body: JSON.stringify(data),
        headers: headers,
       }  
-
       const response = fetch(`https://allungawebapi.azurewebsites.net/api/Samples/`,options);
       var ee=await response;
       if (!ee.ok)
@@ -212,7 +205,6 @@ export const Sample  = ({  closeModal, sampleid,SeriesID }:Props) => {
     }
   setLoading(false);
   }
-
 
     return (
 
