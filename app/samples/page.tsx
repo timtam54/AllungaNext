@@ -225,7 +225,7 @@ export default function Samples()
               cell: (row:samplerow) =><button onClick={(e)=>{
                 e.preventDefault();
                  setSampID(row.SampleID); 
-                 setmodalOpenHist(true);
+                 setmodalOpenHist(true); 
                 
               }}><u><ManageHistoryIcon/></u></button> ,
  
