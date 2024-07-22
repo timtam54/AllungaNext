@@ -106,7 +106,25 @@ const Header = () => {
       
     </Menu>
    
-    <Menu as="div" className="relative inline-block text-left">
+    
+       <img style={{height:"20px",width:"380"}}
+                      src="/tagline.png"/>
+
+
+       <div style={{color:'Navy',alignItems: 'center',display:'flex',justifyContent:'space-between'}} ><UserAvatar/><button onClick={(e)=>{e.preventDefault();handleLogout("redirect");}}><b>{user?.name}</b><LogoutIcon/></button>   
+       </div>
+       <div>
+
+       </div>
+</div>
+
+   
+    );
+  };
+  export default Header;
+
+  /*
+  <Menu as="div" className="relative inline-block text-left">
       <div>
         <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
           Reports
@@ -133,29 +151,7 @@ const Header = () => {
       </MenuItems>
 
     </Menu>
-       <img style={{height:"20px",width:"380"}}
-                      src="/tagline.png"/>
-
-
-       <div style={{color:'Navy',alignItems: 'center',display:'flex',justifyContent:'space-between'}} ><UserAvatar/><button onClick={(e)=>{e.preventDefault();handleLogout("redirect");}}><b>{user?.name}</b><LogoutIcon/></button>   
-       </div>
-       <div>
-
-       </div>
-</div>
-
-   
-    );
-  };
-  export default Header;
-
-  /*
-  <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-      crossorigin="anonymous"
-    />*/
+  */
 
     /* <MenuItem>
             <a
