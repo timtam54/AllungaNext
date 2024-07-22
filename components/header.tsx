@@ -1,18 +1,29 @@
 
 import {  msalInstance } from "@/msal/msal";
-
+import RptRack from "@/components/RptRack"; 
 import { handleLogout } from "@/msal/msal";
 import Link from "next/link";
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import LogoutIcon from '@mui/icons-material/Logout';
 import UserAvatar from "@/components/UserAvatar";
+import { useState } from "react";
+//import { useState } from "react";
 
 
 const Header = () => {
+
+
+
+
+  const [rackrptOpen,setrackrptOpen] = useState(false);
     const user = msalInstance.getActiveAccount();
     return (
         <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>
+
+{rackrptOpen && <RptRack closeModal={()=>{setrackrptOpen(false)}}/>}
+
+<button onClick={(e)=>{e.preventDefault(); setrackrptOpen(true);}}>Rack Report</button>
         <img style={{height:"83px",width:"342px"}}
                       src="/logo.png"/>
       
@@ -123,12 +134,8 @@ const Header = () => {
       >
         <div className="py-1">
           <MenuItem>
-            <Link 
-              href="/RptRack"
-              className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-            >
-              RackReport
-            </Link>
+        
+          <button onClick={(e)=>{e.preventDefault(); setrackrptOpen(true);}}>Rack Report</button>
           </MenuItem>
           
         </div>

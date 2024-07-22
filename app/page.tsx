@@ -1,18 +1,13 @@
 "use client"
 import { getToken } from "@/msal/msal";//, msalInstance
 import Header from '@/components/header'
-
-//import { confirmAlert } from 'react-confirm-alert'; 
 import moment from 'moment';
-//import { bearerToken } from './index'
 import { Circles } from 'react-loader-spinner'
-
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 
 import { ChangeEvent, useEffect, useState } from "react";
 import Link from "next/link";
-import DeleteIcon from '@mui/icons-material/Delete';
 import DataTable from "react-data-table-component";
  interface series{
   ExposureType:string;
@@ -88,14 +83,7 @@ export default function Home() {
   
     ssearch(e.target.checked,inactives,fields);
   }
- /* const setsorted = (e:any) => {
-    const val=e.target.name;
-    setsortedx(val);
-     const sorted = results.sort((a, b) => b[val] < a[val]);
-     console.log(sorted);
-     setResults(sorted);
-  
-  }*/
+
   const colourstyle = (active:boolean, complete:boolean,dteNextRpt:Date,dteNextRtrn:Date,CntSamplesOnSite:number,locked:Boolean) => 
     {
       const dte=new Date();
@@ -368,7 +356,7 @@ export default function Home() {
    const dte= new Date(date);
     return dte.getFullYear().toString()+'-'+(dte.getMonth()+1).toString().padStart(2,'0')+'-'+(dte.getDate()).toString().padStart(2,'0');
   }
-  
+
   return (
    <>
    <Header/>
@@ -376,6 +364,7 @@ export default function Home() {
 
     <div className="search">
   <form onSubmit={handleSearch}>
+
         <table style={{border:"0px"}}>
        
          <tr>
@@ -434,7 +423,7 @@ export default function Home() {
          <td rowSpan={2} style={{backgroundColor:'#aef3a8',color:'black'}} ><b>
           Return / Report<br/>Complete</b>
          </td>
-        
+       
               </tr>
               <tr>
               <td style={{backgroundColor:'rgb(243, 233, 233)',color:'black'}}><b>
