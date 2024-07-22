@@ -4,10 +4,11 @@ import React, { useState, useEffect, Component } from "react";
 import DataTable from "react-data-table-component";
 import { Circles } from 'react-loader-spinner'
 import { getToken } from "@/msal/msal";
-import DataTableExtensions from 'react-data-table-component-extensions';
+//import DataTableExtensions from 'react-data-table-component-extensions';
 import 'react-data-table-component-extensions/dist/index.css';
 import Button from '@mui/material/Button';
-/*interface rackrptrow{
+
+interface rackrptrow{
   SeriesID:number;
   RackNo:string;
   Samples:string;
@@ -15,9 +16,12 @@ import Button from '@mui/material/Button';
   AllungaReference:string;
   ClientName:string;
   ClientID:number;
-}*/
+}
 
-function RptRack({closeModal}) {
+type Props = {
+  closeModal:  () => void;
+}
+function RptRack({closeModal}:Props) {
   const [loading,setLoading] = useState(true);
  
   const customStyles = {
@@ -41,9 +45,9 @@ function RptRack({closeModal}) {
   const conditionalRowStyles = [
     {
       //when: (row:rackrptrow) => true,
-      when: row => true,
+      when: (row:rackrptrow) => true,
       //style:  (row:rackrptrow) => ({
-        style:  row => ({
+        style:  (row:rackrptrow) => ({
           color: row.SeriesID==0?'navy':'red',
       })
     }
@@ -55,7 +59,7 @@ const columns =[
       sortable: true,
       width: "60px",  
       wrap:true,  
-      selector: row=>row.SeriesID
+      selector: (row:rackrptrow)=>row.SeriesID
     } /*,
     {
         name:'AEL Ref',
@@ -84,18 +88,12 @@ const columns =[
           sortable: true,
           width: "160px",  
           wrap:true,  
-          selector: (row)=>row.ClientReference
+          selector:(row:rackrptrow)=>row.ClientReference
         } 
       ]
      
   useEffect(() => {
-    /*let df = new Date();
-    df.setDate(df.getDate() - 1500);
-    setDateFrom(df);
-
-    let dt = new Date();
-    dt.setDate(dt.getDate() + 1200);
-    setDateTo(dt);*/
+    
 
    fetchRack();
   }, []);
@@ -155,10 +153,10 @@ const columns =[
    />
 :
  
-  <DataTableExtensions
-      {...tableData}
-    >
+
   <DataTable 
+  columns={columns}
+    data={data}
         fixedHeader
         pagination
         dense
@@ -167,7 +165,7 @@ const columns =[
         
         conditionalRowStyles={conditionalRowStyles} >
         </DataTable>
-        </DataTableExtensions>
+
   }
 </div>
 </div>
@@ -177,6 +175,10 @@ const columns =[
 
 }
 export default RptRack
+/*
+        <DataTableExtensions
+        {...tableData}
+      >  </DataTableExtensions>*/
 
 /*<Link
   to={"/client"}

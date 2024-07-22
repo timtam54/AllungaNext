@@ -5,6 +5,7 @@ import moment from 'moment';
 import { Circles } from 'react-loader-spinner'
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
+import RptRack from "@/components/RptRack"; 
 
 import { ChangeEvent, useEffect, useState } from "react";
 import Link from "next/link";
@@ -356,14 +357,15 @@ export default function Home() {
    const dte= new Date(date);
     return dte.getFullYear().toString()+'-'+(dte.getMonth()+1).toString().padStart(2,'0')+'-'+(dte.getDate()).toString().padStart(2,'0');
   }
-
+  const [rackrptOpen,setrackrptOpen] = useState(false);
   return (
    <>
    <Header/>
-   
+   {rackrptOpen && <RptRack closeModal={()=>{setrackrptOpen(false)}}/>}
 
     <div className="search">
   <form onSubmit={handleSearch}>
+
 
         <table style={{border:"0px"}}>
        
@@ -430,6 +432,10 @@ export default function Home() {
           All Samples off site</b>
          </td><td style={{backgroundColor:'black',color:'white'}}><b>
          Inactive</b>
+         </td>
+         <td>
+         <button        className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+       onClick={(e)=>{e.preventDefault(); setrackrptOpen(true);}}>Rack Report</button>
          </td>
               </tr>
             </table>
