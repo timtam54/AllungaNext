@@ -55,14 +55,14 @@ function RptRack({closeModal}:Props) {
   
 const columns =[
     {
-      name:'+',
+      name:'Series ID',
       sortable: true,
       width: "60px",  
       wrap:true,  
       selector: (row:rackrptrow)=>row.SeriesID
-    } /*,
+    } ,
     {
-        name:'AEL Ref',
+        name:'Rack No',
         sortable: true,
         width: "100px",  
         wrap:true,  
@@ -82,7 +82,7 @@ const columns =[
           width: "160px",  
           wrap:true,  
           selector: (row:rackrptrow)=>row.Samples
-        } */,
+        } ,
         {
           name:'ClientReference',
           sortable: true,
@@ -136,7 +136,7 @@ const columns =[
 
 <div className="modal-container">
     <div className="modal" style={{backgroundColor:'whitesmoke'}} >
-<h1 style={{fontSize:'24px',fontWeight:'bold'}}>Report Details</h1>
+<h1 style={{fontSize:'24px',fontWeight:'bold'}}>Rack Report</h1>
 
 
 <Button type="submit" variant="outlined" onClick={(e)=>{e.preventDefault();closeModal()}}>Close</Button>

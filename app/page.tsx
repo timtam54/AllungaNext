@@ -5,7 +5,7 @@ import moment from 'moment';
 import { Circles } from 'react-loader-spinner'
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
-import RptRack from "@/components/RptRack"; 
+ 
 
 import { ChangeEvent, useEffect, useState } from "react";
 import Link from "next/link";
@@ -357,11 +357,11 @@ export default function Home() {
    const dte= new Date(date);
     return dte.getFullYear().toString()+'-'+(dte.getMonth()+1).toString().padStart(2,'0')+'-'+(dte.getDate()).toString().padStart(2,'0');
   }
-  const [rackrptOpen,setrackrptOpen] = useState(false);
+ 
   return (
    <>
    <Header/>
-   {rackrptOpen && <RptRack closeModal={()=>{setrackrptOpen(false)}}/>}
+ 
 
     <div className="search">
   <form onSubmit={handleSearch}>
