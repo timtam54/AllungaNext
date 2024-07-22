@@ -456,7 +456,7 @@ export default function Home() {
 :
      
 <DataTable columns={columns}
-        fixedHeader
+        
         pagination
         dense
         customStyles={customStyles}        

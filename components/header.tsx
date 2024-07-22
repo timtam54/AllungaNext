@@ -1,6 +1,7 @@
 
 import {  msalInstance } from "@/msal/msal";
 import RptRack from "@/components/RptRack"; 
+import ChartSimple from "@/components/chartsimple";
 import { handleLogout } from "@/msal/msal";
 import Link from "next/link";
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
@@ -15,15 +16,14 @@ const Header = () => {
 
 
 
-
+  const [chartSimpleOpen,setChartSimpleOpen] = useState(false);
   const [rackrptOpen,setrackrptOpen] = useState(false);
     const user = msalInstance.getActiveAccount();
     return (
         <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>
 
 {rackrptOpen && <RptRack closeModal={()=>{setrackrptOpen(false)}}/>}
-
-<button onClick={(e)=>{e.preventDefault(); setrackrptOpen(true);}}>Rack Report</button>
+{chartSimpleOpen && <ChartSimple closeModal={()=>{setChartSimpleOpen(false)}}/>}
         <img style={{height:"83px",width:"342px"}}
                       src="/logo.png"/>
       
@@ -48,14 +48,7 @@ const Header = () => {
               Search
             </Link>
           </MenuItem>
-          <MenuItem>
-            <a
-              href="/charts"
-              className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-            >
-              Daily Charts
-            </a>
-          </MenuItem>
+         
           <MenuItem>
             <a
               href="/chartssimple"
@@ -135,11 +128,17 @@ const Header = () => {
         <div className="py-1">
           <MenuItem>
         
-          <button onClick={(e)=>{e.preventDefault(); setrackrptOpen(true);}}>Rack Report</button>
+          <button        className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+       onClick={(e)=>{e.preventDefault(); setrackrptOpen(true);}}>Rack Report</button>
           </MenuItem>
-          
+          <MenuItem>
+        
+        <button        className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+       onClick={(e)=>{e.preventDefault(); setChartSimpleOpen(true);}}>Param Chart</button>
+        </MenuItem>
         </div>
       </MenuItems>
+
     </Menu>
        <img style={{height:"20px",width:"380"}}
                       src="/tagline.png"/>
@@ -164,3 +163,12 @@ const Header = () => {
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
       crossorigin="anonymous"
     />*/
+
+    /* <MenuItem>
+            <a
+              href="/charts"
+              className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+            >
+              Daily Charts
+            </a>
+          </MenuItem>*/

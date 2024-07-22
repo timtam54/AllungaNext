@@ -1,6 +1,6 @@
 "use client"
 
-
+import Button from '@mui/material/Button';
 import { Circles } from 'react-loader-spinner'
 import React, { ChangeEvent, useEffect, useRef, useState ,MouseEvent} from 'react';
 import Link from "next/link";
@@ -35,10 +35,11 @@ interface dssx{
     hoverBorderColor: string;
     data: Array<number>;
 }
-
-export default function ChartsSimple()
+type Props = {
+  closeModal:  () => void;
+}
+export default function ChartSimple({closeModal}:Props)
 {
-  
   const user = msalInstance.getActiveAccount();
 
  const dta= {
@@ -278,8 +279,10 @@ const options = {
   },
 };
 const [Titles,setTitles]=useState<string[]>([]);
-  return    <div className="grid grid-cols-1 gap-4 px-4 my-4">
- <div className="bg-white rounded-lg">
+  return    <div className="modal-container">
+  <div className="modal" style={{backgroundColor:'whitesmoke'}} >
+<h1 style={{fontSize:'24px',fontWeight:'bold'}}>Report Details</h1>
+<Button type="submit" variant="outlined" onClick={(e)=>{e.preventDefault();closeModal()}}>Close</Button>
  <button onClick={emailcustomer}><a href=""><u>Email to me</u></a></button>
      <Bar
 options={options}
