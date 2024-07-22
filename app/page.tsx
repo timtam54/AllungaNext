@@ -255,7 +255,7 @@ export default function Home() {
         width: "130px",    
         selector:  (row:series)=>row.clientreference,
         cell:   (row:series) => row.clientreference
-    }/*,
+    },
     {
         name:'No of Samples On Site',
         sortable: true,
@@ -270,7 +270,7 @@ export default function Home() {
         width: "130px",    
         selector:  (row:series)=>row.EquivalentSamples,
         cell:   (row:series) => row.EquivalentSamples
-    }
+    }/*
     ,
     {
         name:'Next Report',
