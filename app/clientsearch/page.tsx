@@ -172,13 +172,7 @@ export default function clientsearch()
                         wrap:true,  
                         selector: (row:clientrow)=>row.AccountingEmail
                       }
-          /*
-          
-   
-    
-    :string;
-    :string;
-    :string;*/
+       
     ]
 
     return (
@@ -193,7 +187,7 @@ export default function clientsearch()
         data={results}
         conditionalRowStyles={conditionalRowStyles} >
         </DataTable>
-        {modelOpen && <Client clientid={cliid} closeModal={()=>{setModelOpen(false);searchClient()}} />}
+        {modelOpen && <Client clientid={cliid} closeModal={()=>{setModelOpen(false);searchClient();}} />}
         
         </>
     )

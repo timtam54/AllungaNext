@@ -1,6 +1,6 @@
 
 import {  msalInstance } from "@/msal/msal";
-import RptRack from "@/components/RptRack"; 
+//import RptRack from "@/components/RptRack"; 
 import ChartSimple from "@/components/chartsimple";
 import { handleLogout } from "@/msal/msal";
 import Link from "next/link";
