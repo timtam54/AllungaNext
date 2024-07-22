@@ -260,7 +260,7 @@ export default function Home() {
         selector:  (row:series)=>row.AllungaReference,
         cell:   (row:series) =><Link href={{pathname:"/seriestab",query:{id:row.seriesid,seriesname:row.AllungaReference}}}><u>{row.AllungaReference}</u></Link>
         //href={{pathname:"/seriestab",  query:{id: result.seriesid,name:result.AllungaReference }}}
-    } ,
+    } /*,
     {
         name:'Client Series',
         sortable: true,
@@ -320,7 +320,7 @@ export default function Home() {
         width: "130px",    
         selector:  (row:series)=>row.DateIn,
         cell:   (row:series) => FormatDate(row.DateIn)
-    } 
+    }*/ 
     ,
     {
         name:'Returns Req',

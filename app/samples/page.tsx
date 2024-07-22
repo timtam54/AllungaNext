@@ -228,7 +228,7 @@ export default function Samples()
                  setmodalOpenHist(true);
                 
               }}><u><ManageHistoryIcon/></u></button> ,
-                      //
+ 
                     }
     ]
 
