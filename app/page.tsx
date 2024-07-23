@@ -236,13 +236,6 @@ export default function Home() {
     }
     ,
     {
-        name:'Code',
-        sortable: true,
-        width: "70px",    
-        selector: (row:series) => row.Abbreviation  ,
-        cell:   (row:series) => row.Abbreviation  
-    },
-    {
         name:'Allunga Series',
         sortable: true,
         width: "130px",    
@@ -258,9 +251,16 @@ export default function Home() {
         cell:   (row:series) => row.clientreference
     },
     {
-        name:'No of Samples On Site',
+        name:'Abbrev',
         sortable: true,
-        width: "130px",    
+        width: "70px",    
+        selector: (row:series) => row.Abbreviation  ,
+        cell:   (row:series) => row.Abbreviation  
+    },
+    {
+        name:'# Samples On Site',
+        sortable: true,
+        width: "60px",    
         selector:  (row:series)=>row.CntSamplesOnSite,
         cell:   (row:series) => row.CntSamplesOnSite  
     }
@@ -268,61 +268,60 @@ export default function Home() {
     {
         name:'Equiv Samples',
         sortable: true,
-        width: "130px",    
+        width: "60px",    
         selector:  (row:series)=>row.EquivalentSamples,
         cell:   (row:series) => row.EquivalentSamples
-    }/*
+    }
     ,
     {
         name:'Next Report',
         sortable: true,
-        width: "130px",    
-        selector:  (row:series)=>row.DateNextReport,
+        width: "100px",    
+        selector:  (row:series)=>FormatDate(row.DateNextReport),
         cell:   (row:series) => FormatDate(row.DateNextReport)
     }
-    ,
+  ,
     {
         name:'Next Return',
         sortable: true,
-        width: "130px",    
-        selector:  (row:series)=>row.DateNextReturn,
+        width: "100px",    
+        selector:  (row:series)=>FormatDate(row.DateNextReturn),
         cell:   (row:series) => FormatDate(row.DateNextReturn)
-    }*/,
+    },
     {
         name:'Short Descriptions',
         sortable: true,
-        width: "130px",    
+        width: "250px",    
         selector:  (row:series)=>row.ShortDescription,
         cell:   (row:series) => row.ShortDescription
+    } ,
+    {
+        name:'Date In',
+        sortable: true,
+        width: "100px",    
+        selector:  (row:series)=>FormatDate(row.DateIn),
+        cell:   (row:series) => FormatDate(row.DateIn)
     },
     {
         name:'Active',
         sortable: true,
-        width: "130px",    
+        width: "60px",    
         selector:  (row:series)=>row.Active,
-        cell:   (row:series) => row.Active
+        cell:   (row:series) =><input type="checkbox" checked={row.Active}/>
     } 
-    /*,
-    {
-        name:'Date In',
-        sortable: true,
-        width: "130px",    
-        selector:  (row:series)=>row.DateIn,
-        cell:   (row:series) => FormatDate(row.DateIn)
-    } */
-    ,
+   ,
     {
         name:'Returns Req',
         sortable: true,
-        width: "130px",    
+        width: "60px",    
         selector:  (row:series)=>row.ReturnsReq,
-        cell:   (row:series) => row.ReturnsReq
+        cell:   (row:series) => <input type="checkbox" checked={row.ReturnsReq}/>
     } 
     ,
     {
         name:'Exposure',
         sortable: true,
-        width: "130px",    
+        width: "110px",    
         selector:  (row:series)=>row.ExposureType,
         cell:   (row:series) => row.ExposureType
     } 
@@ -330,7 +329,7 @@ export default function Home() {
     {
         name:'Rack No',
         sortable: true,
-        width: "130px",    
+        width: "80px",    
         selector:  (row:series)=>row.RackNo,
         cell:   (row:series) => row.RackNo
     } 
@@ -338,7 +337,7 @@ export default function Home() {
     {
         name:'Site Name',
         sortable: true,
-        width: "130px",    
+        width: "120px",    
         selector:  (row:series)=>row.SiteName,
         cell:   (row:series) => row.SiteName
     } 
@@ -346,9 +345,9 @@ export default function Home() {
     {
         name:'Locked',
         sortable: true,
-        width: "130px",    
+        width: "80px",    
         selector:  (row:series)=>row.Locked,
-        cell:   (row:series) => row.Locked
+        cell:   (row:series) =><input type="checkbox" checked={row.Locked}/>
     } 
   ]
 
@@ -433,10 +432,6 @@ export default function Home() {
          </td><td style={{backgroundColor:'black',color:'white'}}><b>
          Inactive</b>
          </td>
-         <td>
-         <button        className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-       onClick={(e)=>{e.preventDefault(); setrackrptOpen(true);}}>Rack Report</button>
-         </td>
               </tr>
             </table>
           </td>
@@ -477,63 +472,3 @@ export default function Home() {
 }
 
 
-/*
-    <div style={{
-           zIndex:-1,
-           position:"fixed",
-           width:"100vw",
-           height:"100vh"
-         }}>
-                   <Image alt="Tech Interface - Equipment Service Repair" layout="fill" objectFit="cover" src="/background.jpg"/>
-<h4>You are logged in</h4>
-
-         </div>
-*/
-
-
-/* todo button on delete
-<tr>
-          <th><Button onClick={() => {alert("This button marks Series as deleted only if there are no samples or reports referencing the series");}}>?</Button></th>
-      
-        </tr>*/
-
-        /*
-          <table style={{width:"100%"}} id="table2">
-        
-
-
-        {
-          results.map((result,i)=>{
-            return (
-              <tr key={i} className={colourstyle(result.Active,result.Complete,result.DateNextReport,result.DateNextReturn,result.CntSamplesOnSite,result.Locked)} >
-                <td align='center'><div style={{border:'none'}} onClick={() => onDelete(result.seriesid)}><DeleteIcon/></div></td>
-                <td align='center'><input type='checkbox' checked={result.Complete}/></td>
-                <td>{result.companyname}</td>
-                <td>{result.Abbreviation}</td>
-                <td> <Link href={{pathname:"/seriestab",  query:{id: result.seriesid,name:result.AllungaReference }}}>{result.AllungaReference}</Link></td>
-                <td>{result.clientreference}</td>
-                <td>{result.CntSamplesOnSite}</td>
-                <td>{result.EquivalentSamples}</td>
-                {(result.DateNextReport==null)?<td></td>:
-                (new Date(result.DateNextReport ).getFullYear()==2100)?<td></td>:
-                <td>{new Date(result.DateNextReport ).toLocaleDateString()}</td>
-            }
-
-{(result.DateNextReturn==null)?<td></td>:(new Date(result.DateNextReport ).getFullYear()==2100)?<td></td>:
-                <td>{new Date(result.DateNextReturn ).toLocaleDateString()}</td>
-          }
-                <td>{result.ShortDescription}</td>      
-                  <td><input type='checkbox' checked={result.Active}/></td>    
-                <td>{new Date(result.DateIn ).toLocaleDateString()}</td>
-              
-                <td><input type='checkbox' checked={result.ReturnsReq}/></td>
-                <td>{result.ExposureType}</td>
-                <td>{result.RackNo}</td>
-                <td>{result.SiteName}</td>   
-                <td>{result.Locked}</td>        
-              </tr>  
-            )
-          })
-        }
-        
-      </table>*/
