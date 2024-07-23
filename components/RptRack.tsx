@@ -101,14 +101,12 @@ const columns =[
 
  
 
-  const [data, setDataSample] =useState([]);// useState<rackrptrow[]>([]);
+  const [data, setDataSample] =useState<rackrptrow[]>([]);
   const tableData = {
     columns,
     data,
   };
-  const fetchRack = async ()=>{
-
-    
+  const fetchRack = async ()=>{   
   const endPoint =`https://allungawebapi.azurewebsites.net/api/Rprts/Rack/`
   const token = await getToken()
   const headers = new Headers()
