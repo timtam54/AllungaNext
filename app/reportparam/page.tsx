@@ -78,8 +78,8 @@ export default function Page()
       }, []);
       const getAllData=async()=>
       {
-        fetchParRepSeries();
-        fetchParams();
+        await fetchParRepSeries();
+        await fetchParams();
         await fetchReport();
       }
       const fetchParams = async ()=>{
@@ -193,21 +193,23 @@ export default function Page()
       const [modelOpen,setModelOpen]=useState(false);
       const seriesname=searchParams!.get("seriesname");
       return (
-          <body style={{backgroundColor:'white'}}>
-               {loading ? 
-        <div className="container">
-        <Circles
-        height="200"
-        width="200"
-        color="silver"
-        ariaLabel="circles-loading"
-        wrapperStyle={{}}
-        wrapperClass=""
-        visible={true}
-      />
-      </div>
-  :
-  <>
+        <body style={{backgroundColor:'whitesmoke'}}>
+        {loading ? 
+         <div className="relative h-16" style={{backgroundColor:'whitesmoke'}}>
+<div style={{backgroundColor:'whitesmoke'}} className="absolute p-4 text-center transform -translate-x-1/2 translate-y-1/2 border top-1/2 left-1/2">
+
+ <Circles 
+ height="200"
+ width="200"
+ color="silver"
+ ariaLabel="circles-loading"
+ wrapperStyle={{}}
+ wrapperClass=""
+ visible={true}
+/>
+</div> </div>
+:
+<>
           <Header/>
           {modelOpen && <ChartSampleParam title={chartTitle} seriesid={id} paramID={paramID} closeModal={()=>{setModelOpen(false)}}/>}
           <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',backgroundColor:'white'}}>

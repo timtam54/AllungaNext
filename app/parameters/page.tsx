@@ -4,6 +4,7 @@ import { getToken } from "@/msal/msal";
 import { useEffect, useState } from "react";
 import DataTable , { createTheme }from "react-data-table-component";
 import Param from "@/components/Param";
+import { Circles } from 'react-loader-spinner';
 interface exposuretyperow
 {
   ParamID:number;
@@ -38,7 +39,7 @@ export default function parameters()
           method: 'GET',
           headers: headers,
         }  
-        const response = fetch(`https://allungawebapi.azurewebsites.net/api/Params/`,options);
+        const response = await fetch(`https://allungawebapi.azurewebsites.net/api/Params/`,options);
         var ee=await response;
         if (!ee.ok)
         {
@@ -206,8 +207,23 @@ export default function parameters()
         const [ParamID,setParamID]=useState(0);
         const [modelOpen,setModelOpen]=useState(false);
         return (
-            <>
-           
+          <body style={{backgroundColor:'whitesmoke'}}>
+          {loading ? 
+           <div className="relative h-16" style={{backgroundColor:'whitesmoke'}}>
+<div style={{backgroundColor:'whitesmoke'}} className="absolute p-4 text-center transform -translate-x-1/2 translate-y-1/2 border top-1/2 left-1/2">
+
+   <Circles 
+   height="200"
+   width="200"
+   color="silver"
+   ariaLabel="circles-loading"
+   wrapperStyle={{}}
+   wrapperClass=""
+   visible={true}
+ />
+ </div> </div>
+:
+<>
             <Header/>
             {modelOpen && <Param ParamID={ParamID} closeModal={()=>{setModelOpen(false)}}/>}
       
@@ -224,5 +240,7 @@ export default function parameters()
              
 
               </>
+}
+</body>
           )
 }

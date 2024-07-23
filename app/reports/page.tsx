@@ -37,7 +37,7 @@ export default function Samples()
     const seriesname=searchParams!.get("seriesname");
     const SeriesID =parseInt( searchParams!.get("id")!);
     const [loading,setLoading] = useState(true);
-    const [deleted,setDeleted] = useState(false);
+   // const [deleted,setDeleted] = useState(false);
     useEffect(() => {
         getalldata()
    
