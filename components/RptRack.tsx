@@ -4,10 +4,9 @@ import React, { useState, useEffect, Component } from "react";
 import DataTable from "react-data-table-component";
 import { Circles } from 'react-loader-spinner'
 import { getToken } from "@/msal/msal";
-//import DataTableExtensions from 'react-data-table-component-extensions';
-import 'react-data-table-component-extensions/dist/index.css';
+import { ExportAsExcel, ExportAsPdf, CopyToClipboard, CopyTextToClipboard, PrintDocument, ExcelToJsonConverter, FileUpload } from "react-export-table";
 import Button from '@mui/material/Button';
-
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 interface rackrptrow{
   SeriesID:number;
   RackNo:string;
@@ -140,18 +139,32 @@ const columns =[
 <Button type="submit" variant="outlined" onClick={(e)=>{e.preventDefault();closeModal()}}>Close</Button>
 {loading ? 
      
-     <Circles
-     height="300"
-     width="300"
-     color="purple"
-     ariaLabel="circles-loading"
-     wrapperStyle={{}}
-     wrapperClass=""
-     visible={true}
-   />
+     <div className="relative h-16" style={{backgroundColor:'whitesmoke'}}>
+     <div style={{backgroundColor:'whitesmoke'}} className="absolute p-4 text-center transform -translate-x-1/2 translate-y-1/2 border top-1/2 left-1/2">
+    
+         <Circles 
+         height="200"
+         width="200"
+         color="silver"
+         ariaLabel="circles-loading"
+         wrapperStyle={{}}
+         wrapperClass=""
+         visible={true}
+       />
+       </div> </div>
 :
  
-
+<>  <ExportAsExcel
+    data={data}
+    headers={["SeriesID", "RackNo", "Samples","ClientReference", "AllungaReference", "ClientName", "ClientID"]}
+    
+>
+{(props)=> (
+      <button {...props}>
+        <FileDownloadIcon/>Export as Excel
+      </button>
+    )}
+</ExportAsExcel>
   <DataTable 
   columns={columns}
     data={data}
@@ -163,7 +176,7 @@ const columns =[
         
         conditionalRowStyles={conditionalRowStyles} >
         </DataTable>
-
+        </>
   }
 </div>
 </div>
