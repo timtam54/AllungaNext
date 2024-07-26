@@ -9,7 +9,7 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import LogoutIcon from '@mui/icons-material/Logout';
 import UserAvatar from "@/components/UserAvatar";
 import { useState } from "react";
-//import { useState } from "react";
+import ScheduleActual from "@/components/ScheduleActual";
 
 
 const Header = () => {
@@ -17,15 +17,17 @@ const Header = () => {
 
 
   const [chartSimpleOpen,setChartSimpleOpen] = useState(false);
-
+    const [rpt,setRpt]=useState('Actual');
     const user = msalInstance.getActiveAccount();
     const [rackrptOpen,setrackrptOpen] = useState(false);
+    const [schedrptOpen,setschedrptOpen] = useState(false);
     return (
         <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>
 
 
 {chartSimpleOpen && <ChartSimple closeModal={()=>{setChartSimpleOpen(false)}}/>}
 {rackrptOpen && <RptRack closeModal={()=>{setrackrptOpen(false)}}/>}
+{schedrptOpen && <ScheduleActual Rpt={rpt} closeModal={()=>{setschedrptOpen(false)}}/>}
         <img style={{height:"83px",width:"342px"}} src="/logo.png"/>
       
       <Menu as="div" className="relative inline-block text-left">
@@ -125,6 +127,22 @@ const Header = () => {
           <button        className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
        onClick={(e)=>{e.preventDefault(); setrackrptOpen(true);}}>Rack Report</button>
           </MenuItem>
+          <MenuItem>
+        
+          <button        className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+       onClick={(e)=>{e.preventDefault(); setRpt('Actual');setschedrptOpen(true);}}>Schedule Actual</button>
+          </MenuItem>
+
+          <MenuItem>
+        
+          <button        className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+       onClick={(e)=>{e.preventDefault();setRpt('Projected');setschedrptOpen(true);}}>Schedule Projected</button>
+          </MenuItem>
+          <MenuItem>
+        
+        <button        className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+     onClick={(e)=>{e.preventDefault();setRpt('SampleOnOffSiteActual');setschedrptOpen(true);}}>Sample On/Off Site - Actual</button>
+        </MenuItem>
           <MenuItem>
         
         <button        className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
