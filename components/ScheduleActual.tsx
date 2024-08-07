@@ -277,10 +277,12 @@ const columns =[
     {
       dte=new Date('2024-09-01')
     }
-    else// else if (Rpt== `SampleOnOffSiteActual`)
+    else if (Rpt== `SampleOnOffSiteActual`)
       dte=new Date('2023-09-01')
     
-    
+    else// else if (Rpt== `SampleOnOffSiteActual`)
+    dte=new Date('2024-09-01')
+
     setDate(dte);
 
 
@@ -319,7 +321,11 @@ const columns =[
     endPoint = `https://allungawebapicore.azurewebsites.net/api/SampleOnOffSiteActual/id/From/To?id=0&From=` + DateFormat(dte) +`&To=`+ DateFormat(todte);
   
   }
-
+  else if (Rpt== `SampleOnOffSiteProjected`)
+    {
+      endPoint = `https://allungawebapicore.azurewebsites.net/api/SampleOnOffSiteProjected/id/From/To?id=0&From=` + DateFormat(dte) +`&To=`+ DateFormat(todte);
+    
+    }
   const token = await getToken()
   const headers = new Headers()
   const bearer = `Bearer ${token}`

@@ -130,18 +130,23 @@ const Header = () => {
           <MenuItem>
         
           <button        className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-       onClick={(e)=>{e.preventDefault(); setRpt('Actual');setschedrptOpen(true);}}>Schedule Actual</button>
+       onClick={(e)=>{e.preventDefault(); setRpt('Actual');setschedrptOpen(true);}}>Report Actual Schedule</button>
           </MenuItem>
 
           <MenuItem>
         
           <button        className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-       onClick={(e)=>{e.preventDefault();setRpt('Projected');setschedrptOpen(true);}}>Schedule Projected</button>
+       onClick={(e)=>{e.preventDefault();setRpt('Projected');setschedrptOpen(true);}}>Projected Actual Schedule</button>
           </MenuItem>
           <MenuItem>
         
         <button        className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
      onClick={(e)=>{e.preventDefault();setRpt('SampleOnOffSiteActual');setschedrptOpen(true);}}>Sample On/Off Site - Actual</button>
+        </MenuItem>
+        <MenuItem>
+        
+        <button        className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+     onClick={(e)=>{e.preventDefault();setRpt('SampleOnOffSiteProjected');setschedrptOpen(true);}}>Sample On/Off Site - Projected</button>
         </MenuItem>
           <MenuItem>
         
