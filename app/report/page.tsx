@@ -3,7 +3,6 @@ import { ReactGrid, Column, Row, CellChange, TextCell, Cell, DefaultCellTypes, C
 import "@silevis/reactgrid/styles.css";
 import { getToken } from "@/msal/msal";
 import { Circles } from 'react-loader-spinner'
-
 import './App.css';
 import React,{ useState, useEffect} from 'react';
 import Button from '@mui/material/Button';
@@ -33,9 +32,9 @@ function Rprt() {
   const searchParams = useSearchParams();
   const id = parseInt( searchParams!.get("id")!);
   const [reportid]=React.useState(id);
-    const [columns, setColumns] = React.useState<Column[]>([]);
-    const [dataReading, setDataReading] = React.useState<Reading[]>([]);
-    const [datacol, setDatacol] = React.useState<Param[]>([]);
+  const [columns, setColumns] = React.useState<Column[]>([]);
+  const [dataReading, setDataReading] = React.useState<Reading[]>([]);
+  const [datacol, setDatacol] = React.useState<Param[]>([]);
 const [rows,setRows]=React.useState<Row[]>([]);
 
 const [dataSample, setDataSample] = React.useState([]);

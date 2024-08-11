@@ -26,7 +26,7 @@ export default function RootLayout({
     <title>Technician Interface</title>
        <img rel="icon" src="/logo.png"/>
         </head>
-        <body style={{backgroundColor:'#E5E4E2'}}>
+        <body style={{backgroundColor:'whitesmoke'}}>
             {children}
           </body>
         </MyMsalProvider>

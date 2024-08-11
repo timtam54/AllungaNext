@@ -1,21 +1,33 @@
 "use client"
 import Header from "@/components/header";
 import { getToken } from "@/msal/msal";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import Client from '@/components/Client'
+
+import { GoogleMap, InfoBox, LoadScript, Marker } from '@react-google-maps/api';
+import Button from '@mui/material/Button';
+import MapIcon from '@mui/icons-material/Map';
+import GridOnIcon from '@mui/icons-material/GridOn';
 interface clientrow{
     clientid:number;   
     companyname:string;
-    GroupName:string;
+    groupname:string;
     contactname:string;
-    Address:string;
-    Description:string;
-    Abbreviation:string;
-    TechnicalPhone:string;
-    TechnicalEmail:string;
-    AccountingContact:string;
-    AccountingEmail:string;
+    address:string;
+    description:string;
+    abbreviation:string;
+    technicalphone:string;
+    technicalemail:string;
+    accountingcontact:string;
+    accountingemail:string;
+    lat:number;
+    lon:number;
+}
+interface latlon{
+  lat:number;
+  lng:number;
+  title:string;
 }
 export default function clientsearch()
 {
@@ -25,14 +37,25 @@ export default function clientsearch()
     } , []);
     
     const [search,setSearch] = useState("");
-    const [loading,setLoading] = useState(false);
+    const [loading,setLoading] = useState(true);
     const [results,setResults] = useState<clientrow[]>([]);
-    const handleSearch = async (e:any)=>{
+   /* const handleSearch = async (e:any)=>{
 
         e.preventDefault();
-        if (search == '')
-        { setSearch('~');
-      }
+        setSearch('~');
+      
+
+
+        
+    }*/
+        const containerStyle = {
+          width: '100%',
+          height: '600px'
+        };
+    function handleSearch(event: ChangeEvent<HTMLInputElement>)
+    {
+      setSearch(event.target.value.toLowerCase());
+
     }
     const [modelOpen,setModelOpen]=useState(false);
     const searchClient=async ()=>{
@@ -47,16 +70,62 @@ export default function clientsearch()
           method: 'GET',
           headers: headers,
         }  
-        const response = fetch(`https://allungawebapi.azurewebsites.net/api/Clients/`+search,options);
+        const response = fetch(`https://allungawebapicore.azurewebsites.net/api/Clients/`+((search=='')?'~':search),options);
         var ee=await response;
+        console.log(ee)
         if (!ee.ok)
         {
           throw Error((ee).statusText);
         }
-        const json=await ee.json();
+        const json:clientrow[]=await ee.json();
         console.log(json);
         setResults(json);
+        await SetLocsLatLon(json);
         setLoading(false);
+      }
+
+      const [center,setCenter] = useState<latlon>();
+      const [locations,setLocations] = useState<latlon[]>([]); 
+      const SetLocsLatLon=async (jbs:clientrow[])=>
+        {
+          let unique:latlon[] = [];
+          let glocs:latlon[] = [];
+          
+          let sumlat=0;
+          let sumlon=0;
+          let cnt=0;
+          jbs.forEach((element:clientrow) => {
+          
+            glocs.push({lat: element.lat, lng:  element.lon,title:element.companyname})
+
+              const el:latlon={lat:element.lat,lng:element.lon,title:element.companyname };
+
+                if (unique.filter(i=>i.title==element.companyname).length==0)
+                {
+
+                  unique.push(el);
+                  if (el.lat!=null && el.lng!=null)
+                    {
+                  sumlat+=el.lat;
+                  console.log(el.lat);
+                  sumlon+=el.lng;
+           
+                  cnt+=1;
+                    }
+                }     
+          });
+          setLocations(glocs);
+          const lati=sumlat/cnt;
+          console.log('avg lat:'+lati.toString());
+          const loni=sumlon/cnt;
+          console.log('avg lon:'+loni.toString());
+          setCenter({lat:lati,lng:loni,title:'center'});
+        }
+
+      const DateFormat=(date:any)=>  {
+        if (date==null) return "";
+       const dte= new Date(date);
+        return dte.getFullYear().toString()+'-'+(dte.getMonth()+1).toString().padStart(2,'0')+'-'+(dte.getDate()).toString().padStart(2,'0');
       }
       const [cliid,setCliID]=useState(0);
     const customStyles = {
@@ -99,12 +168,14 @@ export default function clientsearch()
             width: "180px",  
             wrap:true,  
             selector: (row:clientrow)=>row.companyname,          
-            cell: (row:clientrow) =><button onClick={(e)=>{
+            cell: (row:clientrow) =><a href={"/client?id="+row.clientid.toString()} target="new"><u>{row.companyname}</u></a>
+         /*   
+            <button onClick={(e)=>{
               e.preventDefault();
                setCliID(row.clientid); 
               setModelOpen(true);
               
-            }}><u>{row.companyname}</u></button> ,
+            }}><u>{row.companyname}</u></button> ,*/
           }
           ,
         {
@@ -112,7 +183,7 @@ export default function clientsearch()
             sortable: true,
             width: "120px",  
             wrap:true,  
-            selector: (row:clientrow)=>row.GroupName
+            selector: (row:clientrow)=>row.groupname
           }
           ,
         {
@@ -127,28 +198,28 @@ export default function clientsearch()
               sortable: true,
               width: "160px",  
               wrap:true,  
-              selector: (row:clientrow)=>row.Address
+              selector: (row:clientrow)=>row.address
             } ,
             {
                 name:'Description',
                 sortable: true,
-                width: "160px",  
+                width: "320px",  
                 wrap:true,  
-                selector: (row:clientrow)=>row.Description
+                selector: (row:clientrow)=>row.description
               },
               {
                   name:'Abbreviation',
                   sortable: true,
                   width: "90px",  
                   wrap:true,  
-                  selector: (row:clientrow)=>row.Abbreviation
+                  selector: (row:clientrow)=>row.abbreviation
                 },
                 {
                     name:'TechnicalPhone',
                     sortable: true,
                     width: "160px",  
                     wrap:true,  
-                    selector: (row:clientrow)=>row.TechnicalPhone
+                    selector: (row:clientrow)=>row.technicalphone
                   }
                   ,
                 {
@@ -156,38 +227,56 @@ export default function clientsearch()
                     sortable: true,
                     width: "160px",  
                     wrap:true,  
-                    selector: (row:clientrow)=>row.TechnicalEmail
+                    selector: (row:clientrow)=>row.technicalemail
                   },
                   {
                       name:'AccountingContact',
                       sortable: true,
                       width: "160px",  
                       wrap:true,  
-                      selector: (row:clientrow)=>row.AccountingContact
+                      selector: (row:clientrow)=>row.accountingcontact
                     },
                     {
                         name:'AccountingEmail',
                         sortable: true,
                         width: "160px",  
                         wrap:true,  
-                        selector: (row:clientrow)=>row.AccountingEmail
+                        selector: (row:clientrow)=>row.accountingemail
                       }
        
     ]
-
+    const [grid,setGrid]=useState(true);
     return (
       <>
       <Header/>
-      <h1 style={{fontSize:"22px"}}>Clients</h1>
-        <DataTable columns={columns}
+      {modelOpen && <Client clientid={cliid} closeModal={()=>{setModelOpen(false);searchClient();}} />}
+      
+      <div style={{alignItems: 'center',display:'flex',backgroundColor:'#944780'}}>
+        <h1 style={{fontSize:"22px"}}><b style={{color:'white'}}>Clients</b></h1>
+        <Button style={{backgroundColor:grid?'yellow':'white',color:'#0690B1'}} variant="outlined" onClick={(e)=>{e.preventDefault();setGrid(true)}}><GridOnIcon/>Grid</Button>
+    <Button style={{backgroundColor:grid?'white':'yellow',color:'#0690B1'}} variant="outlined" onClick={(e)=>{e.preventDefault();setGrid(false)}}><MapIcon/>Map</Button>
+  </div>
+
+  
+  {grid && <DataTable columns={columns}
         fixedHeader
         pagination
         dense
         customStyles={customStyles}        
         data={results}
         conditionalRowStyles={conditionalRowStyles} >
-        </DataTable>
-        {modelOpen && <Client clientid={cliid} closeModal={()=>{setModelOpen(false);searchClient();}} />}
+        </DataTable>}
+        {!grid && 
+        <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API!}>
+      <GoogleMap 
+        mapContainerStyle={containerStyle}
+        center={center}
+        zoom={5}>
+ {locations.map((location, index) => (
+          <Marker key={index} title={location.title} position={location} clickable={true} draggable={true}  />
+        ))}
+      </GoogleMap>
+    </LoadScript>}
         
         </>
     )

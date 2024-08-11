@@ -193,7 +193,7 @@ export default function Page()
       const [modelOpen,setModelOpen]=useState(false);
       const seriesname=searchParams!.get("seriesname");
       return (
-        <body style={{backgroundColor:'whitesmoke'}}>
+        <div style={{backgroundColor:'white'}}>
         {loading ? 
          <div className="relative h-16" style={{backgroundColor:'whitesmoke'}}>
 <div style={{backgroundColor:'whitesmoke'}} className="absolute p-4 text-center transform -translate-x-1/2 translate-y-1/2 border top-1/2 left-1/2">
@@ -266,6 +266,6 @@ export default function Page()
       </table>
       </>
 }
-</body>
+</div>
     )
 }

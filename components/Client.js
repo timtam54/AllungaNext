@@ -5,13 +5,6 @@ import { Circles } from 'react-loader-spinner'
 import { getToken } from "@/msal/msal";
 import "@/components/part.css";
 import Button from '@mui/material/Button';
-
-function Client( {closeModal, clientid}) {
-  const [loading,setLoading] = useState(true);
-  //const [value, setValue] = React.useState('1');
-  const [results,setResults] = useState([]);
-
-  const [ClientID,setClientID] =useState( clientid);//.id
 /*
   const urlExp = `https://allungawebapi.azurewebsites.net/api/ExposureTypes/`;
   const [exp, setExp] = useState([]);
@@ -21,6 +14,11 @@ function Client( {closeModal, clientid}) {
       .then((d) => setExp(d))
        .then (fetchInfo());
   }*/
+function Client( {closeModal, clientid}) {
+  const [loading,setLoading] = useState(true);
+  const [results,setResults] = useState([]);
+  const [ClientID,setClientID] =useState( clientid);//.id
+
  
   const [data, setData] = useState([]);
 
@@ -62,32 +60,7 @@ else
  }
 
 
-  /*const fetchSeries  = async (del) =>{  
-    
-  const token = await bearerToken()
-  console.log('token'+token);
-  const headers = new Headers()
-  const bearer = `Bearer ${token}`
-  headers.append('Authorization', bearer)
-  const options = {
-    method: 'GET',
-    headers: headers,
-  }
-  var endPoint=`https://allungawebapi.azurewebsites.net/api/series/client/`+ClientID;
-  
-  const response = fetch(endPoint,options);
-  var ee=await response;
-  if (!ee.ok)
-  {
-    throw Error((ee).statusText);
-  }
-  const json=await ee.json();
-  console.log(json);
-  setResults(json);
- // setIsOpen(true);
-  setLoading(false);
-}
-*/
+ 
   useEffect(() => {
     setLoading(true);
    // fetchExp();
@@ -183,35 +156,7 @@ var ee=await response;
  }
 }
 setLoading(false);
-  /*setLoading(true);
-    e.preventDefault()
-
-    if (ClientID==0)
-    {
-      data.clientid=ClientID;
-      const response=fetch(`https://allungawebapi.azurewebsites.net/api/Clients/`, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
-      })
-      ;
-      var ee=await response;
-    }
-    else
-    {
-    const response=fetch(`https://allungawebapi.azurewebsites.net/api/Clients/`+ClientID, {
-      method: "PUT",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-    ;
-    var ee = await response;
-  }
-  setLoading(false);*/
+ 
   }
     return (
       <div className="modal-container">
@@ -451,3 +396,34 @@ setLoading(false);
   }
 
 export default Client
+
+
+ /*setLoading(true);
+    e.preventDefault()
+
+    if (ClientID==0)
+    {
+      data.clientid=ClientID;
+      const response=fetch(`https://allungawebapi.azurewebsites.net/api/Clients/`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      })
+      ;
+      var ee=await response;
+    }
+    else
+    {
+    const response=fetch(`https://allungawebapi.azurewebsites.net/api/Clients/`+ClientID, {
+      method: "PUT",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+    ;
+    var ee = await response;
+  }
+  setLoading(false);*/

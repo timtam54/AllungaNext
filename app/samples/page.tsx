@@ -3,7 +3,8 @@ import { Circles } from 'react-loader-spinner';
 import Header from '@/components/header'
 import Sample from '@/components/Sample'
 import SampleExplode from '@/components/SampleExplode'
-import SampleHistory from '@/components/SampleHistory'
+//import SampleHistory from '@/components/SampleHistory'
+import SampleHist from '@/components/SampleHist'
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from 'react';
 import Link from "next/link";
@@ -323,7 +324,7 @@ const fetchSample = async ()=>{
   const [modalOpenHist,setmodalOpenHist]=useState(false);
   const [sampID,setSampID]=useState(0);
     return (
-        <body style={{backgroundColor:'white'}}>
+      <div style={{backgroundColor:'white'}}>
              
              {loading ? 
            <div className="relative h-16">
@@ -370,10 +371,10 @@ const fetchSample = async ()=>{
 
             </div>
             {modalOpen && <Sample sampleid={sampID} closeModal={()=>{setModalOpen(false);fetchSample()}} SeriesID={SeriesID} />}
-            {modalOpenHist && <SampleHistory sampleid={sampID} closeModal={()=>setmodalOpenHist(false)} SeriesID={SeriesID} />}
+            {modalOpenHist && <SampleHist sampleid={sampID} closeModal={()=>setmodalOpenHist(false)} SeriesID={SeriesID} />}
             {modalOpenExplode && <SampleExplode closeModal={()=>setmodalOpenExplode(false)} />}
             </>
                }
-            </body>
+            </div>
     )
 }

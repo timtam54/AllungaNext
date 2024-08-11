@@ -511,9 +511,9 @@ return 'L';
     //await fetch....;
  }
     return (
-        <body style={{backgroundColor:'whitesmoke'}}>
+        <div style={{backgroundColor:'white'}}>
              {loading ? 
-              <div className="relative h-16" style={{backgroundColor:'whitesmoke'}}>
+              <div className="relative h-16" >
   <div style={{backgroundColor:'whitesmoke'}} className="absolute p-4 text-center transform -translate-x-1/2 translate-y-1/2 border top-1/2 left-1/2">
  
       <Circles 
@@ -544,11 +544,11 @@ return 'L';
         </div>
       
           
-        <div className="grid grid-cols-2 gap-4 px-4 my-4">
+        <div className="grid grid-cols-2 gap-4 px-4 my-4" style={{backgroundColor:'white'}} >
 <div style={{color:'white',backgroundColor:'black'}} className="bg-white rounded-lg">
     <div><br/></div>
 <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>
-        <Link href={"/client?id="+ data!.clientid}></Link><Button style={{color:'white',borderColor:'white'}} variant="outlined"><b>Client</b></Button>
+        <Link target='new' href={"/client?id="+ data!.clientid}><Button style={{color:'white',borderColor:'white'}} variant="outlined"><b>Client</b></Button></Link>
   <div> 
           <select style={{color:'black'}} name="clientid" onChange={handleChange}>
           {
@@ -589,7 +589,7 @@ return 'L';
     <div><br/></div>
 
 </div>
-<div style={{color:'white',backgroundColor:'navy'}} className="bg-white rounded-lg">
+<div style={{color:'black',backgroundColor:'lightgray'}} className="bg-white rounded-lg">
    <div><br/></div>
 <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>
           <b>Exposure Type:</b>
@@ -628,7 +628,7 @@ return 'L';
           </select>
       </div>
 
-      <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',color:'white'}}>
+      <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',color:'black'}}>
       <b>Exposed:</b>
 
 <div style={{color:'black'}}>
@@ -638,7 +638,7 @@ return 'L';
 <div style={{color:'black'}}>
 <DatePicker className="datePicker" dateFormat="dd/MM/yyyy" onChange={setExposureEndX} selected={ExposureEnd} />
 </div>
-  <Button style={{color:'white',borderColor:'white'}}  variant="outlined" onClick={() => setIsOpen(true)}>
+  <Button style={{color:'black',borderColor:'black'}}  variant="outlined" onClick={() => setIsOpen(true)}>
   <b>End Date</b>
 </Button>
 
@@ -648,7 +648,7 @@ return 'L';
 
 </div>
 
-<div style={{color:'white',backgroundColor:'gray'}} className="bg-white rounded-lg">
+<div style={{color:'black',backgroundColor:'lightgray'}} className="bg-white rounded-lg">
 <div><br/></div>
       <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>
 
@@ -771,7 +771,7 @@ return 'L';
 </div>
 </>
 }
-        </body>
+        </div>
     )
 } 
 

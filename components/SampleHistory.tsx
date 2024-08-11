@@ -100,8 +100,9 @@ export const Sample  = ({  closeModal, sampleid,SeriesID }:Props) => {
     {
       throw Error((ee).statusText);
     }
+    console.log(urlSample);
     const json=await ee.json();
-    console.log(json);
+    console.table(json);
     
   setDataHistory(json);
   setLoading(false);
