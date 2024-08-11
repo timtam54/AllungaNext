@@ -211,7 +211,7 @@ setLoading(false);
         </tr>
         </table>
         <table  width="100%">
-        <tr width="100%">
+        <tr style={{width:"100%"}}>
           <th>Group:</th>
           <td width="100%">
           <input type="text" name="groupName" style={{width:'600px'}}  onChange={handleChange} value={data.groupName} />

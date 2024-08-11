@@ -273,7 +273,7 @@ export default function client()
                     </td>
           </table>
           <table  width="100%">
-          <tr width="100%">
+          <tr style={{width:"100%"}}>
             <th>Name:</th>
             <td>
             <input type="text" name="contactname" onChange={handleChange} value={data!.contactname} />
@@ -329,7 +329,7 @@ export default function client()
     </td>
   </table>
   <table  width="100%">
-  <tr width="100%">
+  <tr style={{width:"100%"}}>
   <th>Name:</th>
   <td>
   <input type="text" name="AccountingContact" onChange={handleChange} value={data!.AccountingContact} />
