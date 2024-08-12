@@ -99,18 +99,7 @@ async function AddHeaderBearerToEndpoint(endpoint:string) {
 }
 
 
-  /*const fetchTechAccessBranchEng = async ():Promise<number> =>{
-    
-    const endpoint =process.env.NEXT_PUBLIC_MDSAPI+'TechAccessBranchEng/?username='+user?.username!.toString();
-
-    console.log(endpoint);
-    const result:branchesEng[] = await AddHeaderBearerToEndpoint(endpoint);
-    const egid=result.filter(ii=>ii.branchid==branchid)[0].engineerid;
-    
-    setBranches(result);
-    return egid;
- }*/
- //   const [engid,setEngid]=useState(0);
+  
     
   useEffect(()=>{
     fetchAllData();

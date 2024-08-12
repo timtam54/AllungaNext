@@ -41,7 +41,6 @@ export async function getToken() {
         account: account,
       })
     }
-
   return authToken;
 }
 export const LoginRequest = {

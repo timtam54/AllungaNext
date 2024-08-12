@@ -5,30 +5,31 @@ import moment from 'moment';
 import { Circles } from 'react-loader-spinner'
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
- 
+import Button from '@mui/material/Button';
 
+import ClientSelect from '@/components/clientselect'
 import { ChangeEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import DataTable from "react-data-table-component";
  interface series{
-  ExposureType:string;
-  RackNo:number;
-  SiteName:string;
-  Locked:boolean;
-  ReturnsReq:boolean;
-  DateIn:Date;
-  Active:boolean;
-  ShortDescription:string;
-  DateNextReturn:Date;
-  EquivalentSamples:number;
-  CntSamplesOnSite:number;
+  exposureType:string;
+  rackNo:number;
+  siteName:string;
+  locked:boolean;
+  returnsReq:boolean;
+  dateIn:Date;
+  active:boolean;
+  shortDescription:string;
+  dateNextReturn:Date;
+  equivalentSamples:number;
+  cntSamplesOnSite:number;
   clientreference:string;
-  AllungaReference:string;
+  allungaReference:string;
   seriesid:number;
-  Abbreviation:string;
+  abbreviation:string;
   companyname:string;
-  Complete:boolean;
-  DateNextReport:Date;
+  complete:boolean;
+  dateNextReport:Date;
 }
 export default function Home() {
   //const user = msalInstance.getActiveAccount();
@@ -40,10 +41,10 @@ export default function Home() {
   
  const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
-    ssearch(actives,inactives,fields);
+    ssearch(actives,inactives,fields,-1);
   }, []);
   const [search,setSearch] = useState("");
-  const ssearch = async (act:boolean,del:boolean,flds:string) =>{  
+  const ssearch = async (act:boolean,del:boolean,flds:string,clid:number) =>{  
     setLoading(true);
   
     const token = await getToken()
@@ -58,9 +59,9 @@ export default function Home() {
     var endPoint='';
   
     if (search=='')
-      endPoint = `https://allungawebapi.azurewebsites.net/api/Series/~,` + (act?`1`:`0`)+`,`+ (del?`1`:`0`)+`,`+flds;
+      endPoint = `https://allungawebapicore.azurewebsites.net/api/Series/~/` + (act?`1`:`0`)+`/`+ (del?`1`:`0`)+`/`+flds+'/'+clid.toString();
     else
-      endPoint = `https://allungawebapi.azurewebsites.net/api/Series/`+search + `,` + (act?`1`:`0`)+`,`+ (del?`1`:`0`)+`,`+flds;
+      endPoint = `https://allungawebapicore.azurewebsites.net/api/Series/`+search + `/` + (act?`1`:`0`)+`/`+ (del?`1`:`0`)+`/`+flds+'/'+clid.toString();
     console.log('endPoint:  '+endPoint);
     const response = fetch(endPoint,options);
     var ee=await response;
@@ -82,7 +83,7 @@ export default function Home() {
 
     setActives(e.target.checked);
   
-    ssearch(e.target.checked,inactives,fields);
+    ssearch(e.target.checked,inactives,fields,clientid);
   }
 
   const colourstyle = (active:boolean, complete:boolean,dteNextRpt:Date,dteNextRtrn:Date,CntSamplesOnSite:number,locked:Boolean) => 
@@ -125,20 +126,27 @@ export default function Home() {
 
     setInactives(e.target.checked);
   
-    ssearch(actives,e.target.checked,fields);
+    ssearch(actives,e.target.checked,fields,clientid);
   }
   const handlefield= (e: ChangeEvent<HTMLSelectElement>) => {
 
     setFields(e.target.value);
   
-    ssearch(actives,inactives,e.target.value);
+    ssearch(actives,inactives,e.target.value,clientid);
   }
   const handleSearch = async (e:any)=>{
 
     e.preventDefault();
     
-   ssearch(actives,inactives,fields);
+   ssearch(actives,inactives,fields,clientid);
   }
+  const selectClient = (id:number,name:string)=>{
+    setClientName(name);
+    setClientID(id);
+    ssearch(actives,inactives,fields,id);
+  }
+  const [clientname,setClientName]=useState('')
+  const [clientid,setClientID]=useState(-1)
 
   const onDelete = async (id:number)=>{
     const confirm = {
@@ -187,7 +195,7 @@ export default function Home() {
       throw Error((ee).statusText);
     }
     const json=await ee.json();
-    await ssearch(actives,inactives,fields);
+    await ssearch(actives,inactives,fields,clientid);
     
     return false;
   }
@@ -195,7 +203,7 @@ export default function Home() {
     {
       when: (row:series) => true,
       style:  (row:series) => ({
-        color: row.Complete?'red':'blue',
+        color: row.complete?'red':'blue',
       })
     }
   ];
@@ -224,7 +232,7 @@ export default function Home() {
       sortable: true,
       width: "60px",  
       wrap:true,  
-      selector: (row:series)=>row.Complete
+      selector: (row:series)=>row.complete
     }
     ,
     {
@@ -239,8 +247,8 @@ export default function Home() {
         name:'Allunga Series',
         sortable: true,
         width: "130px",    
-        selector:  (row:series)=>row.AllungaReference,
-        cell:   (row:series) =><Link href={{pathname:"/seriestab",query:{id:row.seriesid,seriesname:row.AllungaReference}}}><u>{row.AllungaReference}</u></Link>
+        selector:  (row:series)=>row.allungaReference,
+        cell:   (row:series) =><Link href={{pathname:"/seriestab",query:{id:row.seriesid,seriesname:row.allungaReference}}}><u>{row.allungaReference}</u></Link>
         //href={{pathname:"/seriestab",  query:{id: result.seriesid,name:result.AllungaReference }}}
     } ,
     {
@@ -254,100 +262,100 @@ export default function Home() {
         name:'Abbrev',
         sortable: true,
         width: "70px",    
-        selector: (row:series) => row.Abbreviation  ,
-        cell:   (row:series) => row.Abbreviation  
+        selector: (row:series) => row.abbreviation  ,
+        cell:   (row:series) => row.abbreviation  
     },
     {
         name:'# Samples On Site',
         sortable: true,
         width: "60px",    
-        selector:  (row:series)=>row.CntSamplesOnSite,
-        cell:   (row:series) => row.CntSamplesOnSite  
+        selector:  (row:series)=>row.cntSamplesOnSite,
+        cell:   (row:series) => row.cntSamplesOnSite  
     }
     ,
     {
         name:'Equiv Samples',
         sortable: true,
         width: "60px",    
-        selector:  (row:series)=>row.EquivalentSamples,
-        cell:   (row:series) => row.EquivalentSamples
+        selector:  (row:series)=>row.equivalentSamples,
+        cell:   (row:series) => row.equivalentSamples
     }
     ,
     {
         name:'Next Report',
         sortable: true,
         width: "100px",    
-        selector:  (row:series)=>FormatDate(row.DateNextReport),
-        cell:   (row:series) => FormatDate(row.DateNextReport)
+        selector:  (row:series)=>FormatDate(row.dateNextReport),
+        cell:   (row:series) => FormatDate(row.dateNextReport)
     }
   ,
     {
         name:'Next Return',
         sortable: true,
         width: "100px",    
-        selector:  (row:series)=>FormatDate(row.DateNextReturn),
-        cell:   (row:series) => FormatDate(row.DateNextReturn)
+        selector:  (row:series)=>FormatDate(row.dateNextReturn),
+        cell:   (row:series) => FormatDate(row.dateNextReturn)
     },
     {
         name:'Short Descriptions',
         sortable: true,
         width: "250px",    
-        selector:  (row:series)=>row.ShortDescription,
-        cell:   (row:series) => row.ShortDescription
+        selector:  (row:series)=>row.shortDescription,
+        cell:   (row:series) => row.shortDescription
     } ,
     {
         name:'Date In',
         sortable: true,
         width: "100px",    
-        selector:  (row:series)=>FormatDate(row.DateIn),
-        cell:   (row:series) => FormatDate(row.DateIn)
+        selector:  (row:series)=>FormatDate(row.dateIn),
+        cell:   (row:series) => FormatDate(row.dateIn)
     },
     {
         name:'Active',
         sortable: true,
         width: "60px",    
-        selector:  (row:series)=>row.Active,
-        cell:   (row:series) =><input type="checkbox" checked={row.Active}/>
+        selector:  (row:series)=>row.active,
+        cell:   (row:series) =><input type="checkbox" checked={row.active}/>
     } 
    ,
     {
         name:'Returns Req',
         sortable: true,
         width: "60px",    
-        selector:  (row:series)=>row.ReturnsReq,
-        cell:   (row:series) => <input type="checkbox" checked={row.ReturnsReq}/>
+        selector:  (row:series)=>row.returnsReq,
+        cell:   (row:series) => <input type="checkbox" checked={row.returnsReq}/>
     } 
     ,
     {
         name:'Exposure',
         sortable: true,
         width: "110px",    
-        selector:  (row:series)=>row.ExposureType,
-        cell:   (row:series) => row.ExposureType
+        selector:  (row:series)=>row.exposureType,
+        cell:   (row:series) => row.exposureType
     } 
     ,
     {
         name:'Rack No',
         sortable: true,
         width: "80px",    
-        selector:  (row:series)=>row.RackNo,
-        cell:   (row:series) => row.RackNo
+        selector:  (row:series)=>row.rackNo,
+        cell:   (row:series) => row.rackNo
     } 
     ,
     {
         name:'Site Name',
         sortable: true,
         width: "120px",    
-        selector:  (row:series)=>row.SiteName,
-        cell:   (row:series) => row.SiteName
+        selector:  (row:series)=>row.siteName,
+        cell:   (row:series) => row.siteName
     } 
     ,
     {
         name:'Locked',
         sortable: true,
         width: "80px",    
-        selector:  (row:series)=>row.Locked,
-        cell:   (row:series) =><input type="checkbox" checked={row.Locked}/>
+        selector:  (row:series)=>row.locked,
+        cell:   (row:series) =><input type="checkbox" checked={row.locked}/>
     } 
   ]
 
@@ -356,21 +364,19 @@ export default function Home() {
    const dte= new Date(date);
     return dte.getFullYear().toString()+'-'+(dte.getMonth()+1).toString().padStart(2,'0')+'-'+(dte.getDate()).toString().padStart(2,'0');
   }
- 
+ const [clientModel,setClientModel]=useState(false);
   return (
    <>
    <Header/>
- 
+   {clientModel && <ClientSelect selectClient={selectClient} closeModal={()=>{setClientModel(false);}}  />}
 
     <div className="search">
   <form onSubmit={handleSearch}>
-
-
-        <table style={{border:"0px"}}>
+         <table style={{border:"0px"}}>
        
          <tr>
             <td>
-          <h3 style={{color:'#944780',fontSize:'24px'}}>Search Client Series</h3>
+          <h3 style={{color:'#944780',fontSize:'24px'}}>Search Series</h3>
           </td>
           <td width={60}></td>
           <td><Link  title='Add New Series' href='/addseries'><AddIcon/></Link></td>
@@ -390,8 +396,15 @@ export default function Home() {
 <td>
         <input type='text' placeholder="-Search Client/Series-" value={search} onChange={e=>setSearch(e.target.value)} />
         </td>
-        <td><SearchIcon onClick={handleSearch} />click to search</td>
-        <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td><SearchIcon onClick={handleSearch} /></td>
+        <td>
+        <Button variant="contained" onClick={(e)=>{e.preventDefault(); setClientModel(true);}}>
+        {(clientname=="")?"Client Filter":clientname}
+          </Button>
+          {(clientname=="")?<></>:<Button variant="outlined" onClick={(e)=>{e.preventDefault(); selectClient(-1,'');}}>
+        X
+          </Button>}
+        </td>
         <td>
         <table border={1}>
             <tr>

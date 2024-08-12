@@ -4,7 +4,6 @@ import { getToken } from "@/msal/msal";
 import { ChangeEvent, useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import Client from '@/components/Client'
-
 import { GoogleMap, InfoBox, LoadScript, Marker } from '@react-google-maps/api';
 import Button from '@mui/material/Button';
 import MapIcon from '@mui/icons-material/Map';
@@ -32,33 +31,28 @@ interface latlon{
 export default function clientsearch()
 {
     useEffect(() => {
-        searchClient()
+        searchClient(search)
    
     } , []);
     
     const [search,setSearch] = useState("");
     const [loading,setLoading] = useState(true);
     const [results,setResults] = useState<clientrow[]>([]);
-   /* const handleSearch = async (e:any)=>{
-
-        e.preventDefault();
-        setSearch('~');
-      
-
-
-        
-    }*/
+   
+    
         const containerStyle = {
           width: '100%',
           height: '600px'
         };
-    function handleSearch(event: ChangeEvent<HTMLInputElement>)
+        const [modelOpen,setModelOpen]=useState(false);
+    const handleSearch=async (event: ChangeEvent<HTMLInputElement>)=>
     {
       setSearch(event.target.value.toLowerCase());
+    await  searchClient(event.target.value.toLowerCase());
 
     }
-    const [modelOpen,setModelOpen]=useState(false);
-    const searchClient=async ()=>{
+    
+    const searchClient=async (sch:string)=>{
         setLoading(true);
         const token = await getToken()
         const headers = new Headers()
@@ -70,7 +64,7 @@ export default function clientsearch()
           method: 'GET',
           headers: headers,
         }  
-        const response = fetch(`https://allungawebapicore.azurewebsites.net/api/Clients/`+((search=='')?'~':search),options);
+        const response = fetch(`https://allungawebapicore.azurewebsites.net/api/Clients/`+((sch=='')?'~':sch),options);
         var ee=await response;
         console.log(ee)
         if (!ee.ok)
@@ -169,14 +163,7 @@ export default function clientsearch()
             wrap:true,  
             selector: (row:clientrow)=>row.companyname,          
             cell: (row:clientrow) =><a href={"/client?id="+row.clientid.toString()} target="new"><u>{row.companyname}</u></a>
-         /*   
-            <button onClick={(e)=>{
-              e.preventDefault();
-               setCliID(row.clientid); 
-              setModelOpen(true);
-              
-            }}><u>{row.companyname}</u></button> ,*/
-          }
+        }
           ,
         {
             name:'GroupName',
@@ -249,10 +236,11 @@ export default function clientsearch()
     return (
       <>
       <Header/>
-      {modelOpen && <Client clientid={cliid} closeModal={()=>{setModelOpen(false);searchClient();}} />}
+      {modelOpen && <Client clientid={cliid} closeModal={()=>{setModelOpen(false);}} />}
       
       <div style={{alignItems: 'center',display:'flex',backgroundColor:'#944780'}}>
         <h1 style={{fontSize:"22px"}}><b style={{color:'white'}}>Clients</b></h1>
+        <input type="text" onChange={handleSearch} value={search}/>
         <Button style={{backgroundColor:grid?'yellow':'white',color:'#0690B1'}} variant="outlined" onClick={(e)=>{e.preventDefault();setGrid(true)}}><GridOnIcon/>Grid</Button>
     <Button style={{backgroundColor:grid?'white':'yellow',color:'#0690B1'}} variant="outlined" onClick={(e)=>{e.preventDefault();setGrid(false)}}><MapIcon/>Map</Button>
   </div>

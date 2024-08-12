@@ -179,6 +179,17 @@ const options = {
   scales: {
     y: {
       beginAtZero: true,
+      ticks: {
+        // Include a dollar sign in the ticks
+        callback: function(value:number) {
+          if (value==1)
+            return 'On Site';
+          else if (value==-1)
+            return 'Off Site';
+          else
+            return '';
+        }
+    }
     },
   },
 };
