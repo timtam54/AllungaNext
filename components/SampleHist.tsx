@@ -178,10 +178,10 @@ alert('Message successfully sent');
 const options = {
   scales: {
     y: {
-      beginAtZero: true,
+      max: 1,
+      min: -1,
       ticks: {
-        // Include a dollar sign in the ticks
-        callback: function(value:number) {
+        callback: function(value:any, index:any, ticks:any) {
           if (value==1)
             return 'On Site';
           else if (value==-1)
@@ -189,7 +189,11 @@ const options = {
           else
             return '';
         }
-    }
+      },
+      beginAtZero: true,
+      /*ticks: {
+        
+    }*/
     },
   },
 };
@@ -220,8 +224,7 @@ const options = {
   </div></div>
 :
 <>
-<Bar
-options={options}
+<Bar options={options}
 data={repair}/>
   
 
