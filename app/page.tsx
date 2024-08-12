@@ -15,7 +15,7 @@ import DataTable from "react-data-table-component";
   exposureType:string;
   rackNo:number;
   siteName:string;
-  locked:boolean;
+  locked:boolean;//should be string todotim
   returnsReq:boolean;
   dateIn:Date;
   active:boolean;
