@@ -2,7 +2,7 @@ import "@/components/part.css";
 import { ChangeEvent, useEffect, useState } from "react";
 import DatePicker from 'react-date-picker';
 import 'react-date-picker/dist/DatePicker.css'
-import { getToken } from "@/msal/msal";
+import { getToken, msalInstance } from "@/msal/msal";
 import Button from '@mui/material/Button';
 
 type Props = {
@@ -96,6 +96,39 @@ const ReportDet =({report, closeModal}:Props) => {
     }
     alert('saved');
   }
+  const user = msalInstance.getActiveAccount();
+  async function sendEmail() {//chartdata: string, title: string
+    //setLoading(true);
+    const formData = new FormData();
+    console.log('chartdata');
+    //console.log(chartdata);
+    //formData.append('data', chartdata);
+    const email = user?.username.toString()!;
+    formData.append('recipient', email);
+    formData.append('labels', data!.reportname+ ' report has been completed');
+  
+    const resp = await fetch('/api/contact', {
+      method: "post",
+      body: formData, //,email:'timhams@gmail.com'
+    });
+    if (!resp.ok) {
+      console.log("falling over")
+      console.log(resp.json)
+      console.log("await resp.json()")
+      //const responseData = await resp.json();
+      //console.log(responseData['message']);
+   
+  }
+  else
+  {
+  const responseData = await resp.json();
+  console.log(resp.status);
+  console.log(responseData['message']);   
+  alert('Message successfully sent');
+  }
+    //setLoading(false);
+  
+  }
 
     return  <div className="modal-container">
     <div className="modal" style={{backgroundColor:'whitesmoke'}} >
@@ -167,7 +200,7 @@ const ReportDet =({report, closeModal}:Props) => {
                  </div>
                  <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>
 <b>Email report to client</b>
-<Button variant="outlined" onClick={(e)=>{e.preventDefault(); alert('email');}}>
+<Button variant="outlined" onClick={(e)=>{e.preventDefault(); sendEmail();}}>
         Email
           </Button>
         </div>

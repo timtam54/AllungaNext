@@ -107,7 +107,7 @@ export default function Samples()
             e.preventDefault();
             setReportID(row.reportid);
             setModelOpen(true);
-            //window.open("/report?id="+row.reportid); 
+    
           }}><u>{FormatDate( row.date)}</u></button>           
         }
         /*
@@ -160,8 +160,8 @@ export default function Samples()
             e.preventDefault();
             setReportID(row.reportid);
             setModelOpen(true);
- //           window.open("/report?id="+row.reportid); 
-          }}><u>Open</u></Button> 
+
+          }}><u>Excel</u></Button> 
         }
     ]
     const [results, setDataReport] = useState<reportrow[]>([]);

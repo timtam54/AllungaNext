@@ -3,6 +3,7 @@ import { ReactGrid, Column, Row, CellChange, TextCell, Cell, DefaultCellTypes, C
 import "@silevis/reactgrid/styles.css";
 import { getToken } from "@/msal/msal";
 import { Circles } from 'react-loader-spinner'
+import { ExportAsExcel, ExportAsPdf, CopyToClipboard, CopyTextToClipboard, PrintDocument, ExcelToJsonConverter, FileUpload } from "react-export-table";
 
 import "@/components/part.css";
 
@@ -41,7 +42,7 @@ function Rprt({closeModal,reportid}:Props) {
     const [datacol, setDatacol] = React.useState<Param[]>([]);
 const [rows,setRows]=React.useState<Row[]>([]);
 
-const [dataSample, setDataSample] = React.useState([]);
+const [dataSample, setDataSample] = React.useState<Sample[]>([]);
 
       useEffect(() => {
         if (typeof window !== "undefined") {
@@ -93,6 +94,10 @@ const [dataSample, setDataSample] = React.useState([]);
         const json = await ee.json();
         console.log(json);
         setDatacol(json.sort((a:Param,b:Param) => a.Ordering > b.Ordering));
+        json.forEach((element:Param) => {
+          xlheaders.push(element.ParamName);
+        });
+        setXLHeaders(xlheaders);
         const urlReading = `https://allungawebapi.azurewebsites.net/api/Readings/` + reportid;
 
         
@@ -292,9 +297,6 @@ const [dataSample, setDataSample] = React.useState([]);
         return [...prevPeople];
       };*/
 
-      
-    
-
     const handleColumnResize = (ci: number | string, width: number) => {
       setColumns((prevColumns) => {
           const columnIndex = prevColumns.findIndex(el => el.columnId === ci);
@@ -304,17 +306,29 @@ const [dataSample, setDataSample] = React.useState([]);
           return [...prevColumns];
       });
     }
+
+   const [xlheaders,setXLHeaders]=useState<string[]>(["SampleID", "Number", "description"]);
+
+
+
  return  <div className="modal-container">
     <div className="modal" style={{backgroundColor:'whitesmoke'}} >
-
-
-
-  
   <table><tr><td><h3 style={{color:'#944780'}}>Readings - Excel View</h3></td><td> <Button  variant='contained' type="submit" onClick={(e)=>{e.preventDefault();closeModal()}}>Close</Button></td><td><Button variant="outlined"  style={{backgroundColor:'red',color:'white'}} onClick={saveReadings}>
  Submit
 </Button></td>
 
-</tr></table> {loading ? 
+<td>
+<ExportAsExcel
+    data={dataSample}
+    headers={xlheaders}
+>
+{(props)=> (
+      <button {...props}>
+        Export as Excel
+      </button>
+    )}
+</ExportAsExcel>
+  </td></tr></table> {loading ? 
           <div className="relative h-16">
   <div className="absolute p-4 text-center transform -translate-x-1/2 translate-y-1/2 border top-1/2 left-1/2">
            <Circles
