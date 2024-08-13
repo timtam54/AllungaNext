@@ -32,14 +32,13 @@ export async function POST(request) {
     const QuickChart = require('quickchart-js');
     var labelsStr=formData.get('labels');
     
-    
    var dataStr=formData.get('data');
-   console.table('dataStr:'+dataStr);
+   console.log('dataStr:'+dataStr);
    if (dataStr!=null)
     {
-   console.log('dataStr:'+dataStr);
+   console.log(dataStr);
    let data = (dataStr==null)?'':JSON.parse(dataStr); 
-
+   console.table(data);
 
 const myChart = new QuickChart();
 myChart
@@ -52,12 +51,13 @@ myChart
   .setBackgroundColor('transparent');
 //myChart=formData.get('myChart');
 const chartImageUrl = myChart.getUrl();
-
+console.log('chartImageUrl:'+chartImageUrl);
  message = labelsStr+`:
 <br>
 <img src="${chartImageUrl}" />
 `;
     }
+    console.log(message);
     console.log('sendemailstart');
     const mail = await transporter.sendMail({
         from: username,

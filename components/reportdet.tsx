@@ -100,7 +100,7 @@ const ReportDet =({report, closeModal}:Props) => {
   async function sendEmail() {//chartdata: string, title: string
     //setLoading(true);
     const formData = new FormData();
-    console.log('chartdata');
+    //console.log('chartdata');
     //console.log(chartdata);
     //formData.append('data', chartdata);
     const email = user?.username.toString()!;
