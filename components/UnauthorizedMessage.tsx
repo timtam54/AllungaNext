@@ -8,7 +8,7 @@ export default function UnauthorizedMessage() {
     return (
         <>
         <head>
-        <title>Technician Interface</title>
+        <title>Allunga Series Reporting</title>
         <img rel="icon" src="/logo.png"/>
         </head>
 

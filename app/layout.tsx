@@ -8,8 +8,8 @@ import MyMsalProvider from '@/msal/MyMsalProvider'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Technician Service Repair Application',
-  description: 'Technician Service Repair Application',
+  title: 'Allunga Series Reporting',
+  description: 'Allunga Series Reporting',
 }
 
 export default function RootLayout({
@@ -23,7 +23,7 @@ export default function RootLayout({
     
         <MyMsalProvider>
         <head>
-    <title>Technician Interface</title>
+    <title>Allunga Reporting Tool</title>
        <img rel="icon" src="/logo.png"/>
         </head>
         <body style={{backgroundColor:'whitesmoke'}}>

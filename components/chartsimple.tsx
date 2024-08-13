@@ -270,7 +270,7 @@ const options = {
 const [Titles,setTitles]=useState<string[]>([]);
   return    <div className="modal-container">
   <div className="modal" style={{backgroundColor:'whitesmoke'}} >
-<h1 style={{fontSize:'24px',fontWeight:'bold'}}>Report Details</h1>
+<h1 style={{fontSize:'24px',fontWeight:'bold'}}>Chart Simple</h1>
 <Button type="submit" variant="outlined" onClick={(e)=>{e.preventDefault();closeModal()}}>Close</Button>
  <button onClick={emailcustomer}><a href=""><u>Email to me</u></a></button>
      <Bar

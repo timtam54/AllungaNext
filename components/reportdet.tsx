@@ -36,6 +36,7 @@ const ReportDet =({report, closeModal}:Props) => {
   };
   const handleChangeTextArea = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setData({ ...data!, [e.target.name]: e.target.value });
+    setDirty(true);
   }
   const handleCheckReport = (e:ChangeEvent<HTMLInputElement>) => {
     if (dirty==false)
@@ -164,6 +165,12 @@ const ReportDet =({report, closeModal}:Props) => {
                 <div>no changes have been made</div>
               }
                  </div>
+                 <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>
+<b>Email report to client</b>
+<Button variant="outlined" onClick={(e)=>{e.preventDefault(); alert('email');}}>
+        Email
+          </Button>
+        </div>
                  </form>
    </div></div>
 }

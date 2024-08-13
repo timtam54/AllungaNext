@@ -23,6 +23,7 @@ import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import AcUnitIcon from '@mui/icons-material/AcUnit';
 import ManageHistoryIcon from '@mui/icons-material/ManageHistory';
+import { alignProperty } from '@mui/material/styles/cssUtils';
 interface samplerow{
     SampleID:number;
     Number:number;
@@ -168,12 +169,13 @@ export default function Samples()
               }
               ,
             {
-                name:'Sample Order',
+                name:'Order',
                 sortable: true,
-                width: "130px",  
+                width: "55px",  
                 wrap:true,  
                 selector: (row:samplerow)=>row.SampleOrder,
                 cell:(row:samplerow)=>row.SampleOrder,
+                alignProperty:'center'
               },
               {
                   name:'',
