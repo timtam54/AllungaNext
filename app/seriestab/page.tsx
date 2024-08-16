@@ -545,7 +545,7 @@ return 'L';
       
           
         <div className="grid grid-cols-2 gap-4 px-4 my-4" style={{backgroundColor:'white'}} >
-<div style={{color:'white',backgroundColor:'black'}} className="bg-white rounded-lg">
+<div style={{color:'white',backgroundColor:'navy'}} className="bg-white rounded-lg">
     <div><br/></div>
 <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>
         <Link target='new' href={"/client?id="+ data!.clientid}><Button style={{color:'white',borderColor:'white'}} variant="outlined"><b>Client</b></Button></Link>
@@ -728,7 +728,7 @@ return 'L';
     </table>
       </div>
 </div>
-<div style={{color:'white',backgroundColor:'black'}} className="bg-white rounded-lg">
+<div style={{color:'white',backgroundColor:'navy'}} className="bg-white rounded-lg">
 <div><br/></div>
 <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',color:'white'}}>
 

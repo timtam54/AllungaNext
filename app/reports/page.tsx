@@ -15,6 +15,7 @@ import SendTimeExtensionIcon from '@mui/icons-material/SendTimeExtension';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import GrainIcon from '@mui/icons-material/Grain';
 import DetailsIcon from '@mui/icons-material/Details';
+import BorderAllIcon from '@mui/icons-material/BorderAll';
 interface reportrow{
     reportid:number;
     reportname:string;
@@ -161,7 +162,7 @@ export default function Samples()
             setReportID(row.reportid);
             setModelOpen(true);
 
-          }}><u>Excel</u></Button> 
+          }}><BorderAllIcon/> <u>Excel</u></Button> 
         }
     ]
     const [results, setDataReport] = useState<reportrow[]>([]);

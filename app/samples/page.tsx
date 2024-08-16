@@ -23,7 +23,7 @@ import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import AcUnitIcon from '@mui/icons-material/AcUnit';
 import ManageHistoryIcon from '@mui/icons-material/ManageHistory';
-import { alignProperty } from '@mui/material/styles/cssUtils';
+
 interface samplerow{
     SampleID:number;
     Number:number;
@@ -34,6 +34,7 @@ interface samplerow{
     SampleOrder:number;
     ExposureType:string;
 }
+
 export default function Samples()
 {    const searchParams = useSearchParams();
     const seriesname=searchParams!.get("seriesname");
@@ -93,10 +94,8 @@ export default function Samples()
             cell: (row:samplerow) =><button onClick={(e)=>{
               e.preventDefault();
                setSampID(row.SampleID); 
-              setModalOpen(true);
-              
-            }}><u>{row.Number}</u></button> ,
-            
+              setModalOpen(true);        
+            }}><u>{row.Number}</u></button> , 
           }
         ,
           {
@@ -105,14 +104,11 @@ export default function Samples()
               width: "90px",  
               wrap:true,  
               selector: (row:samplerow)=>row.description,
-
               cell: (row:samplerow) =><button onClick={(e)=>{
                 e.preventDefault();
                  setSampID(row.SampleID); 
-                 setmodalOpenHist(true);
-                
+                 setmodalOpenHist(true);     
               }}><u>{row.description}</u></button> ,
-              //
             } ,
             {
                 name:'Description',
@@ -124,11 +120,9 @@ export default function Samples()
                   e.preventDefault();
                    setSampID(row.SampleID);
                    setChartTitle(row.description + ' vs date') 
-                   setModelOpen(true);
-                  
+                   setModelOpen(true); 
                 }}><u>{row.longdescription}</u></button> ,
-                //;setParamID(result.ParamID);setChartTitle(result.ParamName + ' vs date');setModelOpen(true)}}
-              }
+               }
              ,
             {
                 name:'Equiv Samples / Alltrack cms',
@@ -164,7 +158,6 @@ export default function Samples()
                 cell: (row:samplerow) =><button onClick={(e)=>{
                   e.preventDefault();
                   fetch1Sample(row.SampleID,-1);
-                 
                 }}><u><ArrowCircleUpIcon/></u></button>
               }
               ,
@@ -186,10 +179,8 @@ export default function Samples()
                   cell: (row:samplerow) =><button onClick={(e)=>{
                     e.preventDefault();
                     fetch1Sample(row.SampleID,1);
-                   
                   }}><u><ArrowCircleDownIcon/></u></button>
                 },
-             
                 {
                     name:'Explode',
                     sortable: true,
@@ -198,9 +189,7 @@ export default function Samples()
                     selector:  (row:samplerow)=>"Explode",
                     cell: (row:samplerow) =><button onClick={(e)=>{
                       e.preventDefault();
-                       //setSampID(row.SampleID); 
-                       setmodalOpenExplode(true);
-                      
+                       setmodalOpenExplode(true);                    
                     }}><u><AcUnitIcon/></u></button> ,
                   },
                   {
@@ -213,23 +202,19 @@ export default function Samples()
                         e.preventDefault();
                          setSampID(row.SampleID);
                          setChartTitle(row.description + ' vs date') 
-                         setModelOpen(true);
-                        
+                         setModelOpen(true); 
                       }}><u><BarChartIcon/></u></button> ,
-                      //;setParamID(result.ParamID);setChartTitle(result.ParamName + ' vs date');setModelOpen(true)}}
                     },
                     {
                       name:'History',
                       sortable: true,
-              width: "90px",  
-              wrap:true,  
-              selector: (row:samplerow)=>row.description,
-
-              cell: (row:samplerow) =><button onClick={(e)=>{
-                e.preventDefault();
-                 setSampID(row.SampleID); 
-                 setmodalOpenHist(true); 
-                
+                      width: "90px",  
+                      wrap:true,  
+                      selector: (row:samplerow)=>row.description,
+                      cell: (row:samplerow) =><button onClick={(e)=>{
+                      e.preventDefault();
+                      setSampID(row.SampleID); 
+                      setmodalOpenHist(true); 
               }}><u><ManageHistoryIcon/></u></button> ,
  
                     }

@@ -11,6 +11,7 @@ import SendTimeExtensionIcon from '@mui/icons-material/SendTimeExtension';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import GrainIcon from '@mui/icons-material/Grain';
 import "./style.css"
+import Report from "@/components/report";
 import Link from "next/link";
 import DetailsIcon from '@mui/icons-material/Details';
 import ChartSampleParam from '@/components/chartsampleparam'
@@ -191,7 +192,9 @@ export default function Page()
       }
       const [paramID,setParamID]=useState(0);
       const [modelOpen,setModelOpen]=useState(false);
+      const [modelReportOpen,setModelReportOpen]=useState(false);
       const seriesname=searchParams!.get("seriesname");
+      const [reportID,setReportID]=useState(0);
       return (
         <div style={{backgroundColor:'white'}}>
         {loading ? 
@@ -211,6 +214,8 @@ export default function Page()
 :
 <>
           <Header/>
+          {modelReportOpen && <Report reportid={reportID} closeModal={()=>{setModelReportOpen(false)}}/>}
+
           {modelOpen && <ChartSampleParam title={chartTitle} seriesid={id} paramID={paramID} closeModal={()=>{setModelOpen(false)}}/>}
           <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',backgroundColor:'white'}}>
         <Link href="/"><ArrowBack/>back</Link>
@@ -238,7 +243,17 @@ export default function Page()
         {
         dataReport.map((result,i)=>{
           return (
-              <th key={i}>{result.reportname} ({ (new Date(result.date)).getDate()}-{ (new Date(result.date)).getMonth()}-{ (new Date(result.date)).getFullYear()})</th>
+              <th key={i}>
+                
+                <Button variant='outlined' onClick={(e)=>{
+            e.preventDefault();
+            setReportID(result.reportid);
+            setModelReportOpen(true);
+
+          }}><u>{result.reportname} ({ (new Date(result.date)).getDate()}-{ (new Date(result.date)).getMonth()}-{ (new Date(result.date)).getFullYear()})</u></Button> 
+                
+                
+                </th>
           )
           })
         }

@@ -4,7 +4,7 @@ import "@silevis/reactgrid/styles.css";
 import { getToken } from "@/msal/msal";
 import { Circles } from 'react-loader-spinner'
 import { ExportAsExcel, ExportAsPdf, CopyToClipboard, CopyTextToClipboard, PrintDocument, ExcelToJsonConverter, FileUpload } from "react-export-table";
-
+import BorderAllIcon from '@mui/icons-material/BorderAll';
 import "@/components/part.css";
 
 import React,{ useState, useEffect} from 'react';
@@ -323,9 +323,9 @@ const [dataSample, setDataSample] = React.useState<Sample[]>([]);
     headers={xlheaders}
 >
 {(props)=> (
-      <button {...props}>
-        Export as Excel
-      </button>
+      <Button variant="contained" style={{color:'black'}} {...props}>
+        <BorderAllIcon/>Export as Excel
+      </Button>
     )}
 </ExportAsExcel>
   </td></tr></table> {loading ? 
