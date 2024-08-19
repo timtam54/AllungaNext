@@ -26,7 +26,7 @@ export default function RootLayout({
     <title>Allunga Reporting Tool</title>
        <img rel="icon" src="/logo.png"/>
         </head>
-        <body style={{backgroundColor:'whitesmoke'}}>
+        <body style={{backgroundColor:'white'}}>
             {children}
           </body>
         </MyMsalProvider>

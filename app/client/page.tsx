@@ -204,18 +204,13 @@ export default function client()
    
       return (
         <div className="modal-container">
-        <div className="modal" style={{backgroundColor:'lightgray'}} >
-    <h1 style={{fontSize:'24px',fontWeight:'bold'}}>Sample Details</h1>
-    
-       
+        <div className="modal" style={{backgroundColor:'whitesmoke'}} >
+          <div style={{display:'flex',justifyContent:'space-between'}}>
+    <h1 style={{fontSize:'24px',fontWeight:'bold'}}>Client Details</h1>
+    <a href={"/?clientname="+data?.companyname+"&clientid=" + ClientID} style={{fontSize:'14px'}} target="blank" ><u>View all Series</u></a>
+       </div>
         <form>
-  
-  <table>
-                <tr>
-                  <td> <h3 style={{color:'#944780'}}>Clients</h3>
-                    </td>
-  </tr>
-                </table>  
+
   
   
   

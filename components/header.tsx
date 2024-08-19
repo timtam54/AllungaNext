@@ -22,7 +22,7 @@ const Header = () => {
     const [rackrptOpen,setrackrptOpen] = useState(false);
     const [schedrptOpen,setschedrptOpen] = useState(false);
     return (
-        <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>
+        <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',backgroundColor:'white'}}>
 
 
 {chartSimpleOpen && <ChartSimple closeModal={()=>{setChartSimpleOpen(false)}}/>}

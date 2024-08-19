@@ -161,17 +161,12 @@ setLoading(false);
     return (
       <div className="modal-container">
       <div className="modal" style={{backgroundColor:'lightgray'}} >
-  <h1 style={{fontSize:'24px',fontWeight:'bold'}}>Sample Details</h1>
+  <h1 style={{fontSize:'24px',fontWeight:'bold'}}>Clients Details</h1>
   
       <button onClick={(e)=>{e.preventDefault();closeModal()}}>Close</button>
       <form>
 
-<table>
-              <tr>
-                <td> <h3 style={{color:'#944780'}}>Clients</h3>
-                  </td>
-</tr>
-              </table>  
+
 
 
 

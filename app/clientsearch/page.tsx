@@ -4,7 +4,7 @@ import { getToken } from "@/msal/msal";
 import { ChangeEvent, useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import Client from '@/components/Client'
-import { GoogleMap, InfoBox, LoadScript, Marker } from '@react-google-maps/api';
+import { GoogleMap, InfoBox, InfoWindow, LoadScript, Marker } from '@react-google-maps/api';
 import Button from '@mui/material/Button';
 import MapIcon from '@mui/icons-material/Map';
 import GridOnIcon from '@mui/icons-material/GridOn';
@@ -22,11 +22,15 @@ interface clientrow{
     accountingemail:string;
     lat:number;
     lon:number;
+    seriescnt:number;
 }
 interface latlon{
   lat:number;
   lng:number;
   title:string;
+  seriescnt:number;
+  address:string;
+  id:number;
 }
 export default function clientsearch()
 {
@@ -90,9 +94,9 @@ export default function clientsearch()
           let cnt=0;
           jbs.forEach((element:clientrow) => {
           
-            glocs.push({lat: element.lat, lng:  element.lon,title:element.companyname})
+            glocs.push({id:element.clientid, address:element.address, seriescnt:element.seriescnt, lat: element.lat, lng:  element.lon,title:element.companyname})
 
-              const el:latlon={lat:element.lat,lng:element.lon,title:element.companyname };
+              const el:latlon={id:element.clientid,address:element.address,seriescnt:element.seriescnt,lat:element.lat,lng:element.lon,title:element.companyname };
 
                 if (unique.filter(i=>i.title==element.companyname).length==0)
                 {
@@ -113,7 +117,7 @@ export default function clientsearch()
           console.log('avg lat:'+lati.toString());
           const loni=sumlon/cnt;
           console.log('avg lon:'+loni.toString());
-          setCenter({lat:lati,lng:loni,title:'center'});
+          setCenter({id:-1, address:'',seriescnt:0,lat:lati,lng:loni,title:'center'});
         }
 
       const DateFormat=(date:any)=>  {
@@ -230,15 +234,24 @@ export default function clientsearch()
                         wrap:true,  
                         selector: (row:clientrow)=>row.accountingemail
                       }
-       
+                      ,
+                      {
+                          name:'Series Count',
+                          sortable: true,
+                          width: "160px",  
+                          wrap:true,  
+                          selector: (row:clientrow)=>row.seriescnt
+                        }
     ]
     const [grid,setGrid]=useState(true);
+    const [activeMarker, setActiveMarker] = useState('');
+
     return (
       <>
       <Header/>
       {modelOpen && <Client clientid={cliid} closeModal={()=>{setModelOpen(false);}} />}
       
-      <div style={{alignItems: 'center',display:'flex',backgroundColor:'#944780'}}>
+      <div style={{alignItems: 'center',display:'flex',backgroundColor:'#944780',color:'white'}}>
         <h1 style={{fontSize:"22px"}}><b style={{color:'white'}}>Clients</b></h1>
         <input type="text" onChange={handleSearch} value={search}/>
         <Button style={{backgroundColor:grid?'yellow':'white',color:'#0690B1'}} variant="outlined" onClick={(e)=>{e.preventDefault();setGrid(true)}}><GridOnIcon/>Grid</Button>
@@ -261,7 +274,19 @@ export default function clientsearch()
         center={center}
         zoom={5}>
  {locations.map((location, index) => (
-          <Marker key={index} title={location.title} position={location} clickable={true} draggable={true}  />
+          <Marker key={index} title={location.title} onMouseOver={()=>setActiveMarker(location.title)} onMouseOut={()=>setActiveMarker('')}  position={location} clickable={true} onClick={()=>window.open("/client?id="+location.id.toString())} >
+
+
+{activeMarker === location.title ? (
+<InfoWindow onCloseClick={() => setActiveMarker('')}>
+              <div>
+              <div style={{color:'Green'}}>{location.address}</div>
+              <div style={{color:'red'}}><a href={"/?clientid="+location.id}>{"Series Count:"+location.seriescnt.toString()}</a></div>
+              <div style={{color:'navy'}}>{location.title}</div>
+               </div>
+            </InfoWindow>
+ ) : null}
+          </Marker>
         ))}
       </GoogleMap>
     </LoadScript>}

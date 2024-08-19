@@ -6,7 +6,7 @@ import { Circles } from 'react-loader-spinner'
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
-
+import { useSearchParams } from "next/navigation";
 import ClientSelect from '@/components/clientselect'
 import { ChangeEvent, useEffect, useState } from "react";
 import Link from "next/link";
@@ -38,10 +38,15 @@ export default function Home() {
   const [fields,setFields] = useState("All");
   const [loading,setLoading] = useState(false);
   const [results,setResults] = useState<series[]>([]);
+  const searchParams = useSearchParams();
+  const cliid=searchParams!.get("clientid")??'-1';
+  const [clientid,setClientID]=useState(parseInt(cliid));
+  const cliname=searchParams!.get("clientname")??'';
+  const [clientname,setClientName]=useState(cliname)
   
  const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
-    ssearch(actives,inactives,fields,-1);
+    ssearch(actives,inactives,fields,parseInt(cliid));
   }, []);
   const [search,setSearch] = useState("");
   const ssearch = async (act:boolean,del:boolean,flds:string,clid:number) =>{  
@@ -145,8 +150,8 @@ export default function Home() {
     setClientID(id);
     ssearch(actives,inactives,fields,id);
   }
-  const [clientname,setClientName]=useState('')
-  const [clientid,setClientID]=useState(-1)
+  
+ 
 
   const onDelete = async (id:number)=>{
     const confirm = {
@@ -372,18 +377,18 @@ export default function Home() {
 
     <div className="search">
   <form onSubmit={handleSearch}>
-         <table style={{border:"0px"}}>
+         <table style={{border:"0px",backgroundColor:'#944780',color:'white',width:'100%'}} >
        
          <tr>
             <td>
-          <h3 style={{color:'#944780',fontSize:'24px'}}>Search Series</h3>
+          <h3 style={{backgroundColor:'#944780',color:'white',fontSize:'24px'}}>Search Series</h3>
           </td>
           <td width={60}></td>
           <td><Link  title='Add New Series' href='/addseries'><AddIcon/></Link></td>
           <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
 
           <td>
-          <select name="Fields" onChange={handlefield}>
+          <select style={{color:'black'}}  name="Fields" onChange={handlefield}>
           {
           fieldlist.map((ep,i)=>{
             return (
@@ -394,7 +399,7 @@ export default function Home() {
       </td>
       <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
 <td>
-        <input type='text' placeholder="-Search Client/Series-" value={search} onChange={e=>setSearch(e.target.value)} />
+        <input style={{color:'black'}} type='text' placeholder="-Search Client/Series-" value={search} onChange={e=>setSearch(e.target.value)} />
         </td>
         <td><SearchIcon onClick={handleSearch} /></td>
         <td>
@@ -431,9 +436,9 @@ export default function Home() {
           <td style={{fontSize:'8'}}>
             <table border={1}>
               <tr>
-              <td style={{backgroundColor:'rgb(247, 179, 147)'}}><b>Return / Report overdue</b>
+              <td style={{backgroundColor:'rgb(247, 179, 147)',color:'black'}}><b>Return / Report overdue</b>
          </td>
-         <td style={{backgroundColor:'yellow'}}><b>Locked</b></td>
+         <td style={{backgroundColor:'yellow',color:'black'}}><b>Locked</b></td>
          <td rowSpan={2} style={{backgroundColor:'#aef3a8',color:'black'}} ><b>
           Return / Report<br/>Complete</b>
          </td>
@@ -469,12 +474,13 @@ export default function Home() {
    </div></div>
 :
      
-<DataTable columns={columns}
+<DataTable  data={results}
+columns={columns}
         
         pagination
         dense
         customStyles={customStyles}        
-        data={results}
+       
         conditionalRowStyles={conditionalRowStyles} >
         </DataTable>
       }
