@@ -41,16 +41,16 @@ const Page = () => {
             sortable: true,
             width: "260px",  
             wrap:true,  
-            selector: (row:PhotoRow)=>row.description,
-            cell: (row:PhotoRow)=>row.description,
+            selector: (row:PhotoRow)=>row.description??'',
+            cell: (row:PhotoRow)=>row.description??'',
           },
           {
               name:'Photo',
               sortable: true,
               width: "160px",  
               wrap:true,  
-              selector: (row:PhotoRow)=>row.photo,
-              cell: (row:PhotoRow)=>row.photo,
+              selector: (row:PhotoRow)=>row.photo??'',
+              cell: (row:PhotoRow)=>row.photo??'',
             }
     ]
 
