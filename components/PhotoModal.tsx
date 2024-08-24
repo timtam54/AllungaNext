@@ -3,6 +3,8 @@ import { Button } from '@mui/material';
 import { BlobServiceClient } from '@azure/storage-blob';//, ContainerClient,StorageSharedKeyCredential
 import { getToken } from '@/msal/msal';
 import "@/components/part.css";
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 interface PhotoRow {
   id: number;
   reportid: number;
@@ -16,13 +18,24 @@ type Props = {
     reportid:number;
     sampleid:number;
     photoadded: (photo:PhotoRow)=>void;
+    checkExists:  (filename:string,reportid:number,sampleid:number) => boolean;
   }
-    export default function PhotoModal({closeModal,reportid,sampleid,photoadded}:Props)
+    export default function PhotoModal({closeModal,reportid,sampleid,photoadded,checkExists}:Props)
   {  const AZURE_BLOB_SAS_URL = process.env.NEXT_PUBLIC_AZUREBLOB_SASURL!;
     const blobName='allunga~pic~'+reportid.toString()+'~'+sampleid.toString();//+'.png';
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     
       if (event.target.files) {
+        const filename=event.target.files[0].name;
+        const mm=checkExists(filename,reportid,sampleid);
+        if (mm)
+        {
+          const err='file already exists - this cannot be uploaded twice - select another file';
+          setError(err);
+          alert(err);
+          return;
+        }
+        setError('');
         setFile(event.target.files[0]);
       }
     };
@@ -66,7 +79,7 @@ const uploadFileToBlob = async (dataURL:string,filename:string) => {
   
   //alert('signature saved!');
 };
-const [description,setDescrption]=useState('');
+const [description,setDescription]=useState('');
 
 const saveReportphotos=async(filename:string)=>{
   
@@ -97,7 +110,7 @@ const saveReportphotos=async(filename:string)=>{
     closeModal();
    }
 }
-const getSigFromAzure = async (filename:string) => {
+/*const getSigFromAzure = async (filename:string) => {
   const blobServiceClient = new BlobServiceClient(AZURE_BLOB_SAS_URL);
   const containerClient = blobServiceClient.getContainerClient('allunga_pics');
 
@@ -117,20 +130,21 @@ const getSigFromAzure = async (filename:string) => {
   alert(url);
 
 };
-const [imageUrl, setImageUrl] = useState<string | null>(null);
+const [imageUrl, setImageUrl] = useState<string | null>(null);*/
     return <div className="inner-modal-container">
-    <div className="modal" style={{backgroundColor:'white'}} >
-    <div style={{backgroundColor:'red',display:'flex',justifyContent:'space-between'}}><input type="file" onChange={handleFileChange} />
-    reporid:{reportid}
-    sampleid:{sampleid}
-    <input placeholder='-Title-' type="text" value={description} onChange={(e)=>setDescrption(e.target.value)} />
-    <Button variant='contained' onClick={saveFileToBlob} disabled={uploading}>
+    <div className="modal" style={{width:'650px',backgroundColor:'white'}}>
+      <div style={{display:'flex',justifyContent:'space-between'}}>
+      <input type="file" onChange={handleFileChange} />
+    
+    <input placeholder='-Title-' type="text" value={description} onChange={(e)=>setDescription(e.target.value)} />
+   {file && <Button variant='contained' onClick={saveFileToBlob} disabled={uploading}><UploadFileIcon/>
       {uploading ? 'Uploading' : 'Upload'}
-    </Button>
-    <button onClick={(e)=>{e.preventDefault();closeModal();}}>X</button>
-    {error && <p style={{ color: 'red' }}>{error}</p>}
+    </Button>}
+    <button onClick={(e)=>{e.preventDefault();closeModal();}}><HighlightOffIcon/></button>
+   
     </div>
-    {imageUrl && <img src={imageUrl} alt="Downloaded Signature" />}
+    
+    {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
     </div>
     

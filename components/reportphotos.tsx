@@ -55,6 +55,16 @@ type Props = {
     setLoading(false);
 
   }
+  const checkExists=(filename:string,reportid:number,sampleid:number):boolean => 
+  {
+    //const found=data.find(i=>i.photo==filename && i.reportid==reportid && i.sampleid==sampleid);
+    const found=data.find(i=>i.photo=='https://dentalinstalblob.blob.core.windows.net/files/allunga_pics/allunga~pic~'+reportid.toString()+'~'+sampleid.toString()+'~'+filename);
+    if (found)
+    {
+      return true;
+    }
+return false;
+  }
   const fetchSamples = async () => {
     try {
       const endpoint = 'https://allungawebapi.azurewebsites.net/api/Samples/report/'+reportid.toString();
@@ -112,7 +122,7 @@ const [selectedPhoto, setSelectedPhoto] = useState<string>('');
             />}
 
     {isModalOpen && (
-        <PhotoModal photoadded={photoadded} reportid={reportid} sampleid={sampleid} closeModal={()=>{setIsModalOpen(false);}} >
+        <PhotoModal photoadded={photoadded} checkExists={checkExists} reportid={reportid} sampleid={sampleid} closeModal={()=>{setIsModalOpen(false);}} >
         </PhotoModal>
       )}
 
