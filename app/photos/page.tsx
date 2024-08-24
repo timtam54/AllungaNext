@@ -109,11 +109,7 @@ const Page = () => {
 
           <button onClick={handleOpenModal}>Open Modal</button>
 
-          {isModalOpen && (
-            <Modal onClose={handleCloseModal}>
-              {/* Modal content goes here */}
-            </Modal>
-          )}
+          
         </div>
       );
     return (
