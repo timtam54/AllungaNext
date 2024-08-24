@@ -168,7 +168,7 @@ export default function Samples()
           cell: (row:reportrow) =><Button variant='outlined' onClick={(e)=>{
             e.preventDefault();
             setReportID(row.reportid);
-            setSampleID(row.reportid);
+            
             setPhotoModelOpen(true);
 
           }}><PhotoSizeSelectActualIcon/> <u>Photos</u></Button> 
@@ -205,7 +205,7 @@ const fetchReport = async ()=>{
     setModalOpen(false);
     fetchReport();
 }
-const [sampleID,setSampleID]=useState(0);
+
 const [reportID,setReportID]=useState(0);
 const [currentReport,setCurrentReport]=useState<reportrow>();
 const [modelOpen,setModelOpen]=useState(false);
@@ -228,7 +228,7 @@ const [photoModelOpen,setPhotoModelOpen]=useState(false);
 :
 <>
         <Header/>
-       {photoModelOpen && <ReportPhotos sampleid={sampleID} reportid={reportID} closeModal={()=>{setPhotoModelOpen(false)}}/>}
+       {photoModelOpen && <ReportPhotos reportid={reportID} closeModal={()=>{setPhotoModelOpen(false)}}/>}
         {modelOpen && <Report reportid={reportID} closeModal={()=>{setModelOpen(false)}}/>}
         {modalOpen && <ReportDet report={currentReport!} closeModal={closeChat}/>}
 
