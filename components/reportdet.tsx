@@ -97,13 +97,9 @@ const ReportDet =({report, closeModal}:Props) => {
     alert('saved');
   }
   const user = msalInstance.getActiveAccount();
-  async function sendEmail() {//chartdata: string, title: string
-    //setLoading(true);
-    const formData = new FormData();
-    //console.log('chartdata');
-    //console.log(chartdata);
-    //formData.append('data', chartdata);
-    const email = user?.username.toString()!;
+  async function sendEmail() {
+     const formData = new FormData();
+     const email = user?.username.toString()!;
     formData.append('recipient', email);
     formData.append('labels', data!.reportname+ ' report has been completed');
   
@@ -115,10 +111,7 @@ const ReportDet =({report, closeModal}:Props) => {
       console.log("falling over")
       console.log(resp.json)
       console.log("await resp.json()")
-      //const responseData = await resp.json();
-      //console.log(responseData['message']);
-   
-  }
+       }
   else
   {
   const responseData = await resp.json();
@@ -131,36 +124,30 @@ const ReportDet =({report, closeModal}:Props) => {
   }
 
     return  <div className="modal-container">
-    <div className="modal" style={{backgroundColor:'whitesmoke'}} >
+      <div style={{width:'900px',backgroundColor:'white'}}>
+    <div className="modal" style={{width:'900px',backgroundColor:'whitesmoke',display:'flex',justifyContent:'space-between'}} >
 <h1 style={{fontSize:'24px',fontWeight:'bold'}}>Report Details</h1>
-
-
 <Button type="submit" variant="outlined" onClick={(e)=>{e.preventDefault();closeModal()}}>Close</Button>
-    <form>
-    <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>
-        
-                <b>Report Date:</b>
-                  <DatePicker format="dd/MM/yyyy" onSelect={setReportDate}  value={reportDate} />
-              <a href={'https://allungardlc.azurewebsites.net/Matrix.aspx?ReportID='+data!.reportid} target="new"><Button variant="outlined">Report/Print</Button></a>
-       </div>
-       <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>                   
-                <b>Name:</b>
-                <input  type="text" name="reportname" onChange={handleChangeReport} value={data!.reportname} />
-                
-                </div>
-       <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>      
-                <b>Book & Page:</b>
-                <input className='bg-gray-50' type="text" name="bookandpage" onChange={handleChangeReport} value={data!.bookandpage} />
-                </div>
-       <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>    
-                <b>Report Status:</b>
-                <input type="text" name="reportstatus" onChange={handleChangeReport} value={data!.reportstatus} />
-                
-                </div>
-       <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>  
+</div>
 
-          <b>Report Status:</b>
-          <select name="reportstatus" onChange={handleChangeReportSelect}>
+    <form>
+      <table style={{width:'100%'}}>
+    <tr>
+       <td><b>Report Date:</b></td>
+        <td><DatePicker format="dd/MM/yyyy" onSelect={setReportDate}  value={reportDate} />
+        <a href={'https://allungardlc.azurewebsites.net/Matrix.aspx?ReportID='+data!.reportid} target="new"><Button variant="outlined">Report/Print</Button></a></td>
+        <td><b>Name:</b></td>
+        <td><input  type="text" name="reportname" onChange={handleChangeReport} value={data!.reportname} /></td>
+      </tr>
+      <tr style={{backgroundColor:'whitesmoke'}}>      
+                <td><b>Book & Page:</b></td>
+                <td><input className='bg-gray-50' type="text" name="bookandpage" onChange={handleChangeReport} value={data!.bookandpage} /></td>
+                <td><b>Report Status:</b></td>
+                <td><input type="text" name="reportstatus" onChange={handleChangeReport} value={data!.reportstatus} /></td>
+          </tr>
+       <tr>
+        <td><b>Report Status:</b></td>
+         <td><select name="reportstatus" onChange={handleChangeReportSelect}>
           {
           units.map((ep,i)=>{
             return (
@@ -168,43 +155,43 @@ const ReportDet =({report, closeModal}:Props) => {
             )})
           }
           </select>
-          </div>
-       <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>         
-                <b>Return (else Report)</b>
-                <input type="checkbox" name="return_elsereport" onChange={handleCheckReport} checked={data!.return_elsereport} />
-                </div>
-       <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>       
-                <b>Deleted:</b>
-                <input type="checkbox" name="deleted" onChange={handleCheckReport} checked={data!.deleted} />
-                </div>
-       <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>  
-
-                <b>Comment:</b>
-                <textarea cols={120}  style={{width:'100%'}}  name="comment" onChange={handleChangeTextArea} value={data!.comment} />
-                </div>
-       <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>      
-
-                <b>Completed Date</b>
+          </td>
+       <td><b>Return (else Report)</b></td>
+       <td><input type="checkbox" name="return_elsereport" onChange={handleCheckReport} checked={data!.return_elsereport} /></td>
+        </tr>
+        <tr style={{backgroundColor:'whitesmoke'}}>
+       <td> <b>Comment:</b></td>
+       <td colSpan={3}><textarea cols={120}  style={{width:'100%'}}  name="comment" onChange={handleChangeTextArea} value={data!.comment} />
+       </td>
+        </tr>
+       
+       <tr>       
+                <td><b>Deleted:</b></td>
+                <td><input type="checkbox" name="deleted" onChange={handleCheckReport} checked={data!.deleted} />
+                </td>
+<td> 
+  <b>Completed Date</b>
                   <DatePicker format="dd/MM/yyyy" onSelect={setCompletedDate} value={completedDate} />
-                  </div>
-       <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>
-                 
+                  </td>
+                  </tr>
+                  
+       <tr style={{backgroundColor:'whitesmoke'}}>
+                 <td colSpan={2}>
 
             {dirty?
                 <button style={{backgroundColor:'red',color:'white'}} onClick={handleSubmit}>
                   Submit
                 </button>
                 :
-                <div>no changes have been made</div>
+                <p style={{color:'red'}}>no changes have been made</p>
               }
-                 </div>
-                 <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>
-<b>Email report to client</b>
-<Button variant="outlined" onClick={(e)=>{e.preventDefault(); sendEmail();}}>
-        Email
-          </Button>
-        </div>
-                 </form>
+                 </td>
+                 
+                 <td><b>Email report to client</b></td>
+<td><Button variant="outlined" onClick={(e)=>{e.preventDefault(); sendEmail();}}>Email</Button></td>
+        </tr>
+        </table>
+  </form>
    </div></div>
 }
 

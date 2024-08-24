@@ -60,7 +60,10 @@ const Page = () => {
             paddingLeft: '2px', // override the cell padding for head cells
             paddingRight: '2px',
             size:'12px',
-            fontWeight:'bold'
+            fontWeight:'bold',
+            backcolor:'#944780',
+            color:'white',
+
           },
           
         },
@@ -80,7 +83,7 @@ const Page = () => {
           })
         }
       ];
-      import Modal from '@/components/modal';
+  
 
       const [isModalOpen, setIsModalOpen] = useState(false);
 

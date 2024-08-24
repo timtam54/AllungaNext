@@ -16,6 +16,9 @@ import SummarizeIcon from '@mui/icons-material/Summarize';
 import GrainIcon from '@mui/icons-material/Grain';
 import DetailsIcon from '@mui/icons-material/Details';
 import BorderAllIcon from '@mui/icons-material/BorderAll';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import ReportPhotos from '@/components/reportphotos';
+import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual';
 interface reportrow{
     reportid:number;
     reportname:string;
@@ -49,7 +52,9 @@ export default function Samples()
             paddingLeft: '2px', // override the cell padding for head cells
             paddingRight: '2px',
             size:'12px',
-            fontWeight:'bold'
+            fontWeight:'bold',
+            backgroundColor:'#944780',
+            color:'white',
           },
           
         },
@@ -89,7 +94,7 @@ export default function Samples()
         {
           name:'Description',
           sortable: true,
-          width: "230px",  
+          width: "180px",  
           wrap:true,  
           cell: (row:reportrow) =><button onClick={(e)=>{
             e.preventDefault();
@@ -111,15 +116,6 @@ export default function Samples()
     
           }}><u>{FormatDate( row.date)}</u></button>           
         }
-        /*
-            ,
-            {
-              name:'Date',
-              sortable: true,
-              width: "80px",  
-              wrap:true,  
-              cell: (row:reportrow)=><Link href={"/report?id="+row.reportid}><u>{FormatDate( row.date)}</u></Link>
-            }*/
         ,
         {
           name:'Status',
@@ -153,9 +149,9 @@ export default function Samples()
           selector: (row:reportrow)=> row.comment
         },
         {
-          name:'Report',
+          name:'Param Readings',
           sortable: true,
-          width: "170px",  
+          width: "115px",  
           wrap:true,  
           cell: (row:reportrow) =><Button variant='outlined' onClick={(e)=>{
             e.preventDefault();
@@ -163,6 +159,19 @@ export default function Samples()
             setModelOpen(true);
 
           }}><BorderAllIcon/> <u>Excel</u></Button> 
+        },
+        {
+          name:'Photos',
+          sortable: true,
+          width: "130px",  
+          wrap:true,  
+          cell: (row:reportrow) =><Button variant='outlined' onClick={(e)=>{
+            e.preventDefault();
+            setReportID(row.reportid);
+            setSampleID(row.reportid);
+            setPhotoModelOpen(true);
+
+          }}><PhotoSizeSelectActualIcon/> <u>Photos</u></Button> 
         }
     ]
     const [results, setDataReport] = useState<reportrow[]>([]);
@@ -196,9 +205,11 @@ const fetchReport = async ()=>{
     setModalOpen(false);
     fetchReport();
 }
+const [sampleID,setSampleID]=useState(0);
 const [reportID,setReportID]=useState(0);
 const [currentReport,setCurrentReport]=useState<reportrow>();
 const [modelOpen,setModelOpen]=useState(false);
+const [photoModelOpen,setPhotoModelOpen]=useState(false);
     return (
         <body style={{backgroundColor:'white'}}>
              
@@ -217,29 +228,31 @@ const [modelOpen,setModelOpen]=useState(false);
 :
 <>
         <Header/>
+       {photoModelOpen && <ReportPhotos sampleid={sampleID} reportid={reportID} closeModal={()=>{setPhotoModelOpen(false)}}/>}
         {modelOpen && <Report reportid={reportID} closeModal={()=>{setModelOpen(false)}}/>}
-
         {modalOpen && <ReportDet report={currentReport!} closeModal={closeChat}/>}
 
 
         <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',backgroundColor:'white'}}>
-        <Link href="/"><ArrowBack/>back</Link>
+        <Button variant="contained" style={{backgroundColor:'black',color:'white'}} href="/"><ArrowBack/>back</Button>
+        <Button variant="contained" style={{backgroundColor:'black',color:'white'}} href="/"><AddCircleIcon/>Add</Button>
+       
         <div></div>
-        <h3 style={{color:'#944780'}}>Series Name:{seriesname}</h3>
+        <h3 style={{color:'#944780'}}>Series:{seriesname}</h3>
         <div></div>
         <div>
-        <Link href={"/seriestab?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button  style={{width:'200px'}}  variant='outlined'><DetailsIcon/>Details</Button></Link>
-        <Link href={"/samples?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='outlined'><GrainIcon/>Samples</Button></Link>
-        <Link href={"/reports?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='contained'><SummarizeIcon/>Reports</Button></Link>
-        <Link href={"/dispatch?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='outlined'><SendTimeExtensionIcon/>Dispatch</Button></Link>
-        <Link href={"/reportparam?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='outlined'><AppsIcon/>Params</Button></Link>
+        <Link href={"/seriestab?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button  style={{width:'180px'}}  variant='outlined'><DetailsIcon/>Details</Button></Link>
+        <Link href={"/samples?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'180px'}} variant='outlined'><GrainIcon/>Samples</Button></Link>
+        <Link href={"/reports?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'180px'}} variant='contained'><SummarizeIcon/>Reports</Button></Link>
+        <Link href={"/dispatch?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'180px'}} variant='outlined'><SendTimeExtensionIcon/>Dispatch</Button></Link>
+        <Link href={"/reportparam?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'180px'}} variant='outlined'><AppsIcon/>Params</Button></Link>
         </div>
          </div>
 
         <div className="grid grid-cols-1 gap-4 px-4 my-4">
         <div style={{color:'white',backgroundColor:'navy'}} className="bg-white rounded-lg">
         {!modelOpen && !modalOpen && <DataTable columns={columns}
-        fixedHeader
+       
         pagination
         dense
         customStyles={customStyles}        

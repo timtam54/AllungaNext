@@ -495,9 +495,9 @@ export default function ReportTab() {
   ///////////
   return (
     <Box sx={{ width: '100%', typography: 'body1' }}>
-      <Link
+      <Button variant="contained" style={{backgroundColor:'black',color:'white'}} 
         href={"/seriestab"}
-        state={{ id: seriesid, name: '' }}><ArrowBack />back</Link>
+        state={{ id: seriesid, name: '' }}><ArrowBack />back</Button>
       {
         dataReport.map((result, i) => {
           return (

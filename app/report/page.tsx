@@ -45,7 +45,7 @@ const [dataSample, setDataSample] = React.useState([]);
 
   
       const saveReadings= async () => {//e
-        //e.preventDefault();
+  
         const token = await getToken()
         const headers = new Headers()
         const bearer = `Bearer ${token}`

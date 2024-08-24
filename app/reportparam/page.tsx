@@ -218,16 +218,17 @@ export default function Page()
 
           {modelOpen && <ChartSampleParam title={chartTitle} seriesid={id} paramID={paramID} closeModal={()=>{setModelOpen(false)}}/>}
           <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',backgroundColor:'white'}}>
-        <Link href="/"><ArrowBack/>back</Link>
+          <Button variant="contained" style={{backgroundColor:'black',color:'white'}} href="/"><ArrowBack/>back</Button>
+       
         <div></div>
-        <h3 style={{color:'#944780'}}>Series Name:{seriesname}</h3>
+        <h3 style={{color:'#944780'}}>Series:{seriesname}</h3>
         <div></div>
         <div>
-        <Link href={"/seriestab?id="+id.toString()+"&seriesname="+seriesname} ><Button  style={{width:'200px'}}  variant='outlined'><DetailsIcon/>Details</Button></Link>
-        <Link href={"/samples?id="+id.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='outlined'><GrainIcon/>Samples</Button></Link>
-        <Link href={"/reports?id="+id.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='outlined'><SummarizeIcon/>Reports</Button></Link>
-        <Link href={"/dispatch?id="+id.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='outlined'><SendTimeExtensionIcon/>Dispatch</Button></Link>
-        <Link href={"/reportparam?id="+id.toString()+"&seriesname="+seriesname} ><Button style={{width:'200px'}} variant='contained'><AppsIcon/>Params</Button></Link>
+        <Link href={"/seriestab?id="+id.toString()+"&seriesname="+seriesname} ><Button  style={{width:'180px'}}  variant='outlined'><DetailsIcon/>Details</Button></Link>
+        <Link href={"/samples?id="+id.toString()+"&seriesname="+seriesname} ><Button style={{width:'180px'}} variant='outlined'><GrainIcon/>Samples</Button></Link>
+        <Link href={"/reports?id="+id.toString()+"&seriesname="+seriesname} ><Button style={{width:'180px'}} variant='outlined'><SummarizeIcon/>Reports</Button></Link>
+        <Link href={"/dispatch?id="+id.toString()+"&seriesname="+seriesname} ><Button style={{width:'180px'}} variant='outlined'><SendTimeExtensionIcon/>Dispatch</Button></Link>
+        <Link href={"/reportparam?id="+id.toString()+"&seriesname="+seriesname} ><Button style={{width:'180px'}} variant='contained'><AppsIcon/>Params</Button></Link>
         </div>
         </div>
         <div style={{alignItems: 'center',display:'flex',justifyContent:'space-between'}}>
