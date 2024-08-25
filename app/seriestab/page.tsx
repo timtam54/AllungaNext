@@ -538,7 +538,7 @@ return 'L';
       <Circles 
       height="200"
       width="200"
-      color="silver"
+      color="#944780"
       ariaLabel="circles-loading"
       wrapperStyle={{}}
       wrapperClass=""

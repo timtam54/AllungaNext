@@ -147,7 +147,7 @@ return (
  <Circles
  height="300"
  width="300"
- color="purple"
+ color="#944780"
  ariaLabel="circles-loading"
  wrapperStyle={{}}
  wrapperClass=""
