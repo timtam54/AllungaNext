@@ -190,15 +190,9 @@ const fetchAllData=async ()=>
   
     setRepair(data);
     setCustomerEmail(JSON.stringify(data));
-//    console.log('ce');
- //   const ccc=JSON.stringify(c);
-  //  const json = ccc.replace(/"([^"]+)":/g, '$1:');
-   // const json2=json.replaceAll("\"","'");
-   // const json3 = json2.replaceAll("&"," ");
-   // console.log('https://quickchart.io/chart?c='+json3);
-    //setCE('https://quickchart.io/chart?c='+json3);
+
   }
-//  const [ce,setCE] = useState('');
+
 
 const emailcustomer=async(event: React.MouseEvent<HTMLButtonElement>)=>{
   event.preventDefault();

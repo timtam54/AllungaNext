@@ -10,6 +10,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import UserAvatar from "@/components/UserAvatar";
 import { useState } from "react";
 import ScheduleActual from "@/components/ScheduleActual";
+import Weather from "./weather";
 
 
 const Header = () => {
@@ -21,10 +22,11 @@ const Header = () => {
     const user = msalInstance.getActiveAccount();
     const [rackrptOpen,setrackrptOpen] = useState(false);
     const [schedrptOpen,setschedrptOpen] = useState(false);
+    const [weatherOpen,setWeatherOpen] = useState(false);
     return (
         <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',backgroundColor:'white'}}>
 
-
+{weatherOpen && <Weather closeModal={()=>{setWeatherOpen(false)}}/>}
 {chartSimpleOpen && <ChartSimple closeModal={()=>{setChartSimpleOpen(false)}}/>}
 {rackrptOpen && <RptRack closeModal={()=>{setrackrptOpen(false)}}/>}
 {schedrptOpen && <ScheduleActual Rpt={rpt} closeModal={()=>{setschedrptOpen(false)}}/>}
@@ -127,6 +129,12 @@ const Header = () => {
           <button        className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
        onClick={(e)=>{e.preventDefault(); setrackrptOpen(true);}}>Rack Report</button>
           </MenuItem>
+          <MenuItem>
+        
+        <button        className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+     onClick={(e)=>{e.preventDefault(); setWeatherOpen(true);}}>Weather - last week</button>
+        </MenuItem>
+          
           <MenuItem>
         
           <button        className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
