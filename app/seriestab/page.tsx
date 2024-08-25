@@ -512,22 +512,8 @@ return 'L';
  }
     return (
         <div style={{backgroundColor:'white'}}>
-             {loading ? 
-              <div className="relative h-16" >
-  <div style={{backgroundColor:'whitesmoke'}} className="absolute p-4 text-center transform -translate-x-1/2 translate-y-1/2 border top-1/2 left-1/2">
- 
-      <Circles 
-      height="200"
-      width="200"
-      color="silver"
-      ariaLabel="circles-loading"
-      wrapperStyle={{}}
-      wrapperClass=""
-      visible={true}
-    />
-    </div> </div>
-:
-<>
+            
+
         <Header/>
         <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',backgroundColor:'white'}}>
         <Button variant="contained" style={{backgroundColor:'black',color:'white'}} href="/"><ArrowBack/>back</Button>
@@ -544,6 +530,22 @@ return 'L';
         </div>
       
           
+
+        {loading ? 
+              <div className="relative h-16" >
+  <div style={{backgroundColor:'whitesmoke'}} className="absolute p-4 text-center transform -translate-x-1/2 translate-y-1/2 border top-1/2 left-1/2">
+ 
+      <Circles 
+      height="200"
+      width="200"
+      color="silver"
+      ariaLabel="circles-loading"
+      wrapperStyle={{}}
+      wrapperClass=""
+      visible={true}
+    />
+    </div> </div>
+: 
         <div className="grid grid-cols-2 gap-4 px-4 my-4" style={{backgroundColor:'white'}} >
 <div style={{color:'white',backgroundColor:'navy'}} className="bg-white rounded-lg">
     <div><br/></div>
@@ -768,9 +770,9 @@ return 'L';
 </div>
 <div><br/></div>
 </div>
-</div>
-</>
-}
+</div>}
+
+
         </div>
     )
 } 

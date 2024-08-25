@@ -213,19 +213,7 @@ const [photoModelOpen,setPhotoModelOpen]=useState(false);
     return (
         <body style={{backgroundColor:'white'}}>
              
-             {loading ? 
-      <div className="container">
-      <Circles
-      height="200"
-      width="200"
-      color="silver"
-      ariaLabel="circles-loading"
-      wrapperStyle={{}}
-      wrapperClass=""
-      visible={true}
-    />
-    </div>
-:
+  
 <>
         <Header/>
        {photoModelOpen && <ReportPhotos reportid={reportID} closeModal={()=>{setPhotoModelOpen(false)}}/>}
@@ -250,7 +238,23 @@ const [photoModelOpen,setPhotoModelOpen]=useState(false);
          </div>
 
         <div className="grid grid-cols-1 gap-4 px-4 my-4">
+        {loading ? 
+      <div className="container">
+      <Circles
+      height="200"
+      width="200"
+      color="silver"
+      ariaLabel="circles-loading"
+      wrapperStyle={{}}
+      wrapperClass=""
+      visible={true}
+    />
+    </div>
+:
+        <>
         <div style={{color:'white',backgroundColor:'navy'}} className="bg-white rounded-lg">
+
+          
         {!modelOpen && !modalOpen && <DataTable columns={columns}
        
         pagination
@@ -260,10 +264,10 @@ const [photoModelOpen,setPhotoModelOpen]=useState(false);
         conditionalRowStyles={conditionalRowStyles} >
         </DataTable>}
         </div>
-
+        </>}
             </div>
             </>
-               }
+               
             </body>
     )
 }

@@ -25,7 +25,6 @@ interface Report {
     photos: string[];
 }
 
-
   interface PhotoRow {
     id: number;
     reportid: number;
@@ -126,20 +125,8 @@ const [selectedPhoto, setSelectedPhoto] = useState<string>('');
         </PhotoModal>
       )}
 
-    {loading ? 
-              <div className="relative h-16" >
-  <div style={{backgroundColor:'whitesmoke'}} className="absolute p-4 text-center transform -translate-x-1/2 translate-y-1/2 border top-1/2 left-1/2">
- 
-      <Circles 
-      height="200"
-      width="200"
-      color="silver"
-      ariaLabel="circles-loading"
-      wrapperStyle={{}}
-      wrapperClass=""
-      visible={true}
-    />
-    </div> </div>:<>
+   
+    <>
   <div style={{display:'flex',justifyContent:'space-between'}}>
   <h1 style={{fontSize:'24px',fontWeight:'bold'}}>Report Photos</h1>
     <Button type="submit" variant="outlined" onClick={(e:any)=>{e.preventDefault();closeModal()}}>Close</Button>
@@ -155,6 +142,19 @@ const [selectedPhoto, setSelectedPhoto] = useState<string>('');
                 <th colSpan={5}>Photos</th>
               </tr>
             </thead>
+            {loading ? 
+                <div className="relative h-16">
+  <div className="absolute p-4 text-center transform -translate-x-1/2 translate-y-1/2 border top-1/2 left-1/2">
+      <Circles 
+      height="200"
+      width="200"
+      color="silver"
+      ariaLabel="circles-loading"
+      wrapperStyle={{}}
+      wrapperClass=""
+      visible={true}
+    />
+    </div> </div>:
             <tbody>
               {samples.map((sample) => (
                 <tr key={sample.SampleID}>
@@ -170,11 +170,12 @@ const [selectedPhoto, setSelectedPhoto] = useState<string>('');
                 </tr>
               ))}
             </tbody>
+            }
           </table>
 </div>
     
       </>
-       }
+       
     </div>
     </div>
 };
