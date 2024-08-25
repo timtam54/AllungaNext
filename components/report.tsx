@@ -311,42 +311,39 @@ const [dataSample, setDataSample] = React.useState<Sample[]>([]);
 
 
 
- return  <div className="modal-container">
-    <div className="modal" style={{backgroundColor:'whitesmoke'}} >
-  <table><tr><td><h3 style={{color:'#944780'}}>Readings - Excel View</h3></td><td> <Button  variant='contained' type="submit" onClick={(e)=>{e.preventDefault();closeModal()}}>Close</Button></td><td><Button variant="outlined"  style={{backgroundColor:'red',color:'white'}} onClick={saveReadings}>
- Submit
-</Button></td>
+ return <div className="modal-container"> <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
+ <div className="bg-white p-5 rounded-lg shadow-xl w-11/12 max-w-4xl">
+   <div className="flex justify-between items-center mb-4">
+     <h3 className="text-2xl font-bold text-purple-800">Readings - Excel View</h3>
+     <div className="space-x-2">
+       <Button variant="contained" onClick={closeModal} className="bg-gray-500 hover:bg-gray-600">
+         Close
+       </Button>
+       <Button variant="contained" onClick={saveReadings} className="bg-green-500 hover:bg-green-600">
+         Submit
+       </Button>
+       <ExportAsExcel data={dataSample} headers={xlheaders}>
+         {(props) => (
+           <Button variant="contained" {...props} className="bg-blue-500 hover:bg-blue-600">
+             <BorderAllIcon className="mr-2" />
+             Export as Excel
+           </Button>
+         )}
+       </ExportAsExcel>
+     </div>
+   </div>
 
-<td>
-<ExportAsExcel
-    data={dataSample}
-    headers={xlheaders}
->
-{(props)=> (
-      <Button variant="contained" style={{color:'black'}} {...props}>
-        <BorderAllIcon/>Export as Excel
-      </Button>
-    )}
-</ExportAsExcel>
-  </td></tr></table> {loading ? 
-          <div className="relative h-16">
-  <div className="absolute p-4 text-center transform -translate-x-1/2 translate-y-1/2 border top-1/2 left-1/2">
-           <Circles
-             height="200"
-             width="200"
-             color="silver"
-             ariaLabel="circles-loading"
-             wrapperStyle={{}}
-             wrapperClass=""
-             visible={true}
-           /></div></div>
-:
+   {loading ? (
+     <div className="flex justify-center items-center h-64">
+       <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-500"></div>
+     </div>
+   ) :
 <> <ReactGrid onCellsChanged={handleChanges}  onColumnResized={handleColumnResize} enableRowSelection enableFillHandle enableRangeSelection  enableColumnSelection rows={rows} columns={columns} stickyTopRows={1} />
 </>
  }
 
 </div>
-</div>
+</div></div>
 }
 
 
