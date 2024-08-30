@@ -1,198 +1,270 @@
-import "@/components/part.css";
-import { ChangeEvent, useEffect, useState } from "react";
+"use client"
+
+import React, { ChangeEvent, useState } from "react";
+import { getToken, msalInstance } from "@/msal/msal";
 import DatePicker from 'react-date-picker';
 import 'react-date-picker/dist/DatePicker.css'
-import { getToken, msalInstance } from "@/msal/msal";
-import Button from '@mui/material/Button';
+import { 
+  Button, 
+  TextField, 
+  Checkbox, 
+  Select, 
+  MenuItem, 
+  FormControlLabel, 
+  Typography, 
+  Box, 
+  Paper, 
+  Grid,
+  Container,
+  ThemeProvider,
+  createTheme,
+} from '@mui/material';
 
 type Props = {
-    report: reportrow;
-    closeModal:  () => void;
-  };
+  report: reportrow;
+  closeModal: () => void;
+};
 
-  interface reportrow{
-    reportid:number;
-    reportname:string;
-    bookandpage:string;
-    reportstatus:string;
-    return_elsereport:boolean;
-    deleted:boolean;
-    comment:string;
-    completedDate:Date;
-    date:Date;
-    DaysInLab:number;
-  }
-const ReportDet =({report, closeModal}:Props) => {
-  const [reportDate, setReportDate] = useState(new Date());
+interface reportrow {
+  reportid: number;
+  reportname: string;
+  bookandpage: string;
+  reportstatus: string;
+  return_elsereport: boolean;
+  deleted: boolean;
+  comment: string;
+  completedDate: Date;
+  date: Date;
+  DaysInLab: number;
+}
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#1976d2',
+    },
+    secondary: {
+      main: '#dc004e',
+    },
+  },
+});
+
+const ReportDet = ({ report, closeModal }: Props) => {
+  const [reportDate, setReportDate] = useState<Date | null>(new Date(report.date));
   const [data, setData] = useState<reportrow>(report);
   const [units] = useState(["N", "A", "C", "S"]);
-  const [completedDate, setCompletedDate] = useState(new Date());
-  const handleChangeReport = (e:ChangeEvent<HTMLInputElement>) => {
-    if (dirty==false)
-    {
-    setDirty(true);
-    }
-    setData({ ...data!, [e.target.name]: e.target.value });
-  };
-  const handleChangeTextArea = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setData({ ...data!, [e.target.name]: e.target.value });
-    setDirty(true);
-  }
-  const handleCheckReport = (e:ChangeEvent<HTMLInputElement>) => {
-    if (dirty==false)
-      {
+  alert(report.completedDate);
+  const [completedDate, setCompletedDate] = useState<Date | null>((report.completedDate==null)?null:new Date(report.completedDate));
+  const [dirty, setDirty] = useState(false);
+
+  const handleChangeReport = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!dirty) {
       setDirty(true);
-      }
-    if (e.target.checked)
-      {
-      setData({ ...data!, [e.target.name]: true});
-      }
-    else{
-      setData({ ...data!, [e.target.name]: false});
     }
+    setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  const handleChangeReportSelect = (e:ChangeEvent<HTMLSelectElement>) => {
-    if (dirty==false)
-    {
+  const handleChangeTextArea = (e: ChangeEvent<HTMLInputElement>) => {
+    setData({ ...data, [e.target.name]: e.target.value });
     setDirty(true);
-    }
-    setData({ ...data!, [e.target.name]: e.target.value });
   };
-  const [dirty,setDirty]=useState(false);
 
-  const handleSubmit = async (e:any) => {
+  const handleCheckReport = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!dirty) {
+      setDirty(true);
+    }
+    setData({ ...data, [e.target.name]: e.target.checked });
+  };
+
+  const handleChangeReportSelect = (e: ChangeEvent<{ value: unknown }>) => {
+    if (!dirty) {
+      setDirty(true);
+    }
+    setData({ ...data, 'reportstatus': e.target.value as string });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await saveReport();//reportidx);
-  }
+    await saveReport();
+  };
 
   const saveReport = async () => {
     setDirty(false);
-    const dta={ ...data, 'date':new Date(reportDate), 'completedDate': new Date(completedDate)  }
-    /*data.date = moment(reportDate).format("YYYY-MM-DD HH:mm:ss");*/
-    setData(dta);
+    const updatedData = { 
+      ...data, 
+      date: reportDate || new Date(), 
+      completedDate: completedDate || new Date() 
+    };
+    setData(updatedData);
 
-    //data.completeddate = moment(completedDate).format("YYYY-MM-DD HH:mm:ss");
-    //setData({ ...data, 'completeddate': moment(completedDate).format("YYYY-MM-DD HH:mm:ss") });
+    const token = await getToken();
+    const headers = new Headers();
+    const bearer = `Bearer ${token}`;
+    headers.append('Authorization', bearer);
+    headers.append('Content-type', "application/json; charset=UTF-8");
+    const method = (data.reportid !== 0) ? 'PUT' : 'POST';
 
-    const token = await getToken()
-    const headers = new Headers()
-    const bearer = `Bearer ${token}`
-    headers.append('Authorization', bearer)
-    headers.append('Content-type', "application/json; charset=UTF-8")
-    var method = (data.reportid!=0)?'PUT':'POST'; 
- 
     const options = {
       method: method,
-      body: JSON.stringify(data),
+      body: JSON.stringify(updatedData),
       headers: headers,
+    };
+
+    const saveurl = `https://allungawebapi.azurewebsites.net/api/Reports/${data.reportid || ''}`;
+    try {
+      const response = await fetch(saveurl, options);
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      alert('Saved successfully');
+    } catch (error) {
+      alert('Error saving report');
+      console.error('Error:', error);
     }
-    
-    const saveurl = `https://allungawebapi.azurewebsites.net/api/Reports/` + ((data.reportid==0)?"":data.reportid.toString());
-    const response = fetch(saveurl, options);
-    var ee = await response;
-    if (!ee.ok) {
-      throw Error((ee).statusText);
-    }
-    alert('saved');
-  }
+  };
+
   const user = msalInstance.getActiveAccount();
-  async function sendEmail() {
-     const formData = new FormData();
-     const email = user?.username.toString()!;
+
+  const sendEmail = async () => {
+    const formData = new FormData();
+    const email = user?.username || '';
     formData.append('recipient', email);
-    formData.append('labels', data!.reportname+ ' report has been completed');
-  
-    const resp = await fetch('/api/contact', {
-      method: "post",
-      body: formData, //,email:'timhams@gmail.com'
-    });
-    if (!resp.ok) {
-      console.log("falling over")
-      console.log(resp.json)
-      console.log("await resp.json()")
-       }
-  else
-  {
-  const responseData = await resp.json();
-  console.log(resp.status);
-  console.log(responseData['message']);   
-  alert('Message successfully sent');
-  }
-    //setLoading(false);
-  
-  }
+    formData.append('labels', `${data.reportname} report has been completed`);
 
-    return  <div className="modal-container">
-      <div style={{width:'900px',backgroundColor:'white'}}>
-    <div className="modal" style={{width:'900px',backgroundColor:'whitesmoke',display:'flex',justifyContent:'space-between'}} >
-<h1 style={{fontSize:'24px',fontWeight:'bold'}}>Report Details</h1>
-<Button type="submit" variant="outlined" onClick={(e)=>{e.preventDefault();closeModal()}}>Close</Button>
-</div>
+    try {
+      const resp = await fetch('/api/contact', {
+        method: "post",
+        body: formData,
+      });
+      if (!resp.ok) {
+        throw new Error('Failed to send email');
+      }
+      const responseData = await resp.json();
+      console.log(responseData['message']);
+      alert('Message successfully sent');
+    } catch (error) {
+      console.error('Error sending email:', error);
+      alert('Failed to send email');
+    }
+  };
 
-    <form>
-      <table style={{width:'100%'}}>
-    <tr>
-       <td><b>Report Date:</b></td>
-        <td><DatePicker format="dd/MM/yyyy" onSelect={setReportDate}  value={reportDate} />
-        <a href={'https://allungardlc.azurewebsites.net/Matrix.aspx?ReportID='+data!.reportid} target="new"><Button variant="outlined">Report/Print</Button></a></td>
-        <td><b>Name:</b></td>
-        <td><input  type="text" name="reportname" onChange={handleChangeReport} value={data!.reportname} /></td>
-      </tr>
-      <tr style={{backgroundColor:'whitesmoke'}}>      
-                <td><b>Book & Page:</b></td>
-                <td><input className='bg-gray-50' type="text" name="bookandpage" onChange={handleChangeReport} value={data!.bookandpage} /></td>
-                <td><b>Report Status:</b></td>
-                <td><input type="text" name="reportstatus" onChange={handleChangeReport} value={data!.reportstatus} /></td>
-          </tr>
-       <tr>
-        <td><b>Report Status:</b></td>
-         <td><select name="reportstatus" onChange={handleChangeReportSelect}>
-          {
-          units.map((ep,i)=>{
-            return (
-              <option value={ep} selected={(ep==data!.reportstatus)?true:false}>{ep}</option>
-            )})
-          }
-          </select>
-          </td>
-       <td><b>Return (else Report)</b></td>
-       <td><input type="checkbox" name="return_elsereport" onChange={handleCheckReport} checked={data!.return_elsereport} /></td>
-        </tr>
-        <tr style={{backgroundColor:'whitesmoke'}}>
-       <td> <b>Comment:</b></td>
-       <td colSpan={3}><textarea cols={120}  style={{width:'100%'}}  name="comment" onChange={handleChangeTextArea} value={data!.comment} />
-       </td>
-        </tr>
+  return (
+    <div className="modal-container">
+    <ThemeProvider theme={theme}>
+      <Container maxWidth="md">
+        <Paper elevation={3} style={{ padding: '20px', marginTop: '20px' }}>
+          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+            <Typography variant="h4">Report Details</Typography>
+            <Button variant="outlined" onClick={closeModal}>Close</Button>
+          </Box>
+          <form onSubmit={handleSubmit}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={6}>
+                
+              <p>Report Date:</p>
+              <DatePicker format="dd/MM/yyyy" onSelect={setReportDate}  value={reportDate} />
        
-       <tr>       
-                <td><b>Deleted:</b></td>
-                <td><input type="checkbox" name="deleted" onChange={handleCheckReport} checked={data!.deleted} />
-                </td>
-<td> 
-  <b>Completed Date</b>
-                  <DatePicker format="dd/MM/yyyy" onSelect={setCompletedDate} value={completedDate} />
-                  </td>
-                  </tr>
-                  
-       <tr style={{backgroundColor:'whitesmoke'}}>
-                 <td colSpan={2}>
+                
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Name"
+                  name="reportname"
+                  value={data.reportname}
+                  onChange={handleChangeReport}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Book & Page"
+                  name="bookandpage"
+                  value={data.bookandpage}
+                  onChange={handleChangeReport}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Select
+                  fullWidth
+                  label="Report Status"
+                  name="reportstatus"
+                  value={data.reportstatus}
+                  onChange={handleChangeReportSelect}
+                >
+                  {units.map((unit) => (
+                    <MenuItem key={unit} value={unit}>{unit}</MenuItem>
+                  ))}
+                </Select>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={data.return_elsereport}
+                      onChange={handleCheckReport}
+                      name="return_elsereport"
+                    />
+                  }
+                  label="Return (else Report)"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  multiline
+                  rows={4}
+                  label="Comment"
+                  name="comment"
+                  value={data.comment}
+                  onChange={handleChangeTextArea}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={data.deleted}
+                      onChange={handleCheckReport}
+                      name="deleted"
+                    />
+                  }
+                  label="Deleted"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <p>Completed Date</p>
+                <DatePicker format="dd/MM/yyyy" onSelect={setCompletedDate} value={completedDate} />
+   
+              </Grid>
+              <Grid item xs={12}>
+                <Box display="flex" justifyContent="space-between">
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    disabled={!dirty}
+                  >
+                    Submit
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      sendEmail();
+                    }}
+                  >
+                    Email Report to Client
+                  </Button>
+                </Box>
+              </Grid>
+            </Grid>
+          </form>
+        </Paper>
+      </Container>
+    </ThemeProvider></div>
+  );
+};
 
-            {dirty?
-                <button style={{backgroundColor:'red',color:'white'}} onClick={handleSubmit}>
-                  Submit
-                </button>
-                :
-                <p style={{color:'red'}}>no changes have been made</p>
-              }
-                 </td>
-                 
-                 <td><b>Email report to client</b></td>
-<td><Button variant="outlined" onClick={(e)=>{e.preventDefault(); sendEmail();}}>Email</Button></td>
-        </tr>
-        </table>
-  </form>
-   </div></div>
-}
-
-export default ReportDet
+export default ReportDet;

@@ -78,6 +78,7 @@ export default function Samples() {
         <button
           onClick={() => {
             setCurrentReport(row)
+            console.table(row);
             setModalOpen(true)
           }}
           className="text-blue-600 hover:underline"

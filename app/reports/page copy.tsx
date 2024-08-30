@@ -99,6 +99,7 @@ export default function Samples()
           cell: (row:reportrow) =><button onClick={(e)=>{
             e.preventDefault();
             const res=results.filter((i:reportrow)=>i.reportid===row.reportid);
+            console.table(res[0]);
             setCurrentReport(res[0]); 
             openChat();
           }}><u>{row.reportname}</u></button> ,
