@@ -180,7 +180,7 @@ export const Sample  = ({  closeModal, sampleid,SeriesID }:Props) => {
 
       <div className="modal-container">
     <div className="modal" style={{backgroundColor:'whitesmoke'}} >
-<h1 style={{fontSize:'24px',fontWeight:'bold'}}>Sample History</h1>
+<h1 style={{fontSize:'24px',fontWeight:'bold'}}>Sample History.</h1>
 
 <Button type="submit" variant="outlined" onClick={(e)=>{e.preventDefault();closeModal()}}>Close</Button>
     <form>

@@ -1,273 +1,264 @@
-"use client"
-import { Circles } from 'react-loader-spinner';
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
+import Link from 'next/link'
 import Header from '@/components/header'
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from 'react';
-import Link from "next/link";
-import ArrowBack from '@mui/icons-material/ArrowBack';
-import ReportDet from "@/components/reportdet";
-import Report from "@/components/report";
-import AppsIcon from '@mui/icons-material/Apps';
-import { getToken } from "@/msal/msal";
-import DataTable from "react-data-table-component";
-import Button from '@mui/material/Button';
-import SendTimeExtensionIcon from '@mui/icons-material/SendTimeExtension';
-import SummarizeIcon from '@mui/icons-material/Summarize';
-import GrainIcon from '@mui/icons-material/Grain';
-import DetailsIcon from '@mui/icons-material/Details';
-import BorderAllIcon from '@mui/icons-material/BorderAll';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import ReportPhotos from '@/components/reportphotos';
-import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual';
-interface reportrow{
-    reportid:number;
-    reportname:string;
-    bookandpage:string;
-    reportstatus:string;
-    return_elsereport:boolean;
-    deleted:boolean;
-    comment:string;
-    completedDate:Date;
-    date:Date;
-    
-    
-    DaysInLab:number;
-    
-    
-   
+import ReportDet from '@/components/reportdet'
+import Report from '@/components/report'
+import ReportPhotos from '@/components/reportphotos'
+import { getToken } from '@/msal/msal'
+import DataTable from 'react-data-table-component'
+import { ArrowLeft, Plus, FileText, FileSpreadsheet, Send, Grid, Camera } from 'lucide-react'//Grain, 
+
+interface ReportRow {
+  reportid: number
+  reportname: string
+  bookandpage: string
+  reportstatus: string
+  return_elsereport: boolean
+  deleted: boolean
+  comment: string
+  completedDate: Date
+  date: Date
+  DaysInLab: number
 }
-export default function Samples()
-{    const searchParams = useSearchParams();
-    const seriesname=searchParams!.get("seriesname");
-    const SeriesID =parseInt( searchParams!.get("id")!);
-    const [loading,setLoading] = useState(true);
-   // const [deleted,setDeleted] = useState(false);
-    useEffect(() => {
-        getalldata()
-   
-    } , []);
-    const customStyles = {
-        headCells: {
-          style: {
-            paddingLeft: '2px', // override the cell padding for head cells
-            paddingRight: '2px',
-            size:'12px',
-            fontWeight:'bold',
-            backgroundColor:'#944780',
-            color:'white',
-          },
-          
-        },
-        cells: {
-          style: {
-            paddingLeft: '2px', // override the cell padding for data cells
-            paddingRight: '2px',
-            
-          },
-        },
-      }
-      const conditionalRowStyles = [
-        {
-          when: (row:reportrow) => true,
-          style:  (row:reportrow) => ({
-            color: row.reportstatus=='N'?'orange':(row.reportstatus=='A'?'Green':'Navy'),
-          })
+
+export default function Samples() {
+  const searchParams = useSearchParams()
+  const seriesname = searchParams!.get('seriesname')
+  const SeriesID = parseInt(searchParams!.get('id')!)
+  const [loading, setLoading] = useState(true)
+  const [results, setDataReport] = useState<ReportRow[]>([])
+  const [modalOpen, setModalOpen] = useState(false)
+  const [reportID, setReportID] = useState(0)
+  const [currentReport, setCurrentReport] = useState<ReportRow>()
+  const [modelOpen, setModelOpen] = useState(false)
+  const [photoModelOpen, setPhotoModelOpen] = useState(false)
+
+  useEffect(() => {
+    fetchReport()
+  }, [])
+
+  const fetchReport = async () => {
+    setLoading(true)
+    try {
+      const token = await getToken()
+      const response = await fetch(`https://allungawebapi.azurewebsites.net/api/Reports/${SeriesID}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
         }
-      ];
-    const getalldata=async()=>{
-        await fetchReport();
-       
+      })
+      if (!response.ok) throw new Error(response.statusText)
+      const json = await response.json()
+      setDataReport(json)
+    } catch (error) {
+      console.error('Failed to fetch reports:', error)
+    } finally {
+      setLoading(false)
     }
-    const FormatDate=(date:any)=>  {
-      if (date==null) return "";
-     const dte= new Date(date);
-      return dte.getFullYear().toString()+'-'+(dte.getMonth()+1).toString().padStart(2,'0')+'-'+(dte.getDate()).toString().padStart(2,'0');
-    }
-    const columns =[
-        {
-          name:'ID',
-          sortable: true,
-          width: "60px",  
-          wrap:true,  
-          selector: (row:reportrow)=>row.reportid
-        },
-        {
-          name:'Description',
-          sortable: true,
-          width: "180px",  
-          wrap:true,  
-          cell: (row:reportrow) =><button onClick={(e)=>{
-            e.preventDefault();
-            const res=results.filter((i:reportrow)=>i.reportid===row.reportid);
-            setCurrentReport(res[0]); 
-            openChat();
-          }}><u>{row.reportname}</u></button> ,
-          selector: (row:reportrow)=>row.reportname
-        },
-        {
-          name:'Date',
-          sortable: true,
-          width: "90px",  
-          wrap:true,  
-          cell: (row:reportrow) =><button onClick={(e)=>{
-            e.preventDefault();
-            setReportID(row.reportid);
-            setModelOpen(true);
-    
-          }}><u>{FormatDate( row.date)}</u></button>           
-        }
-        ,
-        {
-          name:'Status',
-          sortable: true,
-          width: "80px",  
-          wrap:true,  
-          selector: (row:reportrow)=> row.reportstatus//.status
-        }
-        ,
-        {
-          name:'Book & Page',
-          sortable: true,
-          width: "100px",  
-          wrap:true,  
-          selector: (row:reportrow)=> row.bookandpage
-        }
-        ,
-        {
-          name:'Days In Lab',
-          sortable: true,
-          width: "80px",  
-          wrap:true,  
-          selector: (row:reportrow)=> row.DaysInLab
-        }
-       ,
-        {
-          name:'Comments',
-          sortable: true,
-          width: "420px",  
-          wrap:true,  
-          selector: (row:reportrow)=> row.comment
-        },
-        {
-          name:'Param Readings',
-          sortable: true,
-          width: "115px",  
-          wrap:true,  
-          cell: (row:reportrow) =><Button variant='outlined' onClick={(e)=>{
-            e.preventDefault();
-            setReportID(row.reportid);
-            setModelOpen(true);
-
-          }}><BorderAllIcon/> <u>Excel</u></Button> 
-        },
-        {
-          name:'Photos',
-          sortable: true,
-          width: "130px",  
-          wrap:true,  
-          cell: (row:reportrow) =><Button variant='outlined' onClick={(e)=>{
-            e.preventDefault();
-            setReportID(row.reportid);
-            
-            setPhotoModelOpen(true);
-
-          }}><PhotoSizeSelectActualIcon/> <u>Photos</u></Button> 
-        }
-    ]
-    const [results, setDataReport] = useState<reportrow[]>([]);
-const fetchReport = async ()=>{
-  setLoading(true);
-  const token = await getToken()
-  const headers = new Headers()
-  const bearer = `Bearer ${token}`
-  headers.append('Authorization', bearer)
-
-  const options = {
-    method: 'GET',
-    headers: headers,
-  }  
-  const response = fetch('https://allungawebapi.azurewebsites.net/api/Reports/'+SeriesID,options);
-  var ee=await response;
-  if (!ee.ok)
-  {
-    throw Error((ee).statusText);
   }
-  const json=await ee.json();
-  console.log(json);
-  setDataReport(json);
-  setLoading(false);
+
+  const formatDate = (date: string | Date) => {
+    if (!date) return ''
+    const d = new Date(date)
+    return d.toISOString().split('T')[0]
   }
-  const openChat=()=>{
-    setModalOpen(true);
-}
-  const [modalOpen,setModalOpen] = useState(false);
-  const closeChat=()=>{
-    setModalOpen(false);
-    fetchReport();
-}
 
-const [reportID,setReportID]=useState(0);
-const [currentReport,setCurrentReport]=useState<reportrow>();
-const [modelOpen,setModelOpen]=useState(false);
-const [photoModelOpen,setPhotoModelOpen]=useState(false);
-    return (
-        <body style={{backgroundColor:'white'}}>
-             
-  
-<>
-        <Header/>
-       {photoModelOpen && <ReportPhotos reportid={reportID} closeModal={()=>{setPhotoModelOpen(false)}}/>}
-        {modelOpen && <Report reportid={reportID} closeModal={()=>{setModelOpen(false)}}/>}
-        {modalOpen && <ReportDet report={currentReport!} closeModal={closeChat}/>}
+  const columns = [
+    {
+      name: 'ID',
+      selector: (row: ReportRow) => row.reportid,
+      sortable: true,
+      width: '60px',
+    },
+    {
+      name: 'Description',
+      cell: (row: ReportRow) => (
+        <button
+          onClick={() => {
+            setCurrentReport(row)
+            setModalOpen(true)
+          }}
+          className="text-blue-600 hover:underline"
+        >
+          {row.reportname}
+        </button>
+      ),
+      sortable: true,
+      width: '180px',
+    },
+    {
+      name: 'Date',
+      cell: (row: ReportRow) => (
+        <button
+          onClick={() => {
+            setReportID(row.reportid)
+            setModelOpen(true)
+          }}
+          className="text-blue-600 hover:underline"
+        >
+          {formatDate(row.date)}
+        </button>
+      ),
+      sortable: true,
+      width: '90px',
+    },
+    {
+      name: 'Status',
+      selector: (row: ReportRow) => row.reportstatus,
+      sortable: true,
+      width: '80px',
+    },
+    {
+      name: 'Book & Page',
+      selector: (row: ReportRow) => row.bookandpage,
+      sortable: true,
+      width: '100px',
+    },
+    {
+      name: 'Days In Lab',
+      selector: (row: ReportRow) => row.DaysInLab,
+      sortable: true,
+      width: '80px',
+    },
+    {
+      name: 'Comments',
+      selector: (row: ReportRow) => row.comment,
+      sortable: true,
+      width: '420px',
+      wrap: true,
+    },
+    {
+      name: 'Param Readings',
+      cell: (row: ReportRow) => (
+        <button
+          onClick={() => {
+            setReportID(row.reportid)
+            setModelOpen(true)
+          }}
+          className="flex items-center text-blue-600 hover:underline"
+        >
+          <FileSpreadsheet className="mr-1" size={16} />
+          Excel
+        </button>
+      ),
+      width: '115px',
+    },
+    {
+      name: 'Photos',
+      cell: (row: ReportRow) => (
+        <button
+          onClick={() => {
+            setReportID(row.reportid)
+            setPhotoModelOpen(true)
+          }}
+          className="flex items-center text-blue-600 hover:underline"
+        >
+          <Camera className="mr-1" size={16} />
+          Photos
+        </button>
+      ),
+      width: '130px',
+    },
+  ]
 
+  const customStyles = {
+    headRow: {
+      style: {
+        backgroundColor: '#944780',
+        color: 'white',
+        fontWeight: 'bold',
+      },
+    },
+    headCells: {
+      style: {
+        padding: '8px',
+        fontSize: '14px',
+      },
+    },
+    cells: {
+      style: {
+        padding: '8px',
+      },
+    },
+  }
 
-        <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',backgroundColor:'white'}}>
-        <Button variant="contained" style={{backgroundColor:'black',color:'white'}} href="/"><ArrowBack/>back</Button>
-        <Button variant="contained" style={{backgroundColor:'black',color:'white'}} href="/"><AddCircleIcon/>Add</Button>
-       
-        <div></div>
-        <h3 style={{color:'#944780'}}>Series:{seriesname}</h3>
-        <div></div>
-        <div>
-        <Link href={"/seriestab?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button  style={{width:'180px'}}  variant='outlined'><DetailsIcon/>Details</Button></Link>
-        <Link href={"/samples?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'180px'}} variant='outlined'><GrainIcon/>Samples</Button></Link>
-        <Link href={"/reports?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'180px'}} variant='contained'><SummarizeIcon/>Reports</Button></Link>
-        <Link href={"/dispatch?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'180px'}} variant='outlined'><SendTimeExtensionIcon/>Dispatch</Button></Link>
-        <Link href={"/reportparam?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'180px'}} variant='outlined'><AppsIcon/>Params</Button></Link>
+  const conditionalRowStyles = [
+    {
+      when: (row: ReportRow) => row.reportstatus === 'N',
+      style: { color: 'orange' },
+    },
+    {
+      when: (row: ReportRow) => row.reportstatus === 'A',
+      style: { color: 'green' },
+    },
+    {
+      when: (row: ReportRow) => row.reportstatus !== 'N' && row.reportstatus !== 'A',
+      style: { color: 'navy' },
+    },
+  ]
+
+  return (
+    <div className="min-h-screen bg-gray-100">
+      <Header />
+      {photoModelOpen && <ReportPhotos reportid={reportID} closeModal={() => setPhotoModelOpen(false)} />}
+      {modelOpen && <Report reportid={reportID} closeModal={() => setModelOpen(false)} />}
+      {modalOpen && currentReport && <ReportDet report={currentReport} closeModal={() => setModalOpen(false)} />}
+
+      <main className="container mx-auto px-4 py-8">
+        <div className="flex justify-between items-center mb-6">
+          <Link href="/" className="bg-black text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-800">
+            <ArrowLeft className="mr-2" size={20} />
+            Back
+          </Link>
+          <h1 className="text-2xl font-bold"  style={{color:'#944780'}}>Series: {seriesname}</h1>
+          <div className="flex justify-center space-x-4 ">
+          {[
+            { href: `/seriestab?id=${SeriesID}&seriesname=${seriesname}`, icon: FileText, text: 'Details' },
+            { href: `/samples?id=${SeriesID}&seriesname=${seriesname}`, icon: Send, text: 'Samples' },//Grain, 
+            { href: `/reports?id=${SeriesID}&seriesname=${seriesname}`, icon: FileSpreadsheet, text: 'Reports', active: true },
+            { href: `/dispatch?id=${SeriesID}&seriesname=${seriesname}`, icon: Send, text: 'Dispatch' },
+            { href: `/reportparam?id=${SeriesID}&seriesname=${seriesname}`, icon: Grid, text: 'Params' },
+          ].map((item, index) => (
+            <Link
+              key={index}
+              href={item.href}
+              className={`flex items-center px-4 py-2 rounded-md ${
+                item.active
+                  ? 'bg-[#944780] text-white'
+                  : 'bg-white text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              <item.icon className="mr-2" size={20} />
+              {item.text}
+            </Link>
+          ))}
         </div>
-         </div>
+          <button className="bg-black text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-800">
+            <Plus className="mr-2" size={20} />
+            Add
+          </button>
+        </div>
 
-        <div className="grid grid-cols-1 gap-4 px-4 my-4">
-        {loading ? 
-      <div className="container">
-      <Circles
-      height="200"
-      width="200"
-      color="#944780"
-      ariaLabel="circles-loading"
-      wrapperStyle={{}}
-      wrapperClass=""
-      visible={true}
-    />
+       
+
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-[#944780]"></div>
+          </div>
+        ) : (
+          <div className="bg-white shadow-md rounded-lg overflow-hidden">
+            <DataTable
+              columns={columns}
+              data={results}
+              pagination
+              customStyles={customStyles}
+              conditionalRowStyles={conditionalRowStyles}
+            />
+          </div>
+        )}
+      </main>
     </div>
-:
-        <>
-        <div style={{color:'white',backgroundColor:'navy'}} className="bg-white rounded-lg">
-
-          
-        {!modelOpen && !modalOpen && <DataTable columns={columns}
-       
-        pagination
-        dense
-        customStyles={customStyles}        
-        data={results}
-        conditionalRowStyles={conditionalRowStyles} >
-        </DataTable>}
-        </div>
-        </>}
-            </div>
-            </>
-               
-            </body>
-    )
+  )
 }

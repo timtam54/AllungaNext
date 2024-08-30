@@ -21,6 +21,7 @@ import PhotoCameraBackIcon from "@mui/icons-material/PhotoCameraBack"
 import CloseIcon from "@mui/icons-material/Close"
 import PhotoModal from "@/components/PhotoModal"
 import PhotoOpen from "./photoopen"
+import { getToken } from "@/msal/msal"
 
 interface Sample {
   SampleID: number
@@ -112,6 +113,37 @@ export default function ReportPhotos({ closeModal, reportid }: Props) {
       const response = await fetch(endpoint)
       const jsonData = await response.json()
       setData(jsonData)
+    } catch (error) {
+      console.error("Error fetching photos:", error)
+    }
+  }
+
+  const deletePhoto = async (id:number) => {
+    try {
+      const endpoint = `https://allungawebapicore.azurewebsites.net/api/ReportPhoto/`+id.toString();
+      const token = await getToken()
+      const headers = new Headers()
+      const bearer = `Bearer ${token}`
+      const options = {
+        method: 'DELETE',
+        headers: headers,
+      }
+      const response = fetch(endpoint, options);
+      var ee = await response;
+      if (!ee.ok) {
+        alert((ee).statusText);
+      }
+     else
+     {
+      ;//alert('saved - add new row to parent - close');
+      const data = await ee.json();
+      const added:PhotoRow=data;
+      console.table(added);
+      photoadded(added);
+      closeModal();
+     }
+
+     // setData(jsonData)
     } catch (error) {
       console.error("Error fetching photos:", error)
     }

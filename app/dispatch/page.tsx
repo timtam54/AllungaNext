@@ -176,7 +176,7 @@ const fetchSample = async ()=>{
         <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',backgroundColor:'white'}}>
         <Button variant="contained" style={{backgroundColor:'black',color:'white'}} href="/"><ArrowBack/>back</Button>
         <div></div>
-        <h3 style={{color:'#944780'}}>Series:{seriesname}</h3>
+        <h1 className="text-2xl font-bold"  style={{color:'#944780'}}>Series:{seriesname}</h1>
         <div></div>
         <div>
         <Link href={"/seriestab?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button  style={{width:'180px'}}  variant='outlined'><DetailsIcon/>Details</Button></Link>

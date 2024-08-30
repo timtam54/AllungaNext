@@ -1,21 +1,15 @@
-"use client"
+'use client'
+
+import { useEffect, useState, ChangeEvent } from 'react'
+import { useSearchParams } from 'next/navigation'
+import Link from 'next/link'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
+import moment from 'moment'
+import { getToken } from '@/msal/msal'
 import Header from '@/components/header'
-import { useSearchParams } from "next/navigation";
-import Link from "next/link";
-import ArrowBack from '@mui/icons-material/ArrowBack';
-import { ChangeEvent, useEffect, useState } from 'react';
-import { Circles } from 'react-loader-spinner'
-import { getToken } from "@/msal/msal";
-import moment from 'moment';
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import Button from '@mui/material/Button';
-import ExposureEndDate from '../ExposureEndDate.js';
-import SendTimeExtensionIcon from '@mui/icons-material/SendTimeExtension';
-import SummarizeIcon from '@mui/icons-material/Summarize';
-import GrainIcon from '@mui/icons-material/Grain';
-import DetailsIcon from '@mui/icons-material/Details';
-import AppsIcon from '@mui/icons-material/Apps';
+import ExposureEndDate from '../ExposureEndDate.js'
+import { ArrowLeft, FileText, Brain, Send, Grid, Check, X } from 'lucide-react'
 interface SeriesEvent{
   EventDesc:string;
   EventType:string;
@@ -510,271 +504,398 @@ return 'L';
     setLogBookLetterDate(value!);
     //await fetch....;
  }
-    return (
-        <div style={{backgroundColor:'white'}}>
-            
-
-        <Header/>
-        <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',backgroundColor:'white'}}>
-        <Button variant="contained" style={{backgroundColor:'black',color:'white'}} href="/"><ArrowBack/>back</Button>
-        <div></div>
-        <h3 style={{color:'#944780'}}>Series:{seriesname}</h3>
-        <div></div>
-        <div>
-        <Link href={"/seriestab?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button  style={{width:'180px'}}  variant='contained'><DetailsIcon/>Details</Button></Link>
-        <Link href={"/samples?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'180px'}} variant='outlined'><GrainIcon/>Samples</Button></Link>
-        <Link href={"/reports?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'180px'}} variant='outlined'><SummarizeIcon/>Reports</Button></Link>
-        <Link href={"/dispatch?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'180px'}} variant='outlined'><SendTimeExtensionIcon/>Dispatch</Button></Link>
-        <Link href={"/reportparam?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'180px'}} variant='outlined'><AppsIcon/>Params</Button></Link>
+ return (
+  <div className="min-h-screen bg-gray-100">
+    <Header />
+    <main className="container mx-auto px-4 py-8">
+      <div className="flex justify-between items-center mb-6">
+        <Link href="/" className="flex items-center text-gray-600 hover:text-gray-800">
+          <ArrowLeft className="mr-2" /> Back
+        </Link>
+        <h1 className="text-2xl font-bold" style={{color:'#944780'}}>Series: {seriesname}</h1>
+        <div className="flex space-x-2">
+          {[
+            { href: `/seriestab?id=${SeriesID}&seriesname=${seriesname}`, icon: FileText, text: 'Details', active: true },
+            { href: `/samples?id=${SeriesID}&seriesname=${seriesname}`, icon: Brain, text: 'Samples' },
+            { href: `/reports?id=${SeriesID}&seriesname=${seriesname}`, icon: FileText, text: 'Reports' },
+            { href: `/dispatch?id=${SeriesID}&seriesname=${seriesname}`, icon: Send, text: 'Dispatch' },
+            { href: `/reportparam?id=${SeriesID}&seriesname=${seriesname}`, icon: Grid, text: 'Params' },
+          ].map((item, index) => (
+            <Link
+              key={index}
+              href={item.href}
+              className={`flex items-center px-3 py-2 rounded ${
+                item.active
+                  ? 'bg-purple-600 text-white'
+                  : 'bg-white text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              <item.icon className="mr-2 h-4 w-4" />
+              {item.text}
+            </Link>
+          ))}
         </div>
+      </div>
+
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-500"></div>
         </div>
-      
-          
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-white shadow-md rounded-lg p-6 space-y-4">
+              <div className="flex justify-between items-center">
+                <Link href={`/client?id=${data!.clientid}`} className="text-blue-600 hover:underline">
+                  Client
+                </Link>
+                <select
+                  name="clientid"
+                  onChange={handleChange}
+                  className="form-select mt-1 block w-full"
+                >
+                  {client.map((ep) => (
+                    <option key={ep.clientid} value={ep.clientid} selected={ep.clientid === data!.clientid}>
+                      {ep.companyname}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-        {loading ? 
-              <div className="relative h-16" >
-  <div style={{backgroundColor:'whitesmoke'}} className="absolute p-4 text-center transform -translate-x-1/2 translate-y-1/2 border top-1/2 left-1/2">
- 
-      <Circles 
-      height="200"
-      width="200"
-      color="#944780"
-      ariaLabel="circles-loading"
-      wrapperStyle={{}}
-      wrapperClass=""
-      visible={true}
-    />
-    </div> </div>
-: 
-        <div className="grid grid-cols-2 gap-4 px-4 my-4" style={{backgroundColor:'white'}} >
-<div style={{color:'white',backgroundColor:'navy'}} className="bg-white rounded-lg">
-    <div><br/></div>
-<div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>
-        <Link target='new' href={"/client?id="+ data!.clientid}><Button style={{color:'white',borderColor:'white'}} variant="outlined"><b>Client</b></Button></Link>
-  <div> 
-          <select style={{color:'black'}} name="clientid" onChange={handleChange}>
-          {
-          client.map((ep,i)=>{
-            return (
-              <option value={ep.clientid} selected={(ep.clientid==data!.clientid)?true:false}>{ep.companyname}</option>
-            )})
-          }
-          </select>
-      </div>        
-      <div></div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Allunga Reference</label>
+                  <input
+                    type="text"
+                    name="AllungaReference"
+                    onChange={handleChangeText}
+                    value={data!.AllungaReference}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  />
+                  {vldtAllungaReference && <p className="mt-2 text-sm text-red-600">{vldtAllungaReference}</p>}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Client Ref</label>
+                  <input
+                    type="text"
+                    name="clientreference"
+                    onChange={handleChangeText}
+                    value={data!.clientreference}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  />
+                </div>
+              </div>
 
+              <div className="flex space-x-4">
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    name="Active"
+                    onChange={handleCheck}
+                    checked={data!.Active}
+                    className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  />
+                  <span className="ml-2">Active</span>
+                </label>
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    name="Deleted"
+                    onChange={handleCheck}
+                    checked={data!.Deleted}
+                    className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  />
+                  <span className="ml-2">Deleted</span>
+                </label>
+              </div>
 
-    </div>
-    <div><br/></div>
-    <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>
-      <b>Allunga Reference</b>
-      <input style={{color:'black'}} type="text" name="AllungaReference" onChange={handleChangeText} value={data!.AllungaReference} />
-      <span style={{color:'red'}}>{vldtAllungaReference}</span>
-      <b>Client Ref:</b>
-      <input type="text" style={{color:'black'}}  name="clientreference" onChange={handleChangeText} value={data!.clientreference} />
-      <div></div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Short Description</label>
+                <textarea
+                  name="ShortDescription"
+                  onChange={handleChangeTextArea}
+                  value={data!.ShortDescription}
+                  rows={3}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                />
+              </div>
+            </div>
 
-    </div>
-    <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>
-       
-      <b>Active:</b><input type="checkbox" name="Active" onChange={handleCheck} style={{color:'black'}} checked={data!.Active} />
-      
-      <b>Deleted:</b><input name="Deleted" type="checkbox" onChange={handleCheck} checked={data!.Deleted} />
-      <div></div>
-        </div>
-    <div><br/></div>
-    <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>
-    <b>Short Description:</b>
-    <textarea  name="ShortDescription" style={{color:'black',width:'500px'}}  cols={120} onChange={handleChangeTextArea} value={data!.ShortDescription} />
-    <div></div>
-    </div>
-    <div><br/></div>
+            <div className="bg-white shadow-md rounded-lg p-6 space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Exposure Type</label>
+                  <select
+                    name="ExposureTypeID"
+                    onChange={handleChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  >
+                    {exp.map((ep) => (
+                      <option key={ep.ExposureTypeID} value={ep.ExposureTypeID} selected={ep.ExposureTypeID === data!.ExposureTypeID}>
+                        {ep.Name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Rack No</label>
+                  <input
+                    type="text"
+                    name="RackNo"
+                    onChange={handleChangeText}
+                    value={data!.RackNo}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  />
+                </div>
+              </div>
 
-</div>
-<div style={{color:'black',backgroundColor:'lightgray'}} className="bg-white rounded-lg">
-   <div><br/></div>
-<div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>
-          <b>Exposure Type:</b>
-          
-          <select style={{color:'black'}} name="ExposureTypeID" onChange={handleChange}>
-          {
-          exp.map((ep,i)=>{
-            return (
-              <option value={ep.ExposureTypeID} selected={(ep.ExposureTypeID==data!.ExposureTypeID)?true:false}>{ep.Name}</option>
-            )})
-          }
-          </select>
-      
-          <b>Rack No:</b><input style={{color:'black',width:'100px'}} type="text" name="RackNo" onChange={handleChangeText} value={data!.RackNo} />
-          <div></div>  
-      </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Exposure Duration</label>
+                  <div className="mt-1 flex rounded-md shadow-sm">
+                    <input
+                      type="text"
+                      name="ExposureDurationVal"
+                      onChange={handleChangeNum}
+                      value={data!.ExposureDurationVal}
+                      className="flex-1 rounded-none rounded-l-md border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                    />
+                    <select
+                      name="ExposureDurationUnit"
+                      onChange={handleChange}
+                      className="rounded-none rounded-r-md border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                    >
+                      {units.map((unit) => (
+                        <option key={unit} value={unit} selected={unit === data!.ExposureDurationUnit}>
+                          {unit}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  {vldtExposureDurationVal && <p className="mt-2 text-sm text-red-600">{vldtExposureDurationVal}</p>}
+                </div>
+              </div>
 
-      <div><br/></div>  
-      
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Exposed</label>
+                  <DatePicker
+                    selected={DateIn}
+                    onChange={setDateInX}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                    dateFormat="dd/MM/yyyy"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">End</label>
+                  <DatePicker
+                    selected={ExposureEnd}
+                    onChange={setExposureEndX}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                    dateFormat="dd/MM/yyyy"
+                  />
+                </div>
+              </div>
 
+              <button
+                type="button"
+                onClick={() => setIsOpen(true)}
+                className="mt-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                End Date
+              </button>
 
-        <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>
-          <b>Exposure Duration:</b>
-          <div><input type="text" style={{color:'black',width:'100px'}} name="ExposureDurationVal" onChange={handleChangeNum} value={data!.ExposureDurationVal} />
-          <span style={{color:'red'}}>{vldtExposureDurationVal}</span>
-      </div>
-  
-          
-          <select name="ExposureDurationUnit"  style={{color:'black'}}  onChange={handleChange}>
-          {
-          units.map((ep,i)=>{
-            return (
-              <option value={ep} selected={(ep==data!.ExposureDurationUnit)?true:false}>{ep}</option>
-            )})
-          }
-          </select>
-      </div>
-
-      <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',color:'black'}}>
-      <b>Exposed:</b>
-
-<div style={{color:'black'}}>
-<DatePicker  className="datePicker" dateFormat="dd/MM/yyyy" onChange={setDateInX} selected={DateIn} />
-</div>   
-<b>End:</b>
-<div style={{color:'black'}}>
-<DatePicker className="datePicker" dateFormat="dd/MM/yyyy" onChange={setExposureEndX} selected={ExposureEnd} />
-</div>
-  <Button style={{color:'black',borderColor:'black'}}  variant="outlined" onClick={() => setIsOpen(true)}>
-  <b>End Date</b>
-</Button>
-
-{isOpen && <ExposureEndDate StartDate={data!.DateIn} DurationVal={data!.ExposureDurationVal} DurationUnit={data!.ExposureDurationUnit} text="Exposure End Date" closePopup={() => setIsOpen(false)} />}
-
-</div>
-
-</div>
-
-<div style={{color:'black',backgroundColor:'lightgray'}} className="bg-white rounded-lg">
-<div><br/></div>
-      <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>
-
-          <b>Returns Interval:</b>
-          <input type="text" style={{color:'black',width:'80px'}}  name="ReturnsFrequencyVal" onChange={handleChangeNum} value={data!.ReturnsFrequencyVal} />
-          <span style={{color:'red'}}>{vldtReturnsFrequencyVal}</span>
-            
-          <select name="ReturnsFrequencyUnit" style={{color:'black'}} onChange={handleChange}>
-          {
-          units.map((ep,i)=>{
-            return (
-              <option value={ep} selected={(ep==data!.ReturnsFrequencyUnit)?true:false}>{ep}</option>
-            )})
-          }
-          </select>
-
-          <b>SamplesReturned:</b>
-          <input name="SamplesReturned" type="checkbox" onChange={handleCheck} checked={data!.SamplesReturned} />
-      
-      </div>
-      <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center'}}>
-      <table className="results" id="table1" width='100%'>
-  <tr>
-    <th colSpan={2}><b></b></th>
-    <th colSpan={1}><b>Frequency</b></th>
-  </tr>
-  {
-    dataSeriesEvent.map((result,i)=>{
-      return (
-        <tr className='super-app-theme' key={i} >
-            
-          <td>{result.EventDesc}</td>
-          <td>
-            <input type="checkbox" name={result.EventType} onChange={handleChangeSeriesEvent} checked={result.FrequencyVal!=-1}></input>
-           
-          </td>
-          {(result.FrequencyVal!=-1)?
-          <td> <input type="text" style={{color:'black'}} name={result.EventType} onChange={e=>handleChangeSeriesEventVal(e)} value={result.FrequencyVal} />
-          
-          <select name={result.EventType} style={{color:'black'}} onChange={e=>handleChangeSeriesEventUnits(e)} >
-          {
-          units.map((ep,i)=>{
-            return (
-              <option value={ep} selected={(ep==result.FrequencyUnit)?true:false}>{ep}</option>
-            )})
-          }
-          </select>
-          </td>
-          :
-          <td>
-            Disabled
-          </td>
-    }
-         </tr>  
-      )
-    })
-  }
-   </table>
-
-
-   <table  id="table1" >
-      <tr>
-        <td>&nbsp;</td>
-        </tr>
-      <tr className='super-app-theme' >
-        <td>VisualReporting</td>
-        <td><input type="checkbox" name="VisualReporting" onChange={handleCheck} checked={data!.VisualReporting} /></td>
-      </tr>
-      <tr className='super-app-theme' >
-        <td>&nbsp;</td>
-      </tr>
-      <tr className='super-app-theme' >
-        <td>Photos</td>
-        <td><input type="checkbox" name="Photos" onChange={handleCheck} checked={data!.Photos} /></td>
-    
-      </tr>
-    </table>
-      </div>
-</div>
-<div style={{color:'white',backgroundColor:'navy'}} className="bg-white rounded-lg">
-<div><br/></div>
-<div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',color:'white'}}>
-
-<b>Letter Ref Date</b>
-<div style={{color:'black'}}>
-          <DatePicker className="datePicker" dateFormat="dd/MM/yyyy" onChange={setLogBookLetterDateX} selected={LogBookLetterDate} />
+              {isOpen && (
+                <ExposureEndDate
+                  StartDate={data!.DateIn}
+                  DurationVal={data!.ExposureDurationVal}
+                  DurationUnit={data!.ExposureDurationUnit}
+                  text="Exposure End Date"
+                  closePopup={() => setIsOpen(false)}
+                />
+              )}
+            </div>
           </div>
-          <b>Communication Type</b>
-            <input type="text" style={{color:'black'}} name="LogBookCorrespType" onChange={handleChangeText} value={data!.LogBookCorrespType } />
-<div></div>
-</div>
-<div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',color:'white'}}>
 
-<b>Site</b>
-         
-          <select style={{color:'black'}} name="Site" onChange={handleChange}>
-          {
-          site.map((ep,i)=>{
-            return (
-              <option value={ep.SiteID} selected={(ep.SiteID==data!.Site)?true:false}>{ep.SiteName}</option>
-            )})
-          }
-          </select>
-      
-          <div></div>
-      </div>
-      <div><br/></div>
-      <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',color:'white'}}>
-      <b>Exposure Spec:</b>
-      <textarea style={{width:'500px',color:'black'}} rows={10} cols={120}  name="ExposureSpecification" onChange={handleChangeTextArea} value={data!.ExposureSpecification} />
-      <div></div>
-</div>
-<div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',color:'white'}}>
-<Button variant="outlined" style={{color:'white',borderColor:'white'}}  onClick={handleSubmit}>
-          <b>Submit</b>
-        </Button>
-</div>
-<div><br/></div>
-</div>
-</div>}
+          <div className="bg-white shadow-md rounded-lg p-6 space-y-4">
+            <h2 className="text-lg font-semibold text-gray-900">Returns and Events</h2>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Returns Interval</label>
+                <div className="mt-1 flex rounded-md shadow-sm">
+                  <input
+                    type="text"
+                    name="ReturnsFrequencyVal"
+                    onChange={handleChangeNum}
+                    value={data!.ReturnsFrequencyVal}
+                    className="flex-1 rounded-none rounded-l-md border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  />
+                  <select
+                    name="ReturnsFrequencyUnit"
+                    onChange={handleChange}
+                    className="rounded-none rounded-r-md border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  >
+                    {units.map((unit) => (
+                      <option key={unit} value={unit} selected={unit === data!.ReturnsFrequencyUnit}>
+                        {unit}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {vldtReturnsFrequencyVal && <p className="mt-2 text-sm text-red-600">{vldtReturnsFrequencyVal}</p>}
+              </div>
+              <div>
+                <label className="flex items-center mt-5">
+                  <input
+                    type="checkbox"
+                    name="SamplesReturned"
+                    onChange={handleCheck}
+                    checked={data!.SamplesReturned}
+                    className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  />
+                  <span className="ml-2">Samples Returned</span>
+                </label>
+              </div>
+            </div>
 
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event</th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Enabled</th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Frequency</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {dataSeriesEvent.map((result, i) => (
+                  <tr key={i}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{result.EventDesc}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <input
+                        type="checkbox"
+                        name={result.EventType}
+                        onChange={handleChangeSeriesEvent}
+                        checked={result.FrequencyVal !== -1}
+                        className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                      />
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {result.FrequencyVal !== -1 ? (
+                        <div className="flex items-center space-x-2">
+                          <input
+                            type="text"
+                            name={result.EventType}
+                            onChange={handleChangeSeriesEventVal}
+                            value={result.FrequencyVal}
+                            className="block w-20 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                          />
+                          <select
+                            name={result.EventType}
+                            onChange={handleChangeSeriesEventUnits}
+                            className="block w-32 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                          >
+                            {units.map((unit) => (
+                              <option key={unit} value={unit} selected={unit === result.FrequencyUnit}>
+                                {unit}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      ) : (
+                        <span className="text-gray-500">Disabled</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
 
-        </div>
-    )
-} 
+            <div className="mt-4 space-y-2">
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  name="VisualReporting"
+                  onChange={handleCheck}
+                  checked={data!.VisualReporting}
+                  className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                />
+                <span className="ml-2">Visual Reporting</span>
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  name="Photos"
+                  onChange={handleCheck}
+                  checked={data!.Photos}
+                  className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                />
+                <span className="ml-2">Photos</span>
+              </label>
+            </div>
+          </div>
 
-//
+          <div className="bg-white shadow-md rounded-lg p-6 space-y-4">
+            <h2 className="text-lg font-semibold text-gray-900">Additional Information</h2>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Letter Ref Date</label>
+                <DatePicker
+                  selected={LogBookLetterDate}
+                  onChange={setLogBookLetterDateX}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  dateFormat="dd/MM/yyyy"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Communication Type</label>
+                <input
+                  type="text"
+                  name="LogBookCorrespType"
+                  onChange={handleChangeText}
+                  value={data!.LogBookCorrespType}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Site</label>
+              <select
+                name="Site"
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              >
+                {site.map((ep) => (
+                  <option key={ep.SiteID} value={ep.SiteID} selected={ep.SiteID === data!.Site}>
+                    {ep.SiteName}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Exposure Specification</label>
+              <textarea
+                name="ExposureSpecification"
+                onChange={handleChangeTextArea}
+                value={data!.ExposureSpecification}
+                rows={5}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              />
+            </div>
+          </div>
+
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      )}
+    </main>
+  </div>
+)
+}

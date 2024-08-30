@@ -1,367 +1,330 @@
-"use client"
-import { Circles } from 'react-loader-spinner';
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
+import Link from 'next/link'
+import DataTable from 'react-data-table-component'
+import { getToken } from '@/msal/msal'
 import Header from '@/components/header'
 import Sample from '@/components/Sample'
 import SampleExplode from '@/components/SampleExplode'
-//import SampleHistory from '@/components/SampleHistory'
 import SampleHist from '@/components/SampleHist'
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from 'react';
-import Link from "next/link";
-import AppsIcon from '@mui/icons-material/Apps';
-import ArrowBack from '@mui/icons-material/ArrowBack';
-import { getToken } from "@/msal/msal";
-import DataTable from "react-data-table-component";
-import Button from '@mui/material/Button';
-import SendTimeExtensionIcon from '@mui/icons-material/SendTimeExtension';
-import SummarizeIcon from '@mui/icons-material/Summarize';
-import GrainIcon from '@mui/icons-material/Grain';
-import DetailsIcon from '@mui/icons-material/Details';
 import ChartParamSample from '@/components/chartparamsample'
-import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
-import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import AcUnitIcon from '@mui/icons-material/AcUnit';
-import ManageHistoryIcon from '@mui/icons-material/ManageHistory';
+import { ArrowLeft, FileText, Brain, Send, Grid, ChevronUp, ChevronDown, BarChart2, Snowflake, History } from 'lucide-react'
 
-interface samplerow{
-    SampleID:number;
-    Number:number;
-    description:string;
-    longdescription:string;
-    EquivalentSamples:number;
-    Reportable:boolean;
-    SampleOrder:number;
-    ExposureType:string;
+interface SampleRow {
+  SampleID: number
+  Number: number
+  description: string
+  longdescription: string
+  EquivalentSamples: number
+  Reportable: boolean
+  SampleOrder: number
+  ExposureType: string
 }
 
-export default function Samples()
-{    const searchParams = useSearchParams();
-    const seriesname=searchParams!.get("seriesname");
-    const SeriesID =parseInt( searchParams!.get("id")!);
-    const [loading,setLoading] = useState(true);
-    const [deleted,setDeleted] = useState(false);
-    useEffect(() => {
-        getalldata()
-   
-    } , []);
-    const getalldata=async()=>{
-      await fetchSample();
-      //setLoading(false);
-  }
-    const customStyles = {
-        headCells: {
-          style: {
-            paddingLeft: '2px', // override the cell padding for head cells
-            paddingRight: '2px',
-            size:'12px',
-            fontWeight:'bold'
-          },
-          
-        },
-        cells: {
-          style: {
-            paddingLeft: '2px', // override the cell padding for data cells
-            paddingRight: '2px',
-            
-          },
-        },
-      }
-      const conditionalRowStyles = [
-        {
-          when: (row:samplerow) => true,
-          style:  (row:samplerow) => ({
-            color: row.Reportable?'navy':'red',
-          })
-        }
-      ];
-   
-    const columns =[
-        {
-          name:'+',
-          sortable: true,
-          width: "60px",  
-          wrap:true,  
-          selector: (row:samplerow)=>row.SampleID
-        } ,
-        {
-            name:'AEL Ref',
-            sortable: true,
-            width: "100px",  
-            wrap:true,  
-            selector: (row:samplerow)=>row.Number,
+export default function Samples() {
+  const searchParams = useSearchParams()
+  const seriesname = searchParams!.get('seriesname')
+  const SeriesID = parseInt(searchParams!.get('id')!)
+  const [loading, setLoading] = useState(true)
+  const [deleted, setDeleted] = useState(false)
+  const [results, setDataSample] = useState<SampleRow[]>([])
+  const [chartTitle, setChartTitle] = useState('Hello Chart')
+  const [modelOpen, setModelOpen] = useState(false)
+  const [modalOpenExplode, setModalOpenExplode] = useState(false)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [modalOpenHist, setModalOpenHist] = useState(false)
+  const [sampID, setSampID] = useState(0)
 
-            cell: (row:samplerow) =><button onClick={(e)=>{
-              e.preventDefault();
-               setSampID(row.SampleID); 
-              setModalOpen(true);        
-            }}><u>{row.Number}</u></button> , 
-          }
-        ,
-          {
-              name:'Client id',
-              sortable: true,
-              width: "90px",  
-              wrap:true,  
-              selector: (row:samplerow)=>row.description,
-              cell: (row:samplerow) =><button onClick={(e)=>{
-                e.preventDefault();
-                 setSampID(row.SampleID); 
-                 setmodalOpenHist(true);     
-              }}><u>{row.description}</u></button> ,
-            } ,
-            {
-                name:'Description',
-                sortable: true,
-                width: "130px",  
-                wrap:true,  
-                selector: (row:samplerow)=>row.longdescription,
-                cell: (row:samplerow) =><button onClick={(e)=>{
-                  e.preventDefault();
-                   setSampID(row.SampleID);
-                   setChartTitle(row.description + ' vs date') 
-                   setModelOpen(true); 
-                }}><u>{row.longdescription}</u></button> ,
-               }
-             ,
-            {
-                name:'Equiv Samples / Alltrack cms',
-                sortable: true,
-                width: "130px",  
-                wrap:true,  
-                selector: (row:samplerow)=>row.EquivalentSamples
-              }
-               ,
-            {
-                name:'Exposure Type',
-                sortable: true,
-                width: "130px",  
-                wrap:true,  
-                selector: (row:samplerow)=>row.ExposureType
-              }
-              ,
-            {
-                name:'Reportable',
-                sortable: true,
-                width: "80px",  
-                wrap:true,  
-                selector: (row:samplerow)=>row.Reportable,
-                cell: (row:samplerow)=><input type='checkbox' checked={row.Reportable}></input>
-              }
-              ,
-            {
-                name:'',
-                sortable: true,
-                width: "30px",  
-                wrap:true,  
-                selector: (row:samplerow)=>row.SampleOrder,
-                cell: (row:samplerow) =><button onClick={(e)=>{
-                  e.preventDefault();
-                  fetch1Sample(row.SampleID,-1);
-                }}><u><ArrowCircleUpIcon/></u></button>
-              }
-              ,
-            {
-                name:'Order',
-                sortable: true,
-                width: "55px",  
-                wrap:true,  
-                selector: (row:samplerow)=>row.SampleOrder,
-                cell:(row:samplerow)=>row.SampleOrder,
-                alignProperty:'center'
-              },
-              {
-                  name:'',
-                  sortable: true,
-                  width: "30px",  
-                  wrap:true,  
-                  selector: (row:samplerow)=>row.SampleOrder,
-                  cell: (row:samplerow) =><button onClick={(e)=>{
-                    e.preventDefault();
-                    fetch1Sample(row.SampleID,1);
-                  }}><u><ArrowCircleDownIcon/></u></button>
-                },
-                {
-                    name:'Explode',
-                    sortable: true,
-                    width: "130px",  
-                    wrap:true,  
-                    selector:  (row:samplerow)=>"Explode",
-                    cell: (row:samplerow) =><button onClick={(e)=>{
-                      e.preventDefault();
-                       setmodalOpenExplode(true);                    
-                    }}><u><AcUnitIcon/></u></button> ,
-                  },
-                  {
-                      name:'Charts',
-                      sortable: true,
-                      width: "130px",  
-                      wrap:true,   
-                      selector: (row:samplerow)=>"Charts",
-                      cell: (row:samplerow) =><button onClick={(e)=>{
-                        e.preventDefault();
-                         setSampID(row.SampleID);
-                         setChartTitle(row.description + ' vs date') 
-                         setModelOpen(true); 
-                      }}><u><BarChartIcon/></u></button> ,
-                    },
-                    {
-                      name:'History',
-                      sortable: true,
-                      width: "90px",  
-                      wrap:true,  
-                      selector: (row:samplerow)=>row.description,
-                      cell: (row:samplerow) =><button onClick={(e)=>{
-                      e.preventDefault();
-                      setSampID(row.SampleID); 
-                      setmodalOpenHist(true); 
-              }}><u><ManageHistoryIcon/></u></button> ,
- 
-                    }
-    ]
+  useEffect(() => {
+    fetchSample()
+  }, [])
 
-    const fetch1Sample = async (SampleID:number,inc:number)=>{
-      const urlSample = `https://allungawebapi.azurewebsites.net/api/Samples/int/`+SampleID;
+  const fetchSample = async () => {
+    setLoading(true)
+    try {
       const token = await getToken()
-      const headers = new Headers()
-      const bearer = `Bearer ${token}`
-    
-      headers.append('Authorization', bearer)
-    
-      const options = {
-        method: 'GET',
-        headers: headers,
-      }  
-      const response = fetch(urlSample,options);
-      var ee=await response;
-      if (!ee.ok)
-      {
-        throw Error((ee).statusText);
-      }
-      var json:samplerow=await ee.json();
-      console.log(json);      
-      var newjson={...json,SampleOrder:json.SampleOrder+inc};
-      console.log(newjson);      
+      const response = await fetch(
+        `https://allungawebapi.azurewebsites.net/api/Samples/${SeriesID}~${deleted ? 1 : 0}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      if (!response.ok) throw new Error(response.statusText)
+      const json: SampleRow[] = await response.json()
+      setDataSample(json.sort((a, b) => a.SampleOrder - b.SampleOrder))
+    } catch (error) {
+      console.error('Error fetching samples:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
-      
-      //////////
-      //const token = await getToken()
-      //const headers = new Headers()
-      //const bearer = `Bearer ${token}`
-      headers.append('Authorization', bearer)
-      headers.append('Content-type', "application/json; charset=UTF-8")
-  
-      const optionsx = {
+  const fetch1Sample = async (SampleID: number, inc: number) => {
+    try {
+      const token = await getToken()
+      const response = await fetch(`https://allungawebapi.azurewebsites.net/api/Samples/int/${SampleID}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      if (!response.ok) throw new Error(response.statusText)
+      const json: SampleRow = await response.json()
+      const newJson = { ...json, SampleOrder: json.SampleOrder + inc }
+
+      const updateResponse = await fetch(`https://allungawebapi.azurewebsites.net/api/Samples/${SampleID}`, {
         method: 'PUT',
-        body: JSON.stringify(newjson),
-       headers: headers,
-      }  
-
-      const responsex = fetch(`https://allungawebapi.azurewebsites.net/api/Samples/`+SampleID,optionsx);
-      var ee=await responsex;
-      if (!ee.ok)
-      {
-        throw Error((ee).statusText);
-      }
-      fetchSample();
-      }
-
-    const [results, setDataSample] = useState<samplerow[]>([]);
-const fetchSample = async ()=>{
-  
-  setLoading(true);
-  const urlSample = `https://allungawebapi.azurewebsites.net/api/Samples/`+SeriesID+`~`+((deleted)?1:0);
-  const token = await getToken()
-  const headers = new Headers()
-  const bearer = `Bearer ${token}`
-
-  headers.append('Authorization', bearer)
-
-  const options = {
-    method: 'GET',
-    headers: headers,
-  }  
-  const response = fetch(urlSample,options);
-  var ee=await response;
-  if (!ee.ok)
-  {
-    throw Error((ee).statusText);
-  }
-  const json:samplerow[]=await ee.json();
-  console.log(json);
-  json.sort((a:samplerow, b:samplerow) => {
-    if (a.SampleOrder < b.SampleOrder) {
-        return -1;
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newJson),
+      })
+      if (!updateResponse.ok) throw new Error(updateResponse.statusText)
+      fetchSample()
+    } catch (error) {
+      console.error('Error updating sample order:', error)
     }
-    if (a.SampleOrder > b.SampleOrder) {
-        return 1;
-    }
-    return 0;
-});
-  setDataSample(json);
-  setLoading(false);
-
-
   }
-  //const [sampleID,setSampleID]=useState(0);
-  const [chartTitle,setChartTitle]=useState('Hello Chart');
-  const [modelOpen,setModelOpen]=useState(false);
-  const [modalOpenExplode,setmodalOpenExplode]=useState(false);
-  const [modalOpen,setModalOpen]=useState(false);
-  const [modalOpenHist,setmodalOpenHist]=useState(false);
-  const [sampID,setSampID]=useState(0);
-    return (
-      <div style={{backgroundColor:'white'}}>
-             
-             {loading ? 
-           <div className="relative h-16">
-  <div className="absolute p-4 text-center transform -translate-x-1/2 translate-y-1/2 border top-1/2 left-1/2">
-      <Circles
-      height="200"
-      width="200"
-      color="#944780"
-      ariaLabel="circles-loading"
-      wrapperStyle={{}}
-      wrapperClass=""
-      visible={true}
-    />
-    </div></div>
-:
-<>
-        <Header/>
-        {modelOpen && <ChartParamSample title={chartTitle} seriesid={SeriesID} sampleID={sampID} closeModal={()=>{setModelOpen(false)}}/>}
-      
-        <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',backgroundColor:'white'}}>
-        <Button variant="contained" style={{backgroundColor:'black',color:'white'}} href="/"><ArrowBack/>back</Button>
-        <div></div>
-        <h3 style={{color:'#944780'}}>Series:{seriesname}</h3>
-        <div></div>
-        <div>
-        <Link href={"/seriestab?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button  style={{width:'180px'}}  variant='outlined'><DetailsIcon/>Details</Button></Link>
-        <Link href={"/samples?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'180px'}} variant='contained'><GrainIcon/>Samples</Button></Link>
-        <Link href={"/reports?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'180px'}} variant='outlined'><SummarizeIcon/>Reports</Button></Link>
-        <Link href={"/dispatch?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'180px'}} variant='outlined'><SendTimeExtensionIcon/>Dispatch</Button></Link>
-        <Link href={"/reportparam?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'180px'}} variant='outlined'><AppsIcon/>Params</Button></Link>
-        </div> </div>
 
-        <div className="grid grid-cols-1 gap-4 px-4 my-4">
-        <div style={{color:'white',backgroundColor:'navy'}} className="bg-white rounded-lg">
-        {!modelOpen && <DataTable columns={columns}
-        fixedHeader
-        pagination
-        dense
-        customStyles={customStyles}        
-        data={results}
-        conditionalRowStyles={conditionalRowStyles} >
-        </DataTable>}
+  const columns = [
+    {
+      name: '+',
+      selector: (row: SampleRow) => row.SampleID,
+      sortable: true,
+      width: '60px',
+    },
+    {
+      name: 'AEL Ref',
+      selector: (row: SampleRow) => row.Number,
+      sortable: true,
+      width: '100px',
+      cell: (row: SampleRow) => (
+        <button
+          onClick={() => {
+            setSampID(row.SampleID)
+            setModalOpen(true)
+          }}
+          className="text-blue-600 hover:underline"
+        >
+          {row.Number}
+        </button>
+      ),
+    },
+    {
+      name: 'Client id',
+      selector: (row: SampleRow) => row.description,
+      sortable: true,
+      width: '90px',
+      cell: (row: SampleRow) => (
+        <button
+          onClick={() => {
+            setSampID(row.SampleID)
+            setModalOpenHist(true)
+          }}
+          className="text-blue-600 hover:underline"
+        >
+          {row.description}
+        </button>
+      ),
+    },
+    {
+      name: 'Description',
+      selector: (row: SampleRow) => row.longdescription,
+      sortable: true,
+      width: '130px',
+      cell: (row: SampleRow) => (
+        <button
+          onClick={() => {
+            setSampID(row.SampleID)
+            setChartTitle(`${row.description} vs date`)
+            setModelOpen(true)
+          }}
+          className="text-blue-600 hover:underline"
+        >
+          {row.longdescription}
+        </button>
+      ),
+    },
+    {
+      name: 'Equiv Samples / Alltrack cms',
+      selector: (row: SampleRow) => row.EquivalentSamples,
+      sortable: true,
+      width: '130px',
+    },
+    {
+      name: 'Exposure Type',
+      selector: (row: SampleRow) => row.ExposureType,
+      sortable: true,
+      width: '130px',
+    },
+    {
+      name: 'Reportable',
+      selector: (row: SampleRow) => row.Reportable,
+      sortable: true,
+      width: '80px',
+      cell: (row: SampleRow) => (
+        <input type="checkbox" checked={row.Reportable} readOnly className="form-checkbox h-5 w-5 text-blue-600" />
+      ),
+    },
+    {
+      name: '',
+      cell: (row: SampleRow) => (
+        <button onClick={() => fetch1Sample(row.SampleID, -1)} className="text-gray-600 hover:text-gray-900">
+          <ChevronUp className="h-5 w-5" />
+        </button>
+      ),
+      width: '30px',
+    },
+    {
+      name: 'Order',
+      selector: (row: SampleRow) => row.SampleOrder,
+      sortable: true,
+      width: '55px',
+    },
+    {
+      name: '',
+      cell: (row: SampleRow) => (
+        <button onClick={() => fetch1Sample(row.SampleID, 1)} className="text-gray-600 hover:text-gray-900">
+          <ChevronDown className="h-5 w-5" />
+        </button>
+      ),
+      width: '30px',
+    },
+    {
+      name: 'Explode',
+      cell: () => (
+        <button onClick={() => setModalOpenExplode(true)} className="text-blue-600 hover:text-blue-800">
+          <Snowflake className="h-5 w-5" />
+        </button>
+      ),
+      width: '130px',
+    },
+    {
+      name: 'Charts',
+      cell: (row: SampleRow) => (
+        <button
+          onClick={() => {
+            setSampID(row.SampleID)
+            setChartTitle(`${row.description} vs date`)
+            setModelOpen(true)
+          }}
+          className="text-blue-600 hover:text-blue-800"
+        >
+          <BarChart2 className="h-5 w-5" />
+        </button>
+      ),
+      width: '130px',
+    },
+    {
+      name: 'History',
+      cell: (row: SampleRow) => (
+        <button
+          onClick={() => {
+            setSampID(row.SampleID)
+            setModalOpenHist(true)
+          }}
+          className="text-blue-600 hover:text-blue-800"
+        >
+          <History className="h-5 w-5" />
+        </button>
+      ),
+      width: '90px',
+    },
+  ]
+
+  return (
+    <div className="min-h-screen bg-gray-100">
+      <Header />
+      <main className="container mx-auto px-4 py-8">
+        <div className="mb-6 flex justify-between items-center">
+          <Link href="/" className="flex items-center text-gray-600 hover:text-gray-800">
+            <ArrowLeft className="mr-2" /> Back
+          </Link>
+          <h1 className="text-2xl font-bold"  style={{color:'#944780'}}>Series: {seriesname}</h1>
+          <div className="flex space-x-2">
+            {[
+              { href: `/seriestab?id=${SeriesID}&seriesname=${seriesname}`, icon: FileText, text: 'Details' },
+              { href: `/samples?id=${SeriesID}&seriesname=${seriesname}`, icon: Brain, text: 'Samples', active: true },
+              { href: `/reports?id=${SeriesID}&seriesname=${seriesname}`, icon: FileText, text: 'Reports' },
+              { href: `/dispatch?id=${SeriesID}&seriesname=${seriesname}`, icon: Send, text: 'Dispatch' },
+              { href: `/reportparam?id=${SeriesID}&seriesname=${seriesname}`, icon: Grid, text: 'Params' },
+            ].map((item, index) => (
+              <Link
+                key={index}
+                href={item.href}
+                className={`flex items-center px-3 py-2 rounded ${
+                  item.active
+                    ? 'bg-purple-600 text-white'
+                    : 'bg-white text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                <item.icon className="mr-2 h-4 w-4" />
+                {item.text}
+              </Link>
+            ))}
+          </div>
         </div>
 
-            </div>
-            {modalOpen && <Sample sampleid={sampID} closeModal={()=>{setModalOpen(false);fetchSample()}} SeriesID={SeriesID} />}
-            {modalOpenHist && <SampleHist sampleid={sampID} closeModal={()=>setmodalOpenHist(false)} SeriesID={SeriesID} />}
-            {modalOpenExplode && <SampleExplode closeModal={()=>setmodalOpenExplode(false)} />}
-            </>
-               }
-            </div>
-    )
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-500"></div>
+          </div>
+        ) : (
+          <div className="bg-white shadow-md rounded-lg overflow-hidden">
+            <DataTable
+              columns={columns}
+              data={results}
+              pagination
+              dense
+              customStyles={{
+                headRow: {
+                  style: {
+                    backgroundColor: '#F3F4F6',
+                    fontSize: '0.875rem',
+                    color: '#374151',
+                    fontWeight: 'bold',
+                  },
+                },
+                rows: {
+                  style: {
+                    '&:nth-of-type(odd)': {
+                      backgroundColor: '#F9FAFB',
+                    },
+                  },
+                },
+              }}
+              conditionalRowStyles={[
+                {
+                  when: (row) => !row.Reportable,
+                  style: {
+                    color: '#EF4444',
+                  },
+                },
+              ]}
+            />
+          </div>
+        )}
+      </main>
+
+      {modelOpen && (
+        <ChartParamSample
+          title={chartTitle}
+          seriesid={SeriesID}
+          sampleID={sampID}
+          closeModal={() => setModelOpen(false)}
+        />
+      )}
+      {modalOpen && (
+        <Sample sampleid={sampID} closeModal={() => { setModalOpen(false); fetchSample() }} SeriesID={SeriesID} />
+      )}
+      {modalOpenHist && (
+        <SampleHist sampleid={sampID} closeModal={() => setModalOpenHist(false)} SeriesID={SeriesID} />
+      )}
+      {modalOpenExplode && <SampleExplode closeModal={() => setModalOpenExplode(false)} />}
+    </div>
+  )
 }
