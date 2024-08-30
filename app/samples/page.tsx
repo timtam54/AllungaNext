@@ -140,7 +140,7 @@ export default function Samples() {
         <button
           onClick={() => {
             setSampID(row.SampleID)
-            setChartTitle(`${row.description} vs date`)
+            setChartTitle(`${row.description} vs date.`)
             setModelOpen(true)
           }}
           className="text-blue-600 hover:underline"

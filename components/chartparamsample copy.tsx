@@ -1,11 +1,15 @@
 "use client"
 
+import "@/components/part.css";
 import { Circles } from 'react-loader-spinner'
+
 import React, { ChangeEvent, useEffect, useRef, useState ,MouseEvent} from 'react';
 import Link from "next/link";
 import { getToken, msalInstance } from "@/msal/msal";
-//import BarChartIcon from '@mui/icons-material/BarChart';
-import DataTable from "react-data-table-component";
+import Button from '@mui/material/Button';
+
+//import DataTable from "react-data-table-component";
+
 import { CategoryScale, Chart as ChartJS, LinearScale, BarElement,PointElement,  LineElement,  Legend,  Tooltip ,InteractionItem} from "chart.js";
 import {Bar, Line,getElementAtEvent,Chart } from 'react-chartjs-2';
 
@@ -24,7 +28,7 @@ interface ChartItem{
   //id:number;
   date:Date;
   cnt:number;
-  
+  //ky:string;
   title:string;
 }
 
@@ -37,8 +41,13 @@ interface dssx{
     hoverBorderColor: string;
     data: Array<number>;
 }
-
-export default function Page()
+type Props = {
+  title:string;
+  closeModal:  () => void;
+  sampleID:number;
+  seriesid:number;
+};
+const ChartParamSample=({title,closeModal,sampleID,seriesid}:Props)=>
 {
   
 
@@ -139,53 +148,63 @@ const fetchAllData=async ()=>
 {
         
         //await fetchCustomer();
-        await fetchData('all');
+        await fetchData();
         setLoading(false);
   };
 
   const [repair,setRepair] = useState(dta);
- // const [customerEmail,setCustomerEmail] = useState('');
+
 
   const [data,setData]=useState<ChartItem[]>([]);
-  const fetchData = async(cc:string)=>{
+  const fetchData = async()=>{
     setLoading(true);
-    const endpoint ='https://allungawebapicore.azurewebsites.net/api/ReportsPerDay';// process.env.NEXT_PUBLIC_MDSAPI+'TechCustomerEquipRepairs/'+branchid.toString()+'/'+cc;
+    const endpoint ='https://allungawebapicore.azurewebsites.net/api/ParamSampleReports/id/SampleID?id='+seriesid.toString()+'&SampleID='+sampleID.toString();// process.env.NEXT_PUBLIC_MDSAPI+'TechCustomerEquipRepairs/'+branchid.toString()+'/'+cc;
     console.log(endpoint);
+    //return;
     const result = await AddHeaderBearerToEndpoint(endpoint);
     setData( result);
     let titles: string[] = [];
+    let dates: string[] = [];
+    
     for(let i=0;i<result.length ;i++)
     {
       if (!titles.includes(result[i].title))
       {
         titles.push(result[i].title);
       }
+      var dte=DateFormat(result[i].date);
+      if (!dates.includes(dte))
+        {
+          dates.push(dte);
+        }
     }
     setTitles(titles);
     let ci: ChartItem[] = [];
       
     for(let i=0;i<result.length;i++)
       {
-        ci.push({cnt:result[i].cnt,title:result[i].title, date:result[i].date});
+        ci.push({cnt:result[i].cnt,title:result[i].title, date:result[i].date});//, ky:result[i].ky});
       }
       console.table( ci);
       const dss:dssx[]=[];
+      var iii=0;
       for (const title of titles)
       {
         dss.push(
           {
             label: title.toString(),
-            backgroundColor: 'rgba(255,99,132,0.2)',
-    borderColor: 'rgba(255,99,132,1)',
+            backgroundColor:colors[iii],// 'rgba(255,99,132,0.2)',
+    borderColor: colors[iii],//'rgba(255,99,132,1)',
     borderWidth: 1,
-    hoverBackgroundColor: 'rgba(255,99,132,0.4)',
-    hoverBorderColor: 'rgba(255,99,132,1)',
+    hoverBackgroundColor:colors[iii],// 'rgba(255,99,132,0.4)',
+    hoverBorderColor: colors[iii],//'rgba(255,99,132,1)',
           data: ci.filter(ii=>ii.title==title).map(it=>it.cnt)
           }
         )
+        iii++;
       }
     const data= {
-      labels: ci.map(it=>DateFormat( it.date)),
+      labels: dates.map(dt=>dt),//ci.map(it=>DateFormat( it.date)),
 
       datasets:dss
       
@@ -212,28 +231,22 @@ const fetchAllData=async ()=>
         }
       ]*/
     };
-    const c={type:'bar',
+    const c={type:'line',
       data:data
     };
     
   
     setRepair(data);
     setCustomerEmail(JSON.stringify(data));
-//    console.log('ce');
- //   const ccc=JSON.stringify(c);
-  //  const json = ccc.replace(/"([^"]+)":/g, '$1:');
-   // const json2=json.replaceAll("\"","'");
-   // const json3 = json2.replaceAll("&"," ");
-   // console.log('https://quickchart.io/chart?c='+json3);
-    //setCE('https://quickchart.io/chart?c='+json3);
   }
-//  const [ce,setCE] = useState('');
+
 
 const emailcustomer=async(event: React.MouseEvent<HTMLButtonElement>)=>{
   event.preventDefault();
   
   await sendChartEmail(customerEmail, 'No of Reports/Samples per day - over last 12 months');
 }
+const colors=['red','blue','green','black','brown','orange','purple','black','gray','violet','red','blue','green','black','brown','orange','purple','black','gray','violet','red','blue','green','black','brown','orange','purple','black','gray','violet']
 const [customerEmail,setCustomerEmail]=useState('');
 async function sendChartEmail(chartdata: string, title: string) {
   setLoading(true);
@@ -253,9 +266,7 @@ async function sendChartEmail(chartdata: string, title: string) {
     console.log("falling over")
     console.log(resp.json)
     console.log("await resp.json()")
-    //const responseData = await resp.json();
-    //console.log(responseData['message']);
- 
+   
 }
 else
 {
@@ -297,7 +308,7 @@ const options = {
   },
 };
 const [Titles,setTitles]=useState<string[]>([]);
-  return   loading?
+  return loading?
   <div className="relative h-16">
   <div className="absolute p-4 text-center transform -translate-x-1/2 translate-y-1/2 border top-1/2 left-1/2">
            <Circles
@@ -309,15 +320,25 @@ const [Titles,setTitles]=useState<string[]>([]);
              wrapperClass=""
              visible={true}
            /></div></div>
-           :<div className="grid grid-cols-1 gap-4 px-4 my-4">
- <div className="bg-white rounded-lg">
- <button onClick={emailcustomer}><a href=""><u>Email to mex</u></a></button>
-     <Bar
+        :
+          <div className="modal-container">
+    <div className="modal" style={{backgroundColor:'whitesmoke'}} >
+<h1 style={{fontSize:'24px',fontWeight:'bold'}}>{title}</h1>
+ <Button  variant='outlined' onClick={emailcustomer}><a href=""><u>Email to mey</u></a></Button>
+ <Button  variant='contained' type="submit" onClick={(e)=>{e.preventDefault();closeModal()}}>Close</Button>
+     <Line
+     height={"120%"}
+     
 options={options}
 data={repair}/>
     </div>
-   
-    <div className="bg-white rounded-lg">
+    </div>
+}
+;
+export default ChartParamSample
+
+/*
+ <div className="bg-white rounded-lg">
     <DataTable columns={serviceCols}
         fixedHeader
         pagination
@@ -326,9 +347,4 @@ data={repair}/>
 >
         </DataTable>
        
-        </div>
-    </div>
-
-
-}
-;
+        </div>*/
