@@ -20,7 +20,7 @@ const Header = () => {
   const [weatherOpen, setWeatherOpen] = useState(false)
 
   interface MenuDropdownProps {
-    title?: string;
+    title?: ReactNode;
     children?: ReactNode;
   }
   
@@ -78,7 +78,7 @@ const Header = () => {
         <nav className="flex items-center space-x-4">
           <MenuDropdown title={<><Home className="w-5 h-5 mr-2" />Home</>}>
             <MenuItem href="/">Search</MenuItem>
-            <MenuItem onClick={() => handleLogout('redirect')}>Sign out</MenuItem>
+            <MenuItem href="" onClick={() => handleLogout('redirect')}>Sign out</MenuItem>
           </MenuDropdown>
 
           <MenuDropdown title={<><Database className="w-5 h-5 mr-2" />Data</>}>
@@ -88,24 +88,24 @@ const Header = () => {
           </MenuDropdown>
 
           <MenuDropdown title={<><FileText className="w-5 h-5 mr-2" />Reports</>}>
-            <MenuItem onClick={() => setRackrptOpen(true)}>Rack Report</MenuItem>
-            <MenuItem onClick={() => setWeatherOpen(true)}>
+            <MenuItem href="" onClick={() => setRackrptOpen(true)}>Rack Report</MenuItem>
+            <MenuItem href="" onClick={() => setWeatherOpen(true)}>
               <CloudSun className="w-5 h-5 mr-2 inline" />
               Weather - last week
             </MenuItem>
-            <MenuItem onClick={() => { setRpt('Actual'); setSchedrptOpen(true); }}>
+            <MenuItem href="" onClick={() => { setRpt('Actual'); setSchedrptOpen(true); }}>
               Report Actual Schedule
             </MenuItem>
-            <MenuItem onClick={() => { setRpt('Projected'); setSchedrptOpen(true); }}>
+            <MenuItem href="" onClick={() => { setRpt('Projected'); setSchedrptOpen(true); }}>
               Projected Actual Schedule
             </MenuItem>
-            <MenuItem onClick={() => { setRpt('SampleOnOffSiteActual'); setSchedrptOpen(true); }}>
+            <MenuItem href="" onClick={() => { setRpt('SampleOnOffSiteActual'); setSchedrptOpen(true); }}>
               Sample On/Off Site - Actual
             </MenuItem>
-            <MenuItem onClick={() => { setRpt('SampleOnOffSiteProjected'); setSchedrptOpen(true); }}>
+            <MenuItem href="" onClick={() => { setRpt('SampleOnOffSiteProjected'); setSchedrptOpen(true); }}>
               Sample On/Off Site - Projected
             </MenuItem>
-            <MenuItem onClick={() => setChartSimpleOpen(true)}>Param Chart</MenuItem>
+            <MenuItem href="" onClick={() => setChartSimpleOpen(true)}>Param Chart</MenuItem>
           </MenuDropdown>
         </nav>
 
