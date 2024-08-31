@@ -21,6 +21,7 @@
     "@silevis/reactgrid": "^4.1.6",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.3",
+    "lucide-react": "^0.437.0",
     "moment": "^2.30.1",
     "next": "14.2.3",
     "nodemailer": "^6.9.14",
