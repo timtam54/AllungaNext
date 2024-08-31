@@ -333,7 +333,7 @@ const [Titles,setTitles]=useState<string[]>([]);
            <div className="modal-container">
     <div className="modal" style={{backgroundColor:'whitesmoke'}} >
 <h1 style={{fontSize:'24px',fontWeight:'bold'}}>{title}</h1>
- <Button  variant='outlined' onClick={emailcustomer}><a href=""><u>Email to mez</u></a></Button>
+ <Button  variant='outlined' onClick={emailcustomer}><a href=""><u>Email to me</u></a></Button>
  <Button  variant='contained' type="submit" onClick={(e)=>{e.preventDefault();closeModal()}}>Close</Button>
      <Line
      height={"120%"}

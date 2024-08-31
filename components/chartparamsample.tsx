@@ -63,9 +63,23 @@ const ChartParamSample = ({ title, closeModal, sampleID, seriesid }: Props) => {
     const endpoint = `https://allungawebapicore.azurewebsites.net/api/ParamSampleReports/id/SampleID?id=${seriesid}&SampleID=${sampleID}`;
     const result = await AddHeaderBearerToEndpoint(endpoint);
     
-    const dates = [...new Set(result.map((item: ChartItem) => DateFormat(item.date)))];
-    const titles = [...new Set(result.map((item: ChartItem) => item.title))];
+    //const dates = [...new Set(result.map((item: ChartItem) => DateFormat(item.date)))];
+    //const titles = [...new Set(result.map((item: ChartItem) => item.title))];
+    let titles: string[] = [];
+    let dates: string[] = [];
     
+    for(let i=0;i<result.length ;i++)
+    {
+      if (!titles.includes(result[i].title))
+      {
+        titles.push(result[i].title);
+      }
+      var dte=DateFormat(result[i].date);
+      if (!dates.includes(dte))
+        {
+          dates.push(dte);
+        }
+    }
     const datasets = titles.map((title, index) => ({
       label: title,
       data: dates.map(date => {
