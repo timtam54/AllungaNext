@@ -1,13 +1,13 @@
 'use client'
 
-import { useEffect, useState, ChangeEvent } from "react"
-import { useSearchParams } from "next/navigation"
-import Link from "next/link"
-import DataTable from "react-data-table-component"
-import { getToken } from "@/msal/msal"
-import Header from '@/components/header'
-import ClientSelect from '@/components/clientselect'
-import { Search, Plus, X, ArrowUpDown } from 'lucide-react'
+import { useEffect, useState, ChangeEvent } from "react";
+import { useSearchParams } from "next/navigation";
+import Link from "next/link";
+import DataTable from "react-data-table-component";
+import { getToken } from "@/msal/msal";
+import Header from '@/components/header';
+import ClientSelect from '@/components/clientselect';
+import { Search, Plus, X, ArrowUpDown } from 'lucide-react';
 
 interface Series {
   exposureType: string
@@ -210,7 +210,7 @@ export default function Home() {
             <h1 className="text-2xl font-bold">Search Series</h1>
          
               <select
-                className="p-2 border rounded"
+                className="p-2 border rounded text-black"
                 name="Fields"
                 onChange={(e: ChangeEvent<HTMLSelectElement>) => setFields(e.target.value)}
                 value={fields}
