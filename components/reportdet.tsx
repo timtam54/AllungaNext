@@ -76,7 +76,7 @@ const ReportDet = ({ report, closeModal }: Props) => {
     setData({ ...data, [e.target.name]: e.target.checked });
   };
 
-  const handleChangeReportSelect = (e: ChangeEvent<{ value: unknown }>) => {
+  const handleChangeReportSelect = (e: ChangeEvent<HTMLSelectElement>) => {
     if (!dirty) {
       setDirty(true);
     }
