@@ -77,6 +77,7 @@ const ReportDet = ({ report, closeModal }: Props) => {
   };
 
   const handleChangeReportSelect = (e: ChangeEvent<HTMLSelectElement>) => {
+//  const handleChangeReportSelect = (e:  SelectChangeEvent<string>, child: ReactNode) => {  
     if (!dirty) {
       setDirty(true);
     }
@@ -185,9 +186,9 @@ const ReportDet = ({ report, closeModal }: Props) => {
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Select
-                  fullWidth
-                  label="Report Status"
+              Report Status
+                  
+                <select
                   name="reportstatus"
                   value={data.reportstatus}
                   onChange={handleChangeReportSelect}
@@ -195,7 +196,7 @@ const ReportDet = ({ report, closeModal }: Props) => {
                   {units.map((unit) => (
                     <MenuItem key={unit} value={unit}>{unit}</MenuItem>
                   ))}
-                </Select>
+                </select>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <FormControlLabel
