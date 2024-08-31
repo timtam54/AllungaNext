@@ -331,6 +331,9 @@ const fetchSample = async ()=>{
         <Header/>
         {modelOpen && <ChartParamSample title={chartTitle} seriesid={SeriesID} sampleID={sampID} closeModal={()=>{setModelOpen(false)}}/>}
       
+
+        
+
         <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',backgroundColor:'white'}}>
         <Button variant="contained" style={{backgroundColor:'black',color:'white'}} href="/"><ArrowBack/>back</Button>
         <div></div>

@@ -235,14 +235,12 @@ export default function Samples() {
               {item.text}
             </Link>
           ))}
-        </div>
+          </div>
           <button className="bg-black text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-800">
             <Plus className="mr-2" size={20} />
             Add
           </button>
         </div>
-
-       
 
         {loading ? (
           <div className="flex justify-center items-center h-64">

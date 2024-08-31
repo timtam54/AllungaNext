@@ -1,5 +1,5 @@
 'use client'
-
+import {  Plus, FileSpreadsheet, Camera } from 'lucide-react'//Grain, 
 import { useEffect, useState, ChangeEvent } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
@@ -507,35 +507,46 @@ return 'L';
  return (
   <div className="min-h-screen bg-gray-100">
     <Header />
+
     <main className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-6">
-        <Link href="/" className="flex items-center text-gray-600 hover:text-gray-800">
-          <ArrowLeft className="mr-2" /> Back
-        </Link>
-        <h1 className="text-2xl font-bold" style={{color:'#944780'}}>Series: {seriesname}</h1>
-        <div className="flex space-x-2">
+        <div className="mb-6 flex justify-between items-center">
+         
+
+          <Link href="/" className="bg-black text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-800">
+            <ArrowLeft className="mr-2" size={20} />
+            Back
+          </Link>
+          <h1 className="text-2xl font-bold"  style={{color:'#944780'}}>Series: {seriesname}</h1>
+          <div className="flex justify-center space-x-4 ">
           {[
-            { href: `/seriestab?id=${SeriesID}&seriesname=${seriesname}`, icon: FileText, text: 'Details', active: true },
-            { href: `/samples?id=${SeriesID}&seriesname=${seriesname}`, icon: Brain, text: 'Samples' },
-            { href: `/reports?id=${SeriesID}&seriesname=${seriesname}`, icon: FileText, text: 'Reports' },
+            { href: `/seriestab?id=${SeriesID}&seriesname=${seriesname}`, icon: FileText, text: 'Details' , active: true},
+            { href: `/samples?id=${SeriesID}&seriesname=${seriesname}`, icon: Send, text: 'Samples' },//Grain, 
+            { href: `/reports?id=${SeriesID}&seriesname=${seriesname}`, icon: FileSpreadsheet, text: 'Reports' },
             { href: `/dispatch?id=${SeriesID}&seriesname=${seriesname}`, icon: Send, text: 'Dispatch' },
             { href: `/reportparam?id=${SeriesID}&seriesname=${seriesname}`, icon: Grid, text: 'Params' },
           ].map((item, index) => (
             <Link
               key={index}
               href={item.href}
-              className={`flex items-center px-3 py-2 rounded ${
+              className={`flex items-center px-4 py-2 rounded-md ${
                 item.active
-                  ? 'bg-purple-600 text-white'
+                  ? 'bg-[#944780] text-white'
                   : 'bg-white text-gray-700 hover:bg-gray-100'
               }`}
             >
-              <item.icon className="mr-2 h-4 w-4" />
+              <item.icon className="mr-2" size={20} />
               {item.text}
             </Link>
           ))}
+          </div>
+         
+        
+
+    
         </div>
-      </div>
+
+
+
 
       {loading ? (
         <div className="flex justify-center items-center h-64">

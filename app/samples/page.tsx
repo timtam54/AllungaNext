@@ -11,6 +11,7 @@ import SampleExplode from '@/components/SampleExplode'
 import SampleHist from '@/components/SampleHist'
 import ChartParamSample from '@/components/chartparamsample'
 import { ArrowLeft, FileText, Brain, Send, Grid, ChevronUp, ChevronDown, BarChart2, Snowflake, History } from 'lucide-react'
+import {  Plus, FileSpreadsheet, Camera } from 'lucide-react'//Grain, 
 
 interface SampleRow {
   SampleID: number
@@ -241,32 +242,39 @@ export default function Samples() {
       <Header />
       <main className="container mx-auto px-4 py-8">
         <div className="mb-6 flex justify-between items-center">
-          <Link href="/" className="flex items-center text-gray-600 hover:text-gray-800">
-            <ArrowLeft className="mr-2" /> Back
+         
+
+          <Link href="/" className="bg-black text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-800">
+            <ArrowLeft className="mr-2" size={20} />
+            Back
           </Link>
           <h1 className="text-2xl font-bold"  style={{color:'#944780'}}>Series: {seriesname}</h1>
-          <div className="flex space-x-2">
-            {[
-              { href: `/seriestab?id=${SeriesID}&seriesname=${seriesname}`, icon: FileText, text: 'Details' },
-              { href: `/samples?id=${SeriesID}&seriesname=${seriesname}`, icon: Brain, text: 'Samples', active: true },
-              { href: `/reports?id=${SeriesID}&seriesname=${seriesname}`, icon: FileText, text: 'Reports' },
-              { href: `/dispatch?id=${SeriesID}&seriesname=${seriesname}`, icon: Send, text: 'Dispatch' },
-              { href: `/reportparam?id=${SeriesID}&seriesname=${seriesname}`, icon: Grid, text: 'Params' },
-            ].map((item, index) => (
-              <Link
-                key={index}
-                href={item.href}
-                className={`flex items-center px-3 py-2 rounded ${
-                  item.active
-                    ? 'bg-purple-600 text-white'
-                    : 'bg-white text-gray-700 hover:bg-gray-100'
-                }`}
-              >
-                <item.icon className="mr-2 h-4 w-4" />
-                {item.text}
-              </Link>
-            ))}
+          <div className="flex justify-center space-x-4 ">
+          {[
+            { href: `/seriestab?id=${SeriesID}&seriesname=${seriesname}`, icon: FileText, text: 'Details' },
+            { href: `/samples?id=${SeriesID}&seriesname=${seriesname}`, icon: Send, text: 'Samples' , active: true},//Grain, 
+            { href: `/reports?id=${SeriesID}&seriesname=${seriesname}`, icon: FileSpreadsheet, text: 'Reports' },
+            { href: `/dispatch?id=${SeriesID}&seriesname=${seriesname}`, icon: Send, text: 'Dispatch' },
+            { href: `/reportparam?id=${SeriesID}&seriesname=${seriesname}`, icon: Grid, text: 'Params' },
+          ].map((item, index) => (
+            <Link
+              key={index}
+              href={item.href}
+              className={`flex items-center px-4 py-2 rounded-md ${
+                item.active
+                  ? 'bg-[#944780] text-white'
+                  : 'bg-white text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              <item.icon className="mr-2" size={20} />
+              {item.text}
+            </Link>
+          ))}
           </div>
+         
+        
+
+    
         </div>
 
         {loading ? (
