@@ -45,17 +45,17 @@ export default function Home() {
   const fieldlist = ["All", "AllungaRef", "BookPage", "Client", "ClientRef", "Exposure"]
 
   useEffect(() => {
-    ssearch(actives, inactives, fields, clientid)
+    ssearch(actives, inactives, fields, clientid,'A')
   }, [])
 
-  const ssearch = async (act: boolean, del: boolean, flds: string, clid: number) => {
+  const ssearch = async (act: boolean, del: boolean, flds: string, clid: number,sts:string) => {
     setLoading(true)
     try {
       const token = await getToken()
       const headers = new Headers()
       headers.append('Authorization', `Bearer ${token}`)
       const options = { method: 'GET', headers: headers }
-      const endPoint = `https://allungawebapicore.azurewebsites.net/api/Series/${search || '~'}/${act ? 1 : 0}/${del ? 1 : 0}/${flds}/${clid}`
+      const endPoint = `https://allungawebapicore.azurewebsites.net/api/Series/${search || '~'}/${act ? 1 : 0}/${del ? 1 : 0}/${flds}/${clid}/${sts}`;
       const response = await fetch(endPoint, options)
       if (!response.ok) throw new Error(response.statusText)
       const json = await response.json()
@@ -66,16 +66,17 @@ export default function Home() {
       setLoading(false)
     }
   }
+  const [status, setStatus] = useState('A');
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    ssearch(actives, inactives, fields, clientid)
+    ssearch(actives, inactives, fields, clientid,status);
   }
 
   const selectClient = (id: number, name: string) => {
     setClientName(name)
     setClientID(id)
-    ssearch(actives, inactives, fields, id)
+    ssearch(actives, inactives, fields, id,status)
   }
 
   const formatDate = (date: Date | string | null) => {
@@ -258,7 +259,7 @@ export default function Home() {
                     checked={actives}
                     onChange={(e) => {
                       setActives(e.target.checked)
-                      ssearch(e.target.checked, inactives, fields, clientid)
+                      ssearch(e.target.checked, inactives, fields, clientid,status)
                     }}
                     className="form-checkbox text-purple-600"
                   />
@@ -271,7 +272,7 @@ export default function Home() {
                     checked={inactives}
                     onChange={(e) => {
                       setInactives(e.target.checked)
-                      ssearch(actives, e.target.checked, fields, clientid)
+                      ssearch(actives, e.target.checked, fields, clientid,status)
                     }}
                     className="form-checkbox text-purple-600"
                   />
@@ -287,12 +288,14 @@ export default function Home() {
               </Link>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-2 text-sm">
-              <div className="bg-red-200 text-red-800 p-2 rounded">Return / Report overdue</div>
+            <div className="grid grid-cols-2 md:grid-cols-6 gap-2 text-sm">
+              <div className="bg-red-200 text-red-800 p-2 rounded">Rtn / Rprt overdue</div>
               <div className="bg-yellow-200 text-yellow-800 p-2 rounded">Locked</div>
-              <div className="bg-green-200 text-green-800 p-2 rounded">Return / Report Complete</div>
+              <button onClick={(e) => {e.preventDefault();ssearch(actives, inactives, fields, clientid,'C');setStatus('C');}} type="button" className="bg-green-200 text-green-800 p-2 rounded  hover:bg-green-300 active:bg-green-400 focus:outline-none focus:ring-2 focus:ring-green-500">Rtn / Rprt Complete</button>
               <div className="bg-gray-200 text-gray-800 p-2 rounded">All Samples off site</div>
               <div className="bg-black text-white p-2 rounded">Inactive</div>
+              <button onClick={(e) => {e.preventDefault();ssearch(actives, inactives, fields, clientid,'A');setStatus('A');}} type="button" className="bg-white-200 text-silver-800 p-2 rounded  hover:bg-white-300 active:bg-white-400 focus:outline-none focus:ring-2 focus:ring-black-500">All</button>
+
             </div>
           </form>
 
