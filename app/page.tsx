@@ -8,6 +8,7 @@ import { getToken } from "@/msal/msal";
 import Header from '@/components/header';
 import ClientSelect from '@/components/clientselect';
 import { Search, Plus, X, ArrowUpDown } from 'lucide-react';
+import { getDate } from "react-datepicker/dist/date_utils";
 
 interface Series {
   exposureType: string
@@ -289,13 +290,13 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-6 gap-2 text-sm">
-              <div className="bg-red-200 text-red-800 p-2 rounded">Rtn / Rprt overdue</div>
-              <div className="bg-yellow-200 text-yellow-800 p-2 rounded">Locked</div>
-              <button onClick={(e) => {e.preventDefault();ssearch(actives, inactives, fields, clientid,'C');setStatus('C');}} type="button" className="bg-green-200 text-green-800 p-2 rounded  hover:bg-green-300 active:bg-green-400 focus:outline-none focus:ring-2 focus:ring-green-500">Rtn / Rprt Complete</button>
-              <div className="bg-gray-200 text-gray-800 p-2 rounded">All Samples off site</div>
-              <div className="bg-black text-white p-2 rounded">Inactive</div>
-              <button onClick={(e) => {e.preventDefault();ssearch(actives, inactives, fields, clientid,'A');setStatus('A');}} type="button" className="bg-white-200 text-silver-800 p-2 rounded  hover:bg-white-300 active:bg-white-400 focus:outline-none focus:ring-2 focus:ring-black-500">All</button>
 
+              <button onClick={(e) => {e.preventDefault();ssearch(actives, inactives, fields, clientid,'O');setStatus('O');}} type="button" className="bg-red-200 text-red-800 p-2 rounded hover:bg-red-300 active:bg-red-400 focus:outline-none focus:ring-2 focus:ring-red-500">Rtn / Rpt overdue</button>
+              <button onClick={(e) => {e.preventDefault();ssearch(actives, inactives, fields, clientid,'L');setStatus('L');}} type="button" className="bg-yellow-200 text-yellow-800 p-2 rounded hover:bg-yellow-300 active:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-500">Locked</button>
+              <button onClick={(e) => {e.preventDefault();ssearch(actives, inactives, fields, clientid,'C');setStatus('C');}} type="button" className="bg-green-200 text-green-800 p-2 rounded  hover:bg-green-300 active:bg-green-400 focus:outline-none focus:ring-2 focus:ring-green-500">Rtn / Rpt Complete</button>
+              <button onClick={(e) => {e.preventDefault();ssearch(actives, inactives, fields, clientid,'0');setStatus('0');}} type="button"  className="bg-gray-200 text-gray-800 p-2 rounded hover:bg-gray-300 active:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500">All Samples off site</button>       
+              <button onClick={(e) => {e.preventDefault();ssearch(false, true, fields, clientid,'A');setInactives(true);setActives(false);setStatus('A');}} type="button" className="bg-black text-white p-2 rounded hover:bg-gray-700 active:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500">Inactive</button>
+              <button onClick={(e) => {e.preventDefault();ssearch(actives, inactives, fields, clientid,'A');setStatus('A');}} type="button" className="bg-white-200 text-silver-800 p-2 rounded hover:bg-gray-300 active:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500">All</button>
             </div>
           </form>
 
@@ -331,11 +332,52 @@ export default function Home() {
               }}
               conditionalRowStyles={[
                 {
+                  when: (row) => row.locked!=null,
+                  style: {
+                    backgroundColor: '#F9A825',
+                    color: '#FFF59D',
+                  },
+                  
+                }, {
                   when: (row) => row.complete,
                   style: {
                     backgroundColor: 'rgba(0, 255, 0, 0.1)',
                     color: 'green',
                   },
+                  
+                },
+                {
+                  when: (row) => !row.active,
+                  style: {
+                    backgroundColor: 'black',
+                    color: 'silver',
+                  },
+                  
+                }
+                ,
+                {
+                  when: (row) => row.cntSamplesOnSite==0,
+                  style: {
+                    backgroundColor: '#EEEEEE',
+                    color: '#424242',
+                  },
+                  
+                },
+                {
+                  when: (row) => (row.dateNextReport<new Date()),//(row.dateNextReport!=null &&  || ((row.dateNextReturn!=null && row.dateNextReturn)<new Date())),
+                  style: {
+                    backgroundColor: '#EF9A9A',
+                    color: '#C62828',
+                  },
+                  
+                },
+                {
+                  when: (row) => (row.dateNextReturn<new Date()),//(row.dateNextReport!=null &&  || ((row.dateNextReturn!=null && row.dateNextReturn)<new Date())),
+                  style: {
+                    backgroundColor: '#EF9A9A',
+                    color: '#C62828',
+                  },
+                  
                 },
               ]}
             />

@@ -1,13 +1,18 @@
 "use client"
-
+import { Circles } from 'react-loader-spinner';
 import Header from '@/components/header'
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from 'react';
 import Link from "next/link";
-import { ArrowLeft, FileText, Brain, Send, Grid, BarChart2,FileSpreadsheet } from 'lucide-react'
+import AppsIcon from '@mui/icons-material/Apps';
+import ArrowBack from '@mui/icons-material/ArrowBack';
 import { getToken } from "@/msal/msal";
 import DataTable from "react-data-table-component";
-
+import Button from '@mui/material/Button';
+import SendTimeExtensionIcon from '@mui/icons-material/SendTimeExtension';
+import SummarizeIcon from '@mui/icons-material/Summarize';
+import GrainIcon from '@mui/icons-material/Grain';
+import DetailsIcon from '@mui/icons-material/Details';
 interface samplerow{
     Staff:string;
     Dte:Date;
@@ -21,7 +26,7 @@ interface samplerow{
 export default function Dispatch()
 {    const searchParams = useSearchParams();
     const seriesname=searchParams!.get("seriesname");
-    const id =parseInt( searchParams!.get("id")!);
+    const SeriesID =parseInt( searchParams!.get("id")!);
     const [loading,setLoading] = useState(true);
     const [deleted,setDeleted] = useState(false);
     useEffect(() => {
@@ -125,7 +130,7 @@ export default function Dispatch()
 const fetchSample = async ()=>{
   
   setLoading(true);
-  const urlSample = `https://allungawebapi.azurewebsites.net/api/dispatches/`+id;
+  const urlSample = `https://allungawebapi.azurewebsites.net/api/dispatches/`+SeriesID;
   const token = await getToken()
   const headers = new Headers()
   const bearer = `Bearer ${token}`
@@ -150,55 +155,43 @@ const fetchSample = async ()=>{
 
   }
     return (
-      <div className="min-h-screen bg-gray-100">
-      <Header />
-      
-
-<main className="container mx-auto px-4 py-8">
-        <div className="mb-6 flex justify-between items-center">
-          <Link href="/" className="bg-black text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-800">
-            <ArrowLeft className="mr-2" size={20} />
-            Back
-          </Link>
-          <h1 className="text-2xl font-bold"  style={{color:'#944780'}}>Series: {seriesname}</h1>
-          <div className="flex justify-center space-x-4 ">
-          {[
-            { href: `/seriestab?id=${id}&seriesname=${seriesname}`, icon: FileText, text: 'Details' },
-            { href: `/samples?id=${id}&seriesname=${seriesname}`, icon: Send, text: 'Samples' },//Grain, 
-            { href: `/reports?id=${id}&seriesname=${seriesname}`, icon: FileSpreadsheet, text: 'Reports' },
-            { href: `/dispatch?id=${id}&seriesname=${seriesname}`, icon: Send, text: 'Dispatch', active: true },
-            { href: `/reportparam?id=${id}&seriesname=${seriesname}`, icon: Grid, text: 'Params' },
-          ].map((item, index) => (
-            <Link
-              key={index}
-              href={item.href}
-              className={`flex items-center px-4 py-2 rounded-md ${
-                item.active
-                  ? 'bg-[#944780] text-white'
-                  : 'bg-white text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              <item.icon className="mr-2" size={20} />
-              {item.text}
-            </Link>
-          ))}
-          </div>
-         
-        
-
-    
+        <body style={{backgroundColor:'white'}}>
+             
+             {loading ? 
+              <div className="relative h-16">
+  <div className="absolute p-4 text-center transform -translate-x-1/2 translate-y-1/2 border top-1/2 left-1/2">
+      <Circles
+      height="200"
+      width="200"
+      color="#944780"
+      ariaLabel="circles-loading"
+      wrapperStyle={{}}
+      wrapperClass=""
+      visible={true}
+    />
+    </div></div>
+:
+<>
+        <Header/>
+        <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',backgroundColor:'white'}}>
+        <Button variant="contained" style={{backgroundColor:'black',color:'white'}} href="/"><ArrowBack/>back</Button>
+        <div></div>
+        <h1 className="text-2xl font-bold"  style={{color:'#944780'}}>Series:{seriesname}</h1>
+        <div></div>
+        <div>
+        <Link href={"/seriestab?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button  style={{width:'180px'}}  variant='outlined'><DetailsIcon/>Details</Button></Link>
+        <Link href={"/samples?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'180px'}} variant='outlined'><GrainIcon/>Samples</Button></Link>
+        <Link href={"/reports?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'180px'}} variant='outlined'><SummarizeIcon/>Reports</Button></Link>
+        <Link href={"/dispatch?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'180px'}} variant='contained'><SendTimeExtensionIcon/>Dispatch</Button></Link>
+        <Link href={"/reportparam?id="+SeriesID.toString()+"&seriesname="+seriesname} ><Button style={{width:'180px'}} variant='outlined'><AppsIcon/>Params</Button></Link>
+        </div>
         </div>
 
-
-        {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-500"></div>
-          </div>
-        ) : (
-          <div className="bg-white shadow-md rounded-lg overflow-hidden">
-            <div className="p-6">
-              
-              <DataTable columns={columns}
+        <div className="grid grid-cols-1 gap-4 px-4 my-4">
+        <div style={{color:'white',backgroundColor:'navy'}} className="bg-white rounded-lg">
+        <DataTable
+        
+         columns={columns}
         fixedHeader
         pagination
         dense
@@ -206,10 +199,11 @@ const fetchSample = async ()=>{
         data={results}
         conditionalRowStyles={conditionalRowStyles} >
         </DataTable>
+        </div>
+
             </div>
-          </div>
-        )}
-      </main>
-    </div>
+            </>
+               }
+            </body>
     )
 }
