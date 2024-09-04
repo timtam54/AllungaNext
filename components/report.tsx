@@ -32,8 +32,9 @@ interface Sample
 type Props = {
   reportid: number;
   closeModal:  () => void;
+  reportname:string;
 };
-function Rprt({closeModal,reportid}:Props) {
+function Rprt({closeModal,reportid,reportname}:Props) {
   const [loading, setLoading] = useState(true);
 
     const [columns, setColumns] = React.useState<Column[]>([]);
@@ -313,7 +314,7 @@ const [dataSample, setDataSample] = React.useState<Sample[]>([]);
  return <div className="modal-container"> <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
  <div className="bg-white p-5 rounded-lg shadow-xl w-11/12 max-w-4xl">
    <div className="flex justify-between items-center mb-4">
-     <h3 className="text-2xl font-bold text-purple-800">Readings - Excel View</h3>
+     <h3 className="text-2xl font-bold text-purple-800">{reportname} Readings</h3>
      <div className="space-x-2">
        <Button variant="contained" onClick={closeModal} className="bg-gray-500 hover:bg-gray-600">
          Close

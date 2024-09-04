@@ -214,7 +214,7 @@ export default function Page()
 :
 <>
           <Header/>
-          {modelReportOpen && <Report reportid={reportID} closeModal={()=>{setModelReportOpen(false)}}/>}
+          {modelReportOpen && <Report reportname="reportname" reportid={reportID} closeModal={()=>{setModelReportOpen(false)}}/>}
 
           {modelOpen && <ChartSampleParam title={chartTitle} seriesid={id} paramID={paramID} closeModal={()=>{setModelOpen(false)}}/>}
           <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',backgroundColor:'white'}}>

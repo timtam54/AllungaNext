@@ -300,7 +300,7 @@ const [dataSample, setDataSample] = React.useState([]);
           return [...prevColumns];
       });
     }
- return <div><table><tr><td><h3 style={{color:'#944780'}}>Excel View</h3></td><td><Button variant="outlined"  style={{backgroundColor:'red',color:'white'}} onClick={saveReadings}>
+ return <div><table><tr><td><h3 style={{color:'#944780'}}>Excel View.</h3></td><td><Button variant="outlined"  style={{backgroundColor:'red',color:'white'}} onClick={saveReadings}>
  Submit
 </Button></td>
 

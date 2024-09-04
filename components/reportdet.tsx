@@ -53,7 +53,7 @@ const ReportDet = ({ report, closeModal }: Props) => {
   const [reportDate, setReportDate] = useState<Date | null>(new Date(report.date));
   const [data, setData] = useState<reportrow>(report);
   const [units] = useState(["N", "A", "C", "S"]);
-  alert(report.completedDate);
+  //alert(report.completedDate);
   const [completedDate, setCompletedDate] = useState<Date | null>((report.completedDate==null)?null:new Date(report.completedDate));
   const [dirty, setDirty] = useState(false);
 
@@ -186,15 +186,14 @@ const ReportDet = ({ report, closeModal }: Props) => {
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-              Report Status
-                  
+              Report Status-           
                 <select
                   name="reportstatus"
                   value={data.reportstatus}
                   onChange={handleChangeReportSelect}
                 >
                   {units.map((unit) => (
-                    <MenuItem key={unit} value={unit}>{unit}</MenuItem>
+                    <option key={unit} value={unit}>{unit}</option>
                   ))}
                 </select>
               </Grid>

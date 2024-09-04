@@ -117,11 +117,11 @@ export default function ReportParams() {
   const getRepPar = (reportid: number, ParamID: number) => {
     return !dataParRepSeries.find(i => i.paramid === ParamID && i.reportid === reportid)?.deleted
   }
-
+const [reportname, setReportName] = useState('')
   return (
     <div className="min-h-screen bg-gray-100">
       <Header />
-      {modelReportOpen && <Report reportid={reportID} closeModal={() => setModelReportOpen(false)} />}
+      {modelReportOpen && <Report reportname={reportname} reportid={reportID} closeModal={() => setModelReportOpen(false)} />}
       {modelOpen && (
         <ChartSampleParam
           title={chartTitle}
@@ -195,7 +195,8 @@ export default function ReportParams() {
                         <th key={result.reportid} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           <button
                             onClick={() => {
-                              setReportID(result.reportid)
+                              setReportID(result.reportid);
+                              setReportName(result.reportname);
                               setModelReportOpen(true)
                             }}
                             className="text-blue-600 hover:text-blue-800 transition-colors"

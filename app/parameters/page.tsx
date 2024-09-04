@@ -1,246 +1,171 @@
 "use client"
-import Header from "@/components/header";
-import { getToken } from "@/msal/msal";
-import { useEffect, useState } from "react";
-import DataTable , { createTheme }from "react-data-table-component";
-import Param from "@/components/Param";
-import { Circles } from 'react-loader-spinner';
-interface exposuretyperow
-{
-  ParamID:number;
-  ParamName:string;
-  ValueRange:string;
-  EquivalentValues:string;
-  Ordering:number;
-  Unit:string;
-  VisualNoReadings:string;
+
+import { useEffect, useState } from "react"
+import { Circles } from 'react-loader-spinner'
+import DataTable from "react-data-table-component"
+import Header from "@/components/header"
+import Param from "@/components/Param"
+import { getToken } from "@/msal/msal"
+
+interface ExposureTypeRow {
+  ParamID: number
+  ParamName: string
+  ValueRange: string
+  EquivalentValues: string
+  Ordering: number
+  Unit: string
+  VisualNoReadings: string
 }
 
-export default function parameters()
-{
-    useEffect(() => {
-        getexptype()
-   
-    } , []);
+export default function Parameters() {
+  const [loading, setLoading] = useState(false)
+  const [results, setResults] = useState<ExposureTypeRow[]>([])
+  const [paramID, setParamID] = useState(0)
+  const [modelOpen, setModelOpen] = useState(false)
 
-    const [loading,setLoading] = useState(false);
-    const [results,setResults] = useState<exposuretyperow[]>([]);
+  useEffect(() => {
+    getExpType()
+  }, [])
 
-
-    const getexptype=async ()=>{
-        setLoading(true);
-        const token = await getToken()
-        const headers = new Headers()
-        const bearer = `Bearer ${token}`
-      
-        headers.append('Authorization', bearer)
-      
-        const options = {
-          method: 'GET',
-          headers: headers,
-        }  
-        const response = await fetch(`https://allungawebapi.azurewebsites.net/api/Params/`,options);
-        var ee=await response;
-        if (!ee.ok)
-        {
-          throw Error((ee).statusText);
+  const getExpType = async () => {
+    setLoading(true)
+    try {
+      const token = await getToken()
+      const response = await fetch('https://allungawebapi.azurewebsites.net/api/Params/', {
+        headers: {
+          'Authorization': `Bearer ${token}`
         }
-        const json=await ee.json();
-        console.log(json);
-        setResults(json);
-        setLoading(false);
+      })
+      if (!response.ok) {
+        throw new Error(response.statusText)
       }
+      const json = await response.json()
+      setResults(json)
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
-     /* const customStyles = {
-        noData: {
-          style: {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white',
-          },
-        },
-        rows: {
-          style: {
-            zIndex: 2,
-            minHeight: '30px !important', // override the row height
-            fontSize: '14px',
-            whiteSpace: 'pre',
-          },
-        },
-        table: {
-          style: {
-            zIndex: 1,
-          },
-        },
-        headRow: {
-          style: {
-            minHeight: '40px',
-            borderTopWidth: '1px',
-            borderTopStyle: 'solid',
-            borderBottomWidth: '2px',
-          },
-        },
-        headCells: {
-          style: {
-            fontSize: '16px',
-            justifyContent: 'left',
-            wordWrap: 'breakWord',
-          },
-        },
-        subHeader: {
-          style: {
-            minHeight: '40px',
-          },
-        },
-        pagination: {
-          style: {
-            minHeight: '40px',
-          },
-          pageButtonsStyle: {
-            borderRadius: '50%',
-            height: '40px',
-            width: '40px',
-            padding: '8px',
-            margin: 'px',
-            cursor: 'pointer',
-          },
-        },
-      };*/
-      const customStyles = {
-        headCells: {
-          style: {
-            paddingLeft: '2px', // override the cell padding for head cells
-            paddingRight: '2px',
-            size:'12px',
-            fontWeight:'bold'
-          },
-          
-        },
-        cells: {
-          style: {
-            paddingLeft: '2px', // override the cell padding for data cells
-            paddingRight: '2px',
-            
-          },
-        },
-      }
-    const conditionalRowStyles = [
-        {
-          when: (row:exposuretyperow) => true,
-          style:  (row:exposuretyperow) => ({
-            color: row.ParamID==0?'red':'blue',
-          })
-        }
-      ];
-      //const [etid,setEtid]=useState(0);
-    const columns =[
-        {
-          name:'id',
-          sortable: true,
-          width: "60px",  
-          wrap:true,  
-          selector: (row:exposuretyperow)=>row.ParamID
-        },
-        {
-            name:'Name',
-            sortable: true,
-            width: "300px",  
-            wrap:true,  
-            selector: (row:exposuretyperow)=>row.ParamName,
-            cell: (row:exposuretyperow) =><button onClick={(e)=>{
-              e.preventDefault();
-              setParamID(row.ParamID); 
-              setModelOpen(true);
-              
-            }}><u>{row.ParamName}</u></button> ,
-          }
-          ,
-        {
-            name:'Unit',
-            sortable: true,
-            width: "160px",  
-            wrap:true,  
-            selector: (row:exposuretyperow)=>row.Unit
-          }
-          ,
-        {
-            name:'ValueRange',
-            sortable: true,
-            width: "160px",  
-            wrap:true,  
-            selector: (row:exposuretyperow)=>row.ValueRange
-          }
-          ,
-        {
-            name:'Value Range',
-            sortable: true,
-            width: "160px",  
-            wrap:true,  
-            selector: (row:exposuretyperow)=>row.ValueRange
-          }
-          ,
-        {
-            name:'Equivalent Values',
-            sortable: true,
-            width: "160px",  
-            wrap:true,  
-            selector: (row:exposuretyperow)=>row.EquivalentValues
-          }
-          ,
-        {
-            name:'Ordering',
-            sortable: true,
-            width: "160px",  
-            wrap:true,  
-            selector: (row:exposuretyperow)=>row.Ordering
-          }
-          ,
-        {
-            name:'Visual No Readings',
-            sortable: true,
-            width: "160px",  
-            wrap:true,  
-            selector: (row:exposuretyperow)=>row.VisualNoReadings
-          }
-        ]
-        const [ParamID,setParamID]=useState(0);
-        const [modelOpen,setModelOpen]=useState(false);
-        return (
-          <body style={{backgroundColor:'whitesmoke'}}>
-          {loading ? 
-           <div className="relative h-16" style={{backgroundColor:'whitesmoke'}}>
-<div style={{backgroundColor:'whitesmoke'}} className="absolute p-4 text-center transform -translate-x-1/2 translate-y-1/2 border top-1/2 left-1/2">
+  const customStyles = {
+    table: {
+      style: {
+        backgroundColor: 'white',
+        borderRadius: '0.5rem',
+        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+      },
+    },
+    headRow: {
+      style: {
+        backgroundColor: '#f3f4f6',
+        borderTopLeftRadius: '0.5rem',
+        borderTopRightRadius: '0.5rem',
+      },
+    },
+    headCells: {
+      style: {
+        fontSize: '0.875rem',
+        fontWeight: '600',
+        color: '#374151',
+        padding: '1rem',
+      },
+    },
+    cells: {
+      style: {
+        fontSize: '0.875rem',
+        color: '#4b5563',
+        padding: '1rem',
+      },
+    },
+  }
 
-   <Circles 
-   height="200"
-   width="200"
-   color="#944780"
-   ariaLabel="circles-loading"
-   wrapperStyle={{}}
-   wrapperClass=""
-   visible={true}
- />
- </div> </div>
-:
-<>
-            <Header/>
-            {modelOpen && <Param ParamID={ParamID} closeModal={()=>{setModelOpen(false)}}/>}
-      
-            <h1 style={{fontSize:"22px"}}>Exposure Types</h1>
-              <DataTable columns={columns}
-              fixedHeader
-              pagination
-              dense
-              customStyles={customStyles}        
+  const columns = [
+    {
+      name: 'ID',
+      selector: (row: ExposureTypeRow) => row.ParamID,
+      sortable: true,
+      width: '60px',
+    },
+    {
+      name: 'Name',
+      selector: (row: ExposureTypeRow) => row.ParamName,
+      sortable: true,
+      cell: (row: ExposureTypeRow) => (
+        <button
+          onClick={() => {
+            setParamID(row.ParamID)
+            setModelOpen(true)
+          }}
+          className="text-blue-600 hover:text-blue-800 underline focus:outline-none"
+        >
+          {row.ParamName}
+        </button>
+      ),
+    },
+    {
+      name: 'Unit',
+      selector: (row: ExposureTypeRow) => row.Unit,
+      sortable: true,
+    },
+    {
+      name: 'Value Range',
+      selector: (row: ExposureTypeRow) => row.ValueRange,
+      sortable: true,
+    },
+    {
+      name: 'Equivalent Values',
+      selector: (row: ExposureTypeRow) => row.EquivalentValues,
+      sortable: true,
+    },
+    {
+      name: 'Ordering',
+      selector: (row: ExposureTypeRow) => row.Ordering,
+      sortable: true,
+    },
+    {
+      name: 'Visual No Readings',
+      selector: (row: ExposureTypeRow) => row.VisualNoReadings,
+      sortable: true,
+    },
+  ]
+
+  return (
+    <div className="min-h-screen bg-gray-100">
+      <Header />
+      <main className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">Parameters</h1>
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <Circles
+              height="80"
+              width="80"
+              color="#944780"
+              ariaLabel="circles-loading"
+              visible={true}
+            />
+          </div>
+        ) : (
+          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            <DataTable
+              columns={columns}
               data={results}
-              conditionalRowStyles={conditionalRowStyles} >
-              </DataTable>
-
-             
-
-              </>
-}
-</body>
-          )
+              pagination
+              paginationPerPage={10}
+              paginationRowsPerPageOptions={[10, 20, 30, 40, 50]}
+              fixedHeader
+              fixedHeaderScrollHeight="calc(100vh - 200px)"
+              customStyles={customStyles}
+              noDataComponent={
+                <div className="p-4 text-center text-gray-500">No data available</div>
+              }
+            />
+          </div>
+        )}
+      </main>
+      {modelOpen && (
+        <Param ParamID={paramID} closeModal={() => setModelOpen(false)} />
+      )}
+    </div>
+  )
 }

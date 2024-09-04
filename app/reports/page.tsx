@@ -10,6 +10,7 @@ import ReportPhotos from '@/components/reportphotos'
 import { getToken } from '@/msal/msal'
 import DataTable from 'react-data-table-component'
 import { ArrowLeft, Plus, FileText, FileSpreadsheet, Send, Grid, Camera } from 'lucide-react'//Grain, 
+import { Button } from '@mui/material'
 
 interface ReportRow {
   reportid: number
@@ -66,44 +67,49 @@ export default function Samples() {
   }
 
   const columns = [
-    {
+    /*{
       name: 'ID',
       selector: (row: ReportRow) => row.reportid,
       sortable: true,
       width: '60px',
-    },
+    },*/
     {
       name: 'Description',
       cell: (row: ReportRow) => (
-        <button
-          onClick={() => {
-            setCurrentReport(row)
+        <Button variant='outlined'
+          onClick={(e) => {
+            e.preventDefault();
+            setCurrentReport(row);
             console.table(row);
-            setModalOpen(true)
+            setModalOpen(true);
           }}
-          className="text-blue-600 hover:underline"
+          className="hover:underline"
+          style={{ color: '#944780',borderColor: '#944780' }}
         >
           {row.reportname}
-        </button>
+        </Button>
       ),
       sortable: true,
-      width: '180px',
+      width: '270px',
     },
     {
       name: 'Date',
       cell: (row: ReportRow) => (
-        <button
+        <Button variant='outlined'
           onClick={() => {
-            setReportID(row.reportid)
+            setReportID(row.reportid);
+            setReportName(row.reportname);
             setModelOpen(true)
           }}
-          className="text-blue-600 hover:underline"
+          className="hover:underline"
+          style={{ color: '#944780',borderColor: '#944780' }}
+
         >
           {formatDate(row.date)}
-        </button>
+        </Button>
       ),
       sortable: true,
-      width: '90px',
+      width: '130px',
     },
     {
       name: 'Status',
@@ -135,7 +141,8 @@ export default function Samples() {
       cell: (row: ReportRow) => (
         <button
           onClick={() => {
-            setReportID(row.reportid)
+            setReportID(row.reportid);
+            setReportName(row.reportname);
             setModelOpen(true)
           }}
           className="flex items-center text-blue-600 hover:underline"
@@ -199,12 +206,12 @@ export default function Samples() {
       style: { color: 'navy' },
     },
   ]
-
+  const [reportname, setReportName] = useState('')
   return (
     <div className="min-h-screen bg-gray-100">
       <Header />
       {photoModelOpen && <ReportPhotos reportid={reportID} closeModal={() => setPhotoModelOpen(false)} />}
-      {modelOpen && <Report reportid={reportID} closeModal={() => setModelOpen(false)} />}
+      {modelOpen && <Report reportname={reportname} reportid={reportID} closeModal={() => setModelOpen(false)} />}
       {modalOpen && currentReport && <ReportDet report={currentReport} closeModal={() => setModalOpen(false)} />}
 
       <main className="container mx-auto px-4 py-8">
@@ -213,7 +220,11 @@ export default function Samples() {
             <ArrowLeft className="mr-2" size={20} />
             Back
           </Link>
-          <h1 className="text-2xl font-bold"  style={{color:'#944780'}}>Series: {seriesname}</h1>
+          <button className="bg-black text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-800">
+            <Plus className="mr-2" size={20} />
+            Add
+          </button>
+          <h1 className="text-2xl font-bold"  style={{color:'#944780'}}>{seriesname}</h1>
           <div className="flex justify-center space-x-4 ">
           {[
             { href: `/seriestab?id=${SeriesID}&seriesname=${seriesname}`, icon: FileText, text: 'Details' },
@@ -236,10 +247,7 @@ export default function Samples() {
             </Link>
           ))}
           </div>
-          <button className="bg-black text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-800">
-            <Plus className="mr-2" size={20} />
-            Add
-          </button>
+          
         </div>
 
         {loading ? (

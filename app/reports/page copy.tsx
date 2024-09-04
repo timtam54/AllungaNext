@@ -218,7 +218,7 @@ const [photoModelOpen,setPhotoModelOpen]=useState(false);
 <>
         <Header/>
        {photoModelOpen && <ReportPhotos reportid={reportID} closeModal={()=>{setPhotoModelOpen(false)}}/>}
-        {modelOpen && <Report reportid={reportID} closeModal={()=>{setModelOpen(false)}}/>}
+        {modelOpen && <Report reportname="reportname" reportid={reportID} closeModal={()=>{setModelOpen(false)}}/>}
         {modalOpen && <ReportDet report={currentReport!} closeModal={closeChat}/>}
 
 
