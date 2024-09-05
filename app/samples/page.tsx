@@ -92,17 +92,12 @@ export default function Samples() {
   }
 
   const columns = [
-    {
-      name: '+',
-      selector: (row: SampleRow) => row.SampleID,
-      sortable: true,
-      width: '60px',
-    },
+    
     {
       name: 'AEL Ref',
       selector: (row: SampleRow) => row.Number,
       sortable: true,
-      width: '100px',
+      width: '90px',
       cell: (row: SampleRow) => (
         <button
           onClick={() => {
@@ -119,7 +114,7 @@ export default function Samples() {
       name: 'Client id',
       selector: (row: SampleRow) => row.description,
       sortable: true,
-      width: '90px',
+      width: '110px',
       cell: (row: SampleRow) => (
         <button
           onClick={() => {

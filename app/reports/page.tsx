@@ -9,8 +9,9 @@ import Report from '@/components/report'
 import ReportPhotos from '@/components/reportphotos'
 import { getToken } from '@/msal/msal'
 import DataTable from 'react-data-table-component'
-import { ArrowLeft, Plus, FileText, FileSpreadsheet, Send, Grid, Camera } from 'lucide-react'//Grain, 
+import { ArrowLeft, Plus, FileText, FileSpreadsheet, Send, Grid, Camera, Download } from 'lucide-react'//Grain, 
 import { Button } from '@mui/material'
+import { ExportAsExcel } from 'react-export-table'
 
 interface ReportRow {
   reportid: number
@@ -74,7 +75,7 @@ export default function Samples() {
       width: '60px',
     },*/
     {
-      name: 'Description',
+      name:  <>Description<Button variant='contained' style={{backgroundColor:'black',color:'white'}} onClick={()=>{alert('as')}}><Plus className="mr-2" size={20} />Add</Button></>,
       cell: (row: ReportRow) => (
         <Button variant='outlined'
           onClick={(e) => {
@@ -220,10 +221,23 @@ export default function Samples() {
             <ArrowLeft className="mr-2" size={20} />
             Back
           </Link>
-          <button className="bg-black text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-800">
-            <Plus className="mr-2" size={20} />
-            Add
-          </button>
+          <div className="mb-4">
+                <ExportAsExcel
+                  data={results}
+                  headers={['reportname', 'date', 'reportstatus', 'bookandpage', 'DaysInLab', 'comment']}
+                >
+                  {(props) => (
+                    <button
+                      {...props}
+                      className="flex items-center px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+                    >
+                      <Download className="w-5 h-5 mr-2" />
+                      Export as Excel
+                    </button>
+                  )}
+                </ExportAsExcel>
+             
+        </div>     
           <h1 className="text-2xl font-bold"  style={{color:'#944780'}}>{seriesname}</h1>
           <div className="flex justify-center space-x-4 ">
           {[
