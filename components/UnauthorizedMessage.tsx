@@ -1,18 +1,25 @@
 import { msalInstance } from "@/msal/msal";
 import { SignInButton } from "./SignInButton";
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
-
+import { signIn } from 'next-auth/react'
 import Image from "next/image";
+import ClientRequestAccess from "./ClientRequestAccess";
+import SignInPage from "./SignInPage";
+import { useState } from "react";
 export default function UnauthorizedMessage() {
+  const [modal, setModal] = useState(false);
   const user = msalInstance.getActiveAccount();
     return (
         <>
+       {modal && <ClientRequestAccess closeModal={()=>{setModal(false);}}/>}
+
         <head>
         <title>Allunga Series Reporting</title>
         <img rel="icon" src="/logo.png"/>
         </head>
-
+        
         <body style={{width:"100%",verticalAlign:'top'}}> 
+      
         <div style={{
            zIndex:-1,
            position:"fixed",
@@ -83,6 +90,16 @@ export default function UnauthorizedMessage() {
   <td></td>
 </tr>
 <tr>
+  <td></td>
+</tr>
+
+<tr>
+  <td></td>
+</tr>
+<tr>
+  <td></td>
+</tr>
+<tr>
   <td align='center' >
     <div style={{backgroundColor:"#944780",width:"1020px",alignItems: "center",border: "1px solid #000000"}} >
      <br/>
@@ -104,6 +121,8 @@ export default function UnauthorizedMessage() {
       </ul>
       <br/>
       Click<SignInButton text="Login"/>
+      <button className='bg-blue-200 text-blue-700 hover:bg-blue-500 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded shadow-md' onClick={()=> signIn() }>Request Access to via Third Party</button>
+
 <VpnKeyIcon/>
 to sign in 
     </div>

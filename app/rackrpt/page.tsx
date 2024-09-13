@@ -7,7 +7,7 @@ import { getToken } from "@/msal/msal"
 import { ExportAsExcel } from "react-export-table"
 import { Download } from 'lucide-react'
 import Header from "@/components/header"
-
+import AddLocationIcon from '@mui/icons-material/AddLocation';
 interface RackRptRow {
   SeriesID: number
   RackNo: string
@@ -103,7 +103,7 @@ export default function RptRack() {
       <Header />
       <main className="container mx-auto px-4 py-8">
         <div style={{display: 'flex', justifyContent: 'space-between'}}>
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">Rack Report</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-6"><AddLocationIcon/>Rack Report</h1>
         <div className="mb-4">
                 <ExportAsExcel
                   data={data}

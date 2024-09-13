@@ -134,7 +134,7 @@ export default function Samples() {
       name: 'Comments',
       selector: (row: ReportRow) => row.comment,
       sortable: true,
-      width: '420px',
+      width: '360px',
       wrap: true,
     },
     {

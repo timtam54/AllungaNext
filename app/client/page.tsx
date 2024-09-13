@@ -209,7 +209,7 @@ export default function client()
     <h1 style={{fontSize:'24px',fontWeight:'bold'}}>Client Details</h1>
     <a href={"/?clientname="+data?.companyname+"&clientid=" + ClientID} style={{fontSize:'14px'}} target="blank" ><u>View all Series</u></a>
        </div>
-        <form>
+        
 
   
   
@@ -229,6 +229,7 @@ export default function client()
      /></div></div>
   :
   <>
+  <form>
         <table width="100%">
           <tr>
             
@@ -422,13 +423,13 @@ export default function client()
          
          
   
-   
+  </form>
     </>
        
   
   }
   
-   </form>
+  
    </div>
    </div>
       );

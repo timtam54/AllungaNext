@@ -557,7 +557,7 @@ return 'L';
           <div className="grid md:grid-cols-2 gap-6">
             <div className="bg-white shadow-md rounded-lg p-6 space-y-4">
               <div className="flex justify-between items-center">
-                <Link href={`/client?id=${data!.clientid}`} className="text-blue-600 hover:underline">
+                <Link href={`/client?id=${data!.clientid}`} target='other' className="text-blue-600 hover:underline">
                   Client
                 </Link>
                 <select

@@ -308,15 +308,12 @@ const columns =[
   setDataSample(json);
   setLoading(false);
   }
-//  const [diary,setDiary]=useState(true);
-
-  //const [resourceMap,setResourceMap] = useState<ResourceRow[]>([{resourceid:'0',resourcetitle:'Unassigned'}]);
   return (
   
 <div className="modal-container">
     <div className="modal" style={{backgroundColor:'whitesmoke'}} >
       <div style={{display:'flex'}}>
-<h1 style={{fontSize:'24px',fontWeight:'bold'}}>Schedule Actual Report</h1><Button variant="outlined" onClick={(e)=>{e.preventDefault();setDiary(true);}}>Diary</Button><Button variant="contained" onClick={(e)=>{e.preventDefault();setDiary(false);}}>Table</Button>
+<h1 style={{fontSize:'24px',fontWeight:'bold'}}>Schedule Actual Report.</h1><Button variant="outlined" onClick={(e)=>{e.preventDefault();setDiary(true);}}>Diary</Button><Button variant="contained" onClick={(e)=>{e.preventDefault();setDiary(false);}}>Table</Button>
 </div>
 
 

@@ -4,18 +4,20 @@ import { ReactNode, useState } from 'react'
 import Link from 'next/link'
 import { Menu, Transition } from '@headlessui/react'
 import { msalInstance, handleLogout } from '@/msal/msal'
-
+import AddLocationIcon from '@mui/icons-material/AddLocation';
 import ChartSimple from '@/components/chartsimple'
 import UserAvatar from '@/components/UserAvatar'
 import ScheduleActual from '@/components/ScheduleActual'
+import Radiation from '@/components/radiation'
+import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import Weather from './weather'
 import { ChevronDown, LogOut, Home, Database, FileText, CloudSun } from 'lucide-react'
-
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 const Header = () => {
   const [chartSimpleOpen, setChartSimpleOpen] = useState(false)
   const [rpt, setRpt] = useState('Actual')
   const user = msalInstance.getActiveAccount()
-
+  const [radrptOpen, setRadrptOpen] = useState(false)
   const [schedrptOpen, setSchedrptOpen] = useState(false)
   const [weatherOpen, setWeatherOpen] = useState(false)
 
@@ -98,34 +100,43 @@ const Header = () => {
           </MenuDropdown>
 
           <MenuDropdown title={<><FileText className="w-4 h-4 mr-2" />Reports</>}>
-            <MenuItem href="/rackrpt">Rack Report</MenuItem>
+            <MenuItem href="/rackrpt"><AddLocationIcon className="w-4 h-4 mr-2 inline" />Rack Report</MenuItem>
             <MenuItem href="" onClick={() => setWeatherOpen(true)}>
               <CloudSun className="w-4 h-4 mr-2 inline" />
               Weather - last week
             </MenuItem>
-            <MenuItem href="" onClick={() => { setRpt('Actual'); setSchedrptOpen(true); }}>
+            <MenuItem href="" onClick={() => setRadrptOpen(true)}><WbSunnyIcon  className="w-4 h-4 mr-2 inline"/>Radiation</MenuItem>
+            <MenuItem href="schedulereport?Rpt=Actual">
+            <CalendarMonthIcon className="w-4 h-4 mr-2 inline" />
               Report Actual Schedule
+            
             </MenuItem>
-            <MenuItem href="" onClick={() => { setRpt('Projected'); setSchedrptOpen(true); }}>
-              Projected Actual Schedule
+            <MenuItem href="schedulereport?Rpt=Projected">
+            <CalendarMonthIcon className="w-4 h-4 mr-2 inline" />
+              Report Projected Schedule
+            
             </MenuItem>
-            <MenuItem href="" onClick={() => { setRpt('SampleOnOffSiteActual'); setSchedrptOpen(true); }}>
-              Sample On/Off Site - Actual
+            <MenuItem href="schedulereport?Rpt=SampleOnOffSiteActual">
+            <CalendarMonthIcon className="w-4 h-4 mr-2 inline" />
+            Sample On/Off Site - Actual
+            
             </MenuItem>
-            <MenuItem href="" onClick={() => { setRpt('SampleOnOffSiteProjected'); setSchedrptOpen(true); }}>
-              Sample On/Off Site - Projected
+            <MenuItem href="schedulereport?Rpt=SampleOnOffSiteProjected">
+            <CalendarMonthIcon className="w-4 h-4 mr-2 inline" />
+            Sample On/Off Site - Projected
             </MenuItem>
+            
             <MenuItem href="" onClick={() => setChartSimpleOpen(true)}>Param Chart</MenuItem>
           </MenuDropdown>
         </nav>
 
-        <div className="flex items-center space-x-4">
-          <UserAvatar />
+        <div title={user?.name} className="flex items-center space-x-4">
+          <UserAvatar  />
           <button
             onClick={() => handleLogout('redirect')}
             className="flex items-center text-gray-700 hover:text-indigo-600 transition-colors duration-200"
           >
-            <span className="font-medium mr-2 hidden md:inline">{user?.name}</span>
+           {/* <span className="font-medium mr-2 hidden md:inline">{user?.name}</span>*/}
             <LogOut className="w-5 h-5" />
           </button>
         </div>
@@ -134,6 +145,7 @@ const Header = () => {
       {weatherOpen && <Weather closeModal={() => setWeatherOpen(false)} />}
       {chartSimpleOpen && <ChartSimple closeModal={() => setChartSimpleOpen(false)} />}
       {schedrptOpen && <ScheduleActual Rpt={rpt} closeModal={() => setSchedrptOpen(false)} />}
+      {radrptOpen && <Radiation closeModal={() => setRadrptOpen(false)} />}
     </header>
   )
 }

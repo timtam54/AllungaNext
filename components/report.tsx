@@ -2,7 +2,6 @@
 import { ReactGrid, Column, Row, CellChange, TextCell, Cell, DefaultCellTypes, CellTemplate, NumberCell } from "@silevis/reactgrid";
 import "@silevis/reactgrid/styles.css";
 import { getToken } from "@/msal/msal";
-
 import { ExportAsExcel, ExportAsPdf, CopyToClipboard, CopyTextToClipboard, PrintDocument, ExcelToJsonConverter, FileUpload } from "react-export-table";
 import BorderAllIcon from '@mui/icons-material/BorderAll';
 import "@/components/part.css";
@@ -43,6 +42,7 @@ function Rprt({closeModal,reportid,reportname}:Props) {
 const [rows,setRows]=React.useState<Row[]>([]);
 
 const [dataSample, setDataSample] = React.useState<Sample[]>([]);
+const [excel,setExcel]=useState([]);//todotim
 
       useEffect(() => {
         if (typeof window !== "undefined") {
@@ -276,26 +276,7 @@ const [dataSample, setDataSample] = React.useState<Sample[]>([]);
         });
         return ii;
       }
-/*
-      const applyChangesToPeople = (
-        changes: CellChange<TextCell>[],
-        prevPeople: Person[]
-      ): Person[] => {
-        changes.forEach((change) => {
-          const personIndex = change.rowId;
-          const fieldName = change.columnId;
-         // alert(typeof prevPeople[personIndex][fieldName]);
-          if ((typeof prevPeople[personIndex][fieldName])=='number')
-          {
-          prevPeople[personIndex][fieldName] = +change.newCell.text.replace(',','');
-          }
-          else
-          {
-            prevPeople[personIndex][fieldName] = change.newCell.text;
-          }
-        });
-        return [...prevPeople];
-      };*/
+
 
     const handleColumnResize = (ci: number | string, width: number) => {
       setColumns((prevColumns) => {
@@ -311,7 +292,7 @@ const [dataSample, setDataSample] = React.useState<Sample[]>([]);
 
 
 
- return <div className="modal-container"> <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
+ return  <div className="modal-container"> <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
  <div className="bg-white p-5 rounded-lg shadow-xl w-11/12 max-w-4xl">
    <div className="flex justify-between items-center mb-4">
      <h3 className="text-2xl font-bold text-purple-800">{reportname} Readings</h3>

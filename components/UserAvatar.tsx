@@ -53,6 +53,7 @@ export default function UserAvatar({ showInfo }: UserAvatarProps) {
                     :
                     userPhoto &&
                     <Image
+                       
                         alt='User Avatar'
                         priority
                         placeholder="empty"

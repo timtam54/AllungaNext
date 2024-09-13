@@ -161,7 +161,7 @@ setLoading(false);
     return (
       <div className="modal-container">
       <div className="modal" style={{backgroundColor:'lightgray'}} >
-  <h1 style={{fontSize:'24px',fontWeight:'bold'}}>Clients Details</h1>
+  <h1 style={{fontSize:'24px',fontWeight:'bold'}}>Clients Details.</h1>
   
       <button onClick={(e)=>{e.preventDefault();closeModal()}}>Close</button>
       <form>

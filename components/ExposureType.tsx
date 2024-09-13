@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react"
 import { Circles } from 'react-loader-spinner'
 import { getToken } from "@/msal/msal"
-
+import Button from '@mui/material/Button';
 interface ExposureTypeProps {
   closeModal: () => void
   exposuretypeid: number

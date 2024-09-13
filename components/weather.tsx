@@ -12,7 +12,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js'
-import { Button } from '@mui/material'
+import { X } from 'lucide-react'
 
 ChartJS.register(
   CategoryScale,
@@ -33,24 +33,27 @@ const dummyData = [
   { date: '2024-08-25', value: 30 },
   { date: '2024-08-26', value: 27 },
 ]
-// 
+
 type Props = {
-  
-    closeModal:  () => void;
-  };
+  closeModal: () => void
+}
 
-
-
-    export default function Weather({closeModal}:Props){
+export default function Weather({ closeModal }: Props) {
   const data = {
-    labels: dummyData.map(item => item.date),
+    labels: dummyData.map(item => new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
     datasets: [
       {
-        label: 'Value',
+        label: 'Temperature',
         data: dummyData.map(item => item.value),
-        fill: false,
-        backgroundColor: 'rgb(75, 192, 192)',
-        borderColor: 'rgba(75, 192, 192, 0.2)',
+        fill: true,
+        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+        borderColor: 'rgba(59, 130, 246, 1)',
+        tension: 0.4,
+        pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 5,
+        pointHoverRadius: 7,
       },
     ],
   }
@@ -59,39 +62,76 @@ type Props = {
     responsive: true,
     plugins: {
       legend: {
-        position: 'top' as const,
+        display: false,
       },
       title: {
-        display: true,
-        text: 'Data Values Over Time',
+        display: false,
+      },
+      tooltip: {
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        titleColor: '#fff',
+        bodyColor: '#fff',
+        titleFont: {
+          size: 14,
+          weight: 'bold',
+        },
+        bodyFont: {
+          size: 12,
+        },
+        padding: 12,
+        cornerRadius: 8,
       },
     },
     scales: {
       x: {
-        title: {
-          display: true,
-          text: 'Date',
+        grid: {
+          display: false,
+        },
+        ticks: {
+          font: {
+            size: 12,
+          },
         },
       },
       y: {
-        title: {
-          display: true,
-          text: 'Value',
-        },
         beginAtZero: true,
+        grid: {
+          color: 'rgba(0, 0, 0, 0.1)',
+        },
+        ticks: {
+          font: {
+            size: 12,
+          },
+          callback: function(value: number) {
+            return value + '°C'
+          },
+        },
       },
     },
   }
 
   return (
-    <div className="modal-container">
-    <div className="modal" style={{backgroundColor:'whitesmoke'}} >
-<h1 style={{fontSize:'24px',fontWeight:'bold'}}>Sample Explode</h1>
-
-<Button type="submit" variant="outlined" onClick={(e)=>{e.preventDefault();closeModal()}}>Close</Button>
-
-      <Line data={data} options={options} />
-    </div>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl overflow-hidden">
+        <div className="p-6">
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-2xl font-bold text-gray-800">Weather Forecast</h1>
+            <button
+              onClick={closeModal}
+              className="text-gray-500 hover:text-gray-700 transition-colors"
+              aria-label="Close modal"
+            >
+              <X size={24} />
+            </button>
+          </div>
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <Line data={data} options={options} />
+          </div>
+          <div className="mt-6 text-center text-sm text-gray-600">
+            7-day temperature forecast (°C)
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
