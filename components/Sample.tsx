@@ -207,7 +207,6 @@ export const Sample  = ({  closeModal, sampleid,SeriesID }:Props) => {
   }
 
     return (
-
       <div className="modal-container">
     <div className="modal" style={{backgroundColor:'WhiteSmoke'}} >
 <h1 style={{fontSize:'24px',fontWeight:'bold'}}>Sample Details</h1>
