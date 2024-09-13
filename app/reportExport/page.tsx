@@ -34,12 +34,12 @@ export default function ReportGenerator() {
       doc.addImage(img, 'PNG', 10, 10, 50, 20)
 
       // Add the table after the logo
-      doc.autoTable({
+    /*todotim  doc.autoTable({
         startY: 40, // Adjust startY to position the table below the logo
         head: [['ID', 'Name', 'Sales']],
         body: data.map(item => [item.id, item.name, item.sales]),
       })
-
+*/
       doc.save('sales_report.pdf')
     }
   }
