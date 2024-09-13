@@ -125,7 +125,7 @@ export default function Weather({ closeModal }: Props) {
             </button>
           </div>
           <div className="bg-gray-50 p-4 rounded-lg">
-            <Line data={data} options={options} />
+            <Line data={data}/>
           </div>
           <div className="mt-6 text-center text-sm text-gray-600">
             7-day temperature forecast (°C)
