@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect } from 'react'
 import { Bar } from 'react-chartjs-2'
 import {
@@ -32,10 +30,12 @@ const mockData = [
   { day: "Sat", radiation: 0.09 },
   { day: "Sun", radiation: 0.08 },
 ]
+
 type Props = {
-  closeModal:  () => void;
+  closeModal: () => void;
 }
-export default function Radiation({closeModal}:Props) {
+
+export default function Radiation({ closeModal }: Props) {
   const [chartData, setChartData] = useState<{
     labels: string[];
     datasets: {
@@ -76,6 +76,7 @@ export default function Radiation({closeModal}:Props) {
 
     setChartOptions({
       responsive: true,
+      maintainAspectRatio: false,
       plugins: {
         legend: {
           position: 'top' as const,
@@ -83,33 +84,44 @@ export default function Radiation({closeModal}:Props) {
         title: {
           display: true,
           text: 'Radiation Levels Over Last 7 Days',
+          font: {
+            size: 16,
+            weight: 'bold',
+          },
         },
       },
     })
   }, [])
 
   return (
-
-    <div className="modal-container">
-    <div className="modal" style={{backgroundColor:'whitesmoke'}} >
-
-    <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">Radiation Levels</div>
-    <h1 className="mt-1 text-2xl font-medium text-gray-900">Last 7 Days</h1>
-
-<Button type="submit" variant="outlined" onClick={(e)=>{e.preventDefault();closeModal()}}>Close</Button>
-
-<div className="mt-4 h-80">
-          <Bar options={chartOptions} data={chartData} />
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl overflow-hidden">
+        <div className="p-6">
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800">Radiation Levels</h2>
+              <p className="text-sm text-gray-600">Last 7 Days</p>
+            </div>
+            <Button
+              variant="outlined"
+              onClick={closeModal}
+              className="text-gray-600 hover:text-gray-800"
+            >
+              Close
+            </Button>
+          </div>
+          
+          <div className="h-80 mb-6">
+            <Bar options={chartOptions} data={chartData} />
+          </div>
+          
+          <div className="bg-gray-50 p-4 rounded-md">
+            <p className="text-xs text-gray-500 leading-relaxed">
+              µSv/h: microsieverts per hour. Normal background radiation levels typically range from 0.08 to 0.20 µSv/h.
+            </p>
+          </div>
         </div>
-        <div className="px-8 py-4 bg-gray-50">
-        <p className="text-xs text-gray-500">
-          µSv/h: microsieverts per hour. Normal background radiation levels typically range from 0.08 to 0.20 µSv/h.
-        </p>
       </div>
     </div>
-    </div>
-
-
-    
   )
 }
