@@ -211,16 +211,7 @@ export default function Home() {
           <div style={{backgroundColor:'#944780'}} className="text-white p-4 flex flex-wrap items-center gap-4">
             <h1 className="text-2xl font-bold">Search Series</h1>
          
-              <select
-                className="p-2 border rounded text-black"
-                name="Fields"
-                onChange={(e: ChangeEvent<HTMLSelectElement>) => setFields(e.target.value)}
-                value={fields}
-              >
-                {fieldlist.map((ep) => (
-                  <option key={ep} value={ep}>{ep}</option>
-                ))}
-              </select>
+              
 
               <div className="flex-1 relative">
                 <input
@@ -234,7 +225,16 @@ export default function Home() {
                   <Search className="text-gray-400" />
                 </button>
               </div>
-
+              <select
+                className="p-2 border rounded text-black"
+                name="Fields"
+                onChange={(e: ChangeEvent<HTMLSelectElement>) => setFields(e.target.value)}
+                value={fields}
+              >
+                {fieldlist.map((ep) => (
+                  <option key={ep} value={ep}>{ep}</option>
+                ))}
+              </select>
               <button
                 type="button"
                 onClick={() => setClientModel(true)}

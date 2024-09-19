@@ -2,144 +2,153 @@
 
 import { ReactNode, useState } from 'react'
 import Link from 'next/link'
+import { Menu, Transition } from '@headlessui/react'
 import { msalInstance, handleLogout } from '@/msal/msal'
-import { Drawer, List, ListItem, ListItemIcon, ListItemText, IconButton } from '@mui/material'
-import { Menu as MenuIcon } from '@mui/icons-material'
-import { Home, Database, FileText, CloudSun, LogOut,ChevronDown } from 'lucide-react'
-
+import AddLocationIcon from '@mui/icons-material/AddLocation';
 import ChartSimple from '@/components/chartsimple'
 import UserAvatar from '@/components/UserAvatar'
 import ScheduleActual from '@/components/ScheduleActual'
-import Weather from './weather'
-
-export default function Component() {
-  const [drawerOpen, setDrawerOpen] = useState<string | null>(null)
+import Radiation from '@/components/radiation'
+import WbSunnyIcon from '@mui/icons-material/WbSunny';
+import Weather from './weather' 
+import { ChevronDown, LogOut, Home, Database, FileText, CloudSun } from 'lucide-react'
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+const Header = () => {
   const [chartSimpleOpen, setChartSimpleOpen] = useState(false)
   const [rpt, setRpt] = useState('Actual')
+  const user = msalInstance.getActiveAccount()
+  const [radrptOpen, setRadrptOpen] = useState(false)
   const [schedrptOpen, setSchedrptOpen] = useState(false)
   const [weatherOpen, setWeatherOpen] = useState(false)
 
-  const user = msalInstance.getActiveAccount()
-
-  const toggleDrawer = (menuName: string | null) => (event: React.KeyboardEvent | React.MouseEvent) => {
-    if (
-      event.type === 'keydown' &&
-      ((event as React.KeyboardEvent).key === 'Tab' || (event as React.KeyboardEvent).key === 'Shift')
-    ) {
-      return
-    }
-    setDrawerOpen(menuName)
+  interface MenuDropdownProps {
+    title?: ReactNode;
+    children?: ReactNode;
   }
-
-  const MenuItem = ({ icon, text, onClick }: { icon: ReactNode; text: string; onClick?: () => void }) => (
-    <ListItem button onClick={onClick}>
-      <ListItemIcon>{icon}</ListItemIcon>
-      <ListItemText primary={text} />
-    </ListItem>
+  
+  const MenuDropdown: React.FC<MenuDropdownProps> = ({ title, children }) => (
+    <Menu as="div" className="relative inline-block text-left">
+      <Menu.Button className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
+        {title}
+        <ChevronDown className="w-4 h-4 ml-2 -mr-1 text-gray-400" aria-hidden="true" />
+      </Menu.Button>
+      <Transition
+        enter="transition ease-out duration-100"
+        enterFrom="transform opacity-0 scale-95"
+        enterTo="transform opacity-100 scale-100"
+        leave="transition ease-in duration-75"
+        leaveFrom="transform opacity-100 scale-100"
+        leaveTo="transform opacity-0 scale-95"
+      >
+        <Menu.Items className="absolute right-0 w-56 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <div className="py-1">{children}</div>
+        </Menu.Items>
+      </Transition>
+    </Menu>
   )
 
-  const MenuDropdown = ({ title, menuName, icon }: { title: string; menuName: string; icon: ReactNode }) => (
-    <button
-      onClick={toggleDrawer(menuName)}
-      className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-    >
-      {icon}
-      <span className="ml-2">{title}</span>
-      <ChevronDown className="w-5 h-5 ml-2 -mr-1 text-gray-400" aria-hidden="true" />
-    </button>
-  )
-
-  const homeMenu = (
-    <List>
-      <MenuItem icon={<Home />} text="Search" onClick={() => { setDrawerOpen(null) }} />
-      <MenuItem icon={<LogOut />} text="Sign out" onClick={() => { handleLogout('redirect'); setDrawerOpen(null) }} />
-    </List>
-  )
-
-  const dataMenu = (
-    <List>
-      <MenuItem icon={<Database />} text="Parameters" onClick={() => { setDrawerOpen(null) }} />
-      <MenuItem icon={<Database />} text="Exposure Types" onClick={() => { setDrawerOpen(null) }} />
-      <MenuItem icon={<Database />} text="Client Search" onClick={() => { setDrawerOpen(null) }} />
-    </List>
-  )
-
-  const reportsMenu = (
-    <List>
-      <MenuItem icon={<FileText />} text="Rack Report" onClick={() => { setDrawerOpen(null) }} />
-      <MenuItem 
-        icon={<CloudSun />} 
-        text="Weather - last week" 
-        onClick={() => { setWeatherOpen(true); setDrawerOpen(null) }} 
-      />
-      <MenuItem 
-        icon={<FileText />} 
-        text="Report Actual Schedule" 
-        onClick={() => { setRpt('Actual'); setSchedrptOpen(true); setDrawerOpen(null) }} 
-      />
-      <MenuItem 
-        icon={<FileText />} 
-        text="Projected Actual Schedule" 
-        onClick={() => { setRpt('Projected'); setSchedrptOpen(true); setDrawerOpen(null) }} 
-      />
-      <MenuItem 
-        icon={<FileText />} 
-        text="Sample On/Off Site - Actual" 
-        onClick={() => { setRpt('SampleOnOffSiteActual'); setSchedrptOpen(true); setDrawerOpen(null) }} 
-      />
-      <MenuItem 
-        icon={<FileText />} 
-        text="Sample On/Off Site - Projected" 
-        onClick={() => { setRpt('SampleOnOffSiteProjected'); setSchedrptOpen(true); setDrawerOpen(null) }} 
-      />
-      <MenuItem 
-        icon={<FileText />} 
-        text="Param Chart" 
-        onClick={() => { setChartSimpleOpen(true); setDrawerOpen(null) }} 
-      />
-    </List>
+  interface MenuItemProps {
+    href: string;
+    onClick?: () => void;
+    children?: ReactNode;
+  }
+  
+  const MenuItem: React.FC<MenuItemProps> = ({ href, onClick, children }) => (
+    <Menu.Item>
+      {({ active }) => (
+        href ? (
+          <Link
+            href={href}
+            className={`${
+              active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
+            } flex items-center px-4 py-2 text-sm hover:bg-gray-50 transition duration-150 ease-in-out`}
+          >
+            {children}
+          </Link>
+        ) : (
+          <button
+            onClick={onClick}
+            className={`${
+              active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
+            } flex items-center w-full text-left px-4 py-2 text-sm hover:bg-gray-50 transition duration-150 ease-in-out`}
+          >
+            {children}
+          </button>
+        )
+      )}
+    </Menu.Item>
   )
 
   return (
     <header className="bg-white shadow-md">
-      <div className="container mx-auto px-4 py-2 flex items-center justify-between">
-        <img src="/logo.png" alt="Logo" className="h-16 w-auto" />
+      <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center space-x-8">
+          <img src="/logo.png" alt="Logo" className="h-12 w-auto" />
+          <img src="/tagline.png" alt="Tagline" className="h-4 w-auto hidden md:block" />
+        </div>
 
-        <nav className="flex items-center space-x-4">
-          <MenuDropdown title="Home" menuName="home" icon={<Home className="w-5 h-5" />} />
-          <MenuDropdown title="Data" menuName="data" icon={<Database className="w-5 h-5" />} />
-          <MenuDropdown title="Reports" menuName="reports" icon={<FileText className="w-5 h-5" />} />
+        <nav className="flex items-center space-x-2 md:space-x-4">
+          <MenuDropdown title={<><Home className="w-4 h-4 mr-2" />Home</>}>
+            <MenuItem href="/">Search</MenuItem>
+            <MenuItem href="" onClick={() => handleLogout('redirect')}>Sign out</MenuItem>
+            <MenuItem href="/clientaccess">Client Access</MenuItem>
+          </MenuDropdown>
+
+          <MenuDropdown title={<><Database className="w-4 h-4 mr-2" />Data</>}>
+            <MenuItem href="/parameters">Parameters</MenuItem>
+            <MenuItem href="/exposuretypes">Exposure Types</MenuItem>
+            <MenuItem href="/clientsearch">Client Search</MenuItem>
+          </MenuDropdown>
+
+          <MenuDropdown title={<><FileText className="w-4 h-4 mr-2" />Reports</>}>
+            <MenuItem href="/rackrpt"><AddLocationIcon className="w-4 h-4 mr-2 inline" />Rack Report</MenuItem>
+            <MenuItem href="" onClick={() => setWeatherOpen(true)}>
+              <CloudSun className="w-4 h-4 mr-2 inline" />
+              Weather - last week
+            </MenuItem>
+            <MenuItem href="" onClick={() => setRadrptOpen(true)}><WbSunnyIcon  className="w-4 h-4 mr-2 inline"/>Radiation</MenuItem>
+            <MenuItem href="schedulereport?Rpt=Actual">
+            <CalendarMonthIcon className="w-4 h-4 mr-2 inline" />
+              Report Actual Schedule
+            
+            </MenuItem>
+            <MenuItem href="schedulereport?Rpt=Projected">
+            <CalendarMonthIcon className="w-4 h-4 mr-2 inline" />
+              Report Projected Schedule
+            
+            </MenuItem>
+            <MenuItem href="schedulereport?Rpt=SampleOnOffSiteActual">
+            <CalendarMonthIcon className="w-4 h-4 mr-2 inline" />
+            Sample On/Off Site - Actual
+            
+            </MenuItem>
+            <MenuItem href="schedulereport?Rpt=SampleOnOffSiteProjected">
+            <CalendarMonthIcon className="w-4 h-4 mr-2 inline" />
+            Sample On/Off Site - Projected
+            </MenuItem>
+            
+            <MenuItem href="" onClick={() => setChartSimpleOpen(true)}>Param Chart</MenuItem>
+          </MenuDropdown>
         </nav>
 
-        <img src="/tagline.png" alt="Tagline" className="h-5 w-auto" />
-
-        <div className="flex items-center space-x-4">
-          <UserAvatar />
+        <div title={user?.name} className="flex items-center space-x-4">
+          <UserAvatar  />
           <button
             onClick={() => handleLogout('redirect')}
-            className="flex items-center text-navy hover:text-indigo-700 transition-colors duration-200"
+            className="flex items-center text-gray-700 hover:text-indigo-600 transition-colors duration-200"
           >
-            <span className="font-semibold mr-2">{user?.name}</span>
+           {/* <span className="font-medium mr-2 hidden md:inline">{user?.name}</span>*/}
             <LogOut className="w-5 h-5" />
           </button>
         </div>
       </div>
 
-      <Drawer anchor="left" open={drawerOpen === 'home'} onClose={toggleDrawer(null)}>
-        {homeMenu}
-      </Drawer>
-
-      <Drawer anchor="left" open={drawerOpen === 'data'} onClose={toggleDrawer(null)}>
-        {dataMenu}
-      </Drawer>
-
-      <Drawer anchor="left" open={drawerOpen === 'reports'} onClose={toggleDrawer(null)}>
-        {reportsMenu}
-      </Drawer>
-
       {weatherOpen && <Weather closeModal={() => setWeatherOpen(false)} />}
       {chartSimpleOpen && <ChartSimple closeModal={() => setChartSimpleOpen(false)} />}
       {schedrptOpen && <ScheduleActual Rpt={rpt} closeModal={() => setSchedrptOpen(false)} />}
+      {radrptOpen && <Radiation closeModal={() => setRadrptOpen(false)} />}
     </header>
   )
 }
+
+export default Header
