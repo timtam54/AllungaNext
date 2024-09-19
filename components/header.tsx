@@ -4,16 +4,17 @@ import { ReactNode, useState } from 'react'
 import Link from 'next/link'
 import { Menu, Transition } from '@headlessui/react'
 import { msalInstance, handleLogout } from '@/msal/msal'
-import AddLocationIcon from '@mui/icons-material/AddLocation';
+import AddLocationIcon from '@mui/icons-material/AddLocation'
 import ChartSimple from '@/components/chartsimple'
 import UserAvatar from '@/components/UserAvatar'
 import ScheduleActual from '@/components/ScheduleActual'
 import Radiation from '@/components/radiation'
-import WbSunnyIcon from '@mui/icons-material/WbSunny';
+import WbSunnyIcon from '@mui/icons-material/WbSunny'
 import Weather from './weather' 
 import { ChevronDown, LogOut, Home, Database, FileText, CloudSun } from 'lucide-react'
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-const Header = () => {
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
+
+export default function Component() {
   const [chartSimpleOpen, setChartSimpleOpen] = useState(false)
   const [rpt, setRpt] = useState('Actual')
   const user = msalInstance.getActiveAccount()
@@ -22,8 +23,8 @@ const Header = () => {
   const [weatherOpen, setWeatherOpen] = useState(false)
 
   interface MenuDropdownProps {
-    title?: ReactNode;
-    children?: ReactNode;
+    title?: ReactNode
+    children?: ReactNode
   }
   
   const MenuDropdown: React.FC<MenuDropdownProps> = ({ title, children }) => (
@@ -48,9 +49,9 @@ const Header = () => {
   )
 
   interface MenuItemProps {
-    href: string;
-    onClick?: () => void;
-    children?: ReactNode;
+    href: string
+    onClick?: () => void
+    children?: ReactNode
   }
   
   const MenuItem: React.FC<MenuItemProps> = ({ href, onClick, children }) => (
@@ -80,65 +81,65 @@ const Header = () => {
   )
 
   return (
-    <header className="bg-white shadow-md">
-      <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center space-x-8">
-          <img src="/logo.png" alt="Logo" className="h-12 w-auto" />
-          <img src="/tagline.png" alt="Tagline" className="h-4 w-auto hidden md:block" />
-        </div>
+    <header className="bg-white text-gray-800 shadow-lg">
+      <div className="container mx-auto px-4 py-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-8">
+            <img src="/logo.png" alt="Logo" className="h-12 w-auto" />
+            <img src="/tagline.png" alt="Tagline" className="h-4 w-auto hidden md:block" />
+          </div>
 
-        <nav className="flex items-center space-x-2 md:space-x-4">
-          <MenuDropdown title={<><Home className="w-4 h-4 mr-2" />Home</>}>
-            <MenuItem href="/">Search</MenuItem>
-            <MenuItem href="" onClick={() => handleLogout('redirect')}>Sign out</MenuItem>
-          </MenuDropdown>
+          <nav className="hidden md:flex items-center space-x-6">
+            <MenuDropdown title={<span className="flex items-center text-gray-700"><Home className="w-4 h-4 mr-2" />Home</span>}>
+              <MenuItem href="/">Search</MenuItem>
+              <MenuItem href="" onClick={() => handleLogout('redirect')}>Sign out</MenuItem>
+            </MenuDropdown>
 
-          <MenuDropdown title={<><Database className="w-4 h-4 mr-2" />Data</>}>
-            <MenuItem href="/parameters">Parameters</MenuItem>
-            <MenuItem href="/exposuretypes">Exposure Types</MenuItem>
-            <MenuItem href="/clientsearch">Client Search</MenuItem>
-          </MenuDropdown>
+            <MenuDropdown title={<span className="flex items-center text-gray-700"><Database className="w-4 h-4 mr-2" />Data</span>}>
+              <MenuItem href="/parameters">Parameters</MenuItem>
+              <MenuItem href="/exposuretypes">Exposure Types</MenuItem>
+              <MenuItem href="/clientsearch">Client Search</MenuItem>
+            </MenuDropdown>
 
-          <MenuDropdown title={<><FileText className="w-4 h-4 mr-2" />Reports</>}>
-            <MenuItem href="/rackrpt"><AddLocationIcon className="w-4 h-4 mr-2 inline" />Rack Report</MenuItem>
-            <MenuItem href="" onClick={() => setWeatherOpen(true)}>
-              <CloudSun className="w-4 h-4 mr-2 inline" />
-              Weather - last week
-            </MenuItem>
-            <MenuItem href="" onClick={() => setRadrptOpen(true)}><WbSunnyIcon  className="w-4 h-4 mr-2 inline"/>Radiation</MenuItem>
-            <MenuItem href="schedulereport?Rpt=Actual">
-            <CalendarMonthIcon className="w-4 h-4 mr-2 inline" />
-              Report Actual Schedule
-            
-            </MenuItem>
-            <MenuItem href="schedulereport?Rpt=Projected">
-            <CalendarMonthIcon className="w-4 h-4 mr-2 inline" />
-              Report Projected Schedule
-            
-            </MenuItem>
-            <MenuItem href="schedulereport?Rpt=SampleOnOffSiteActual">
-            <CalendarMonthIcon className="w-4 h-4 mr-2 inline" />
-            Sample On/Off Site - Actual
-            
-            </MenuItem>
-            <MenuItem href="schedulereport?Rpt=SampleOnOffSiteProjected">
-            <CalendarMonthIcon className="w-4 h-4 mr-2 inline" />
-            Sample On/Off Site - Projected
-            </MenuItem>
-            
-            <MenuItem href="" onClick={() => setChartSimpleOpen(true)}>Param Chart</MenuItem>
-          </MenuDropdown>
-        </nav>
+            <MenuDropdown title={<span className="flex items-center text-gray-700"><FileText className="w-4 h-4 mr-2" />Reports</span>}>
+              <MenuItem href="/rackrpt"><AddLocationIcon className="w-4 h-4 mr-2 inline" />Rack Report</MenuItem>
+              <MenuItem href="" onClick={() => setWeatherOpen(true)}>
+                <CloudSun className="w-4 h-4 mr-2 inline" />
+                Weather - last week
+              </MenuItem>
+              <MenuItem href="" onClick={() => setRadrptOpen(true)}><WbSunnyIcon className="w-4 h-4 mr-2 inline"/>Radiation</MenuItem>
+              <MenuItem href="schedulereport?Rpt=Actual">
+                <CalendarMonthIcon className="w-4 h-4 mr-2 inline" />
+                Report Actual Schedule
+              </MenuItem>
+              <MenuItem href="schedulereport?Rpt=Projected">
+                <CalendarMonthIcon className="w-4 h-4 mr-2 inline" />
+                Report Projected Schedule
+              </MenuItem>
+              <MenuItem href="schedulereport?Rpt=SampleOnOffSiteActual">
+                <CalendarMonthIcon className="w-4 h-4 mr-2 inline" />
+                Sample On/Off Site - Actual
+              </MenuItem>
+              <MenuItem href="schedulereport?Rpt=SampleOnOffSiteProjected">
+                <CalendarMonthIcon className="w-4 h-4 mr-2 inline" />
+                Sample On/Off Site - Projected
+              </MenuItem>
+              <MenuItem href="" onClick={() => setChartSimpleOpen(true)}>Param Chart</MenuItem>
+            </MenuDropdown>
+          </nav>
 
-        <div title={user?.name} className="flex items-center space-x-4">
-          <UserAvatar  />
-          <button
-            onClick={() => handleLogout('redirect')}
-            className="flex items-center text-gray-700 hover:text-indigo-600 transition-colors duration-200"
-          >
-           {/* <span className="font-medium mr-2 hidden md:inline">{user?.name}</span>*/}
-            <LogOut className="w-5 h-5" />
-          </button>
+          <div className="flex items-center space-x-4">
+            <div title={user?.name} className="flex items-center space-x-2">
+              <UserAvatar />
+              <span className="font-medium hidden md:inline text-gray-700">{user?.name}</span>
+            </div>
+            <button
+              onClick={() => handleLogout('redirect')}
+              className="flex items-center text-gray-700 hover:text-gray-900 transition-colors duration-200"
+            >
+              <LogOut className="w-5 h-5" />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -149,5 +150,3 @@ const Header = () => {
     </header>
   )
 }
-
-export default Header
