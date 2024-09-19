@@ -10,7 +10,7 @@ import UserAvatar from '@/components/UserAvatar'
 import ScheduleActual from '@/components/ScheduleActual'
 import Radiation from '@/components/radiation'
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
-import Weather from './weather'
+import Weather from './weather' 
 import { ChevronDown, LogOut, Home, Database, FileText, CloudSun } from 'lucide-react'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 const Header = () => {
