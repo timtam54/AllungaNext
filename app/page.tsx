@@ -4,12 +4,14 @@ import { useEffect, useState, ChangeEvent } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import DataTable from "react-data-table-component";
-import { getToken } from "@/msal/msal";
+import { getToken, msalInstance } from "@/msal/msal";
 import Header from '@/components/header';
 import ClientSelect from '@/components/clientselect';
 import { Search, Plus, X, ArrowUpDown } from 'lucide-react';
-import { getDate } from "react-datepicker/dist/date_utils";
-
+interface clientrow{
+  clientid:number;   
+  companyname:string;
+}
 interface Series {
   exposureType: string
   rackNo: number
@@ -46,9 +48,22 @@ export default function Home() {
   const fieldlist = ["All", "AllungaRef", "BookPage", "Client", "ClientRef", "Exposure"]
 
   useEffect(() => {
-    ssearch(actives, inactives, fields, clientid,'A')
+    clientsecure();
+    
   }, [])
 
+  const clientsecure=async()=> 
+  {
+    const endPoint = `https://allungawebapicore.azurewebsites.net/api/ClientSecure/`+msalInstance.getActiveAccount()?.username!.toString()
+    const response = await fetch(endPoint);
+    
+    const cli = await response.json();
+    console.table(cli);
+    setClientID(cli.clientid);
+    setClientName(cli.companyname);
+    //alert(cli.companyname);
+    await ssearch(actives, inactives, fields, cli.clientid,'A')
+  }
   const ssearch = async (act: boolean, del: boolean, flds: string, clid: number,sts:string) => {
     setLoading(true)
     try {
