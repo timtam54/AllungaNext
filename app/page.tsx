@@ -205,7 +205,7 @@ export default function Home() {
       <Header />
       {clientModel && <ClientSelect selectClient={selectClient} closeModal={() => setClientModel(false)} />}
 
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-1">
         <div className="bg-white shadow-md rounded-lg overflow-hidden">
         <form onSubmit={handleSearch} className="p-4 space-y-4">
           <div style={{backgroundColor:'#944780'}} className="text-white p-4 flex flex-wrap items-center gap-4">

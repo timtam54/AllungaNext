@@ -206,9 +206,7 @@ export default function ClientSearch() {
             </button>
             <button
               onClick={() => setGrid(false)}
-              className={`px-4 py-2 rounded-md ${!grid ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}
-            >
-              <Map className="w-5 h-5 inline-block mr-2" />
+              className={`px-4 py-2 rounded-md ${!grid ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}><Map className="w-5 h-5 inline-block mr-2" />
               Map
             </button>
             <ExportAsExcel
