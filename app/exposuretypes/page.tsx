@@ -49,16 +49,15 @@ export default function ExposureTypes() {
     table: {
       style: {
         backgroundColor: 'white',
-        borderRadius: '0.75rem',
-        boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+        borderRadius: '0.5rem',
+        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
       },
     },
     headRow: {
       style: {
-        backgroundColor: '#f9fafb',
-        borderTopLeftRadius: '0.75rem',
-        borderTopRightRadius: '0.75rem',
-        borderBottom: '2px solid #e5e7eb',
+        backgroundColor: '#f3f4f6',
+        borderTopLeftRadius: '0.5rem',
+        borderTopRightRadius: '0.5rem',
       },
     },
     headCells: {
@@ -66,17 +65,14 @@ export default function ExposureTypes() {
         fontSize: '0.875rem',
         fontWeight: '600',
         color: '#374151',
-        padding: '1.25rem 1rem',
-        textTransform: 'uppercase',
-        letterSpacing: '0.05em',
+        padding: '1rem',
       },
     },
     cells: {
       style: {
         fontSize: '0.875rem',
         color: '#4b5563',
-        padding: '1.25rem 1rem',
-        borderBottom: '1px solid #e5e7eb',
+        padding: '1rem',
       },
     },
   }
@@ -85,8 +81,7 @@ export default function ExposureTypes() {
     {
       when: (row: ExposureTypeRow) => row.ExposureTypeID === 0,
       style: {
-        color: '#ef4444',
-        fontWeight: '600',
+        color: 'red',
       },
     },
   ]
@@ -108,7 +103,7 @@ export default function ExposureTypes() {
             setEtid(row.ExposureTypeID)
             setModelOpen(true)
           }}
-          className="text-blue-600 hover:text-blue-800 hover:underline focus:outline-none transition duration-150 ease-in-out"
+          className="text-blue-600 hover:text-blue-800 underline focus:outline-none"
         >
           {row.Description}
         </button>
@@ -123,21 +118,21 @@ export default function ExposureTypes() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gray-100">
       <Header />
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">Exposure Types</h1>
+ 
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">Exposure Types</h1>
         {loading ? (
           <div className="flex justify-center items-center h-64">
             <Circles
               height="80"
               width="80"
-              color="#3b82f6"
+              color="#4b5563"
               ariaLabel="loading-indicator"
             />
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden transition-all duration-300 ease-in-out hover:shadow-xl">
+          <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <DataTable
               columns={columns}
               data={results}
@@ -149,12 +144,12 @@ export default function ExposureTypes() {
               customStyles={customStyles}
               conditionalRowStyles={conditionalRowStyles}
               noDataComponent={
-                <div className="p-8 text-center text-gray-500">No exposure types found</div>
+                <div className="p-4 text-center text-gray-500">No exposure types found</div>
               }
             />
           </div>
         )}
-      </div>
+      
       {modelOpen && (
         <ExposureType
           exposuretypeid={etid}
