@@ -1,16 +1,17 @@
 'use client'
+import Link from "next/link";
 import AddLocationIcon from '@mui/icons-material/AddLocation';
 import UserAvatar from "./UserAvatar"
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { msalInstance, handleLogout } from '@/msal/msal'
-
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { ChevronDown, Search, LogOut, Users, Home } from 'lucide-react'
 import ScheduleActual from '@/components/ScheduleActual'
 import Radiation from '@/components/radiation'
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import Weather from './weather' 
 import { useState } from 'react';
-
+import { ChevronDownIcon } from '@heroicons/react/20/solid'
 export default function Component() {
   
 
@@ -26,7 +27,49 @@ export default function Component() {
             <img src="/tagline.png" alt="Tagline" className="h-4 w-auto " />
           </div>
 
-          <nav>
+
+
+       
+          <Menu as="div" className="relative inline-block text-left">
+      <div>
+        <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+        <Home className="w-4 h-4 mr-2" />Home
+          <ChevronDownIcon aria-hidden="true" className="-mr-1 h-5 w-5 text-gray-400" />
+        </MenuButton>
+      </div>
+
+      <MenuItems
+        transition
+        className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+      >
+        <div className="py-1">
+          <MenuItem>
+            <Link 
+             href={{
+              pathname:"/"}}  className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+            >
+              <Search className="w-4 h-4 mr-2" />
+              Search
+            </Link>
+          </MenuItem>
+         
+          <MenuItem>
+            <Link 
+              href={{
+                pathname:"/clientaccess"}}
+              className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+            > <Users className="w-4 h-4 mr-2" />
+                  Client Access
+            </Link>
+          </MenuItem>
+          
+        </div>
+
+        
+
+      </MenuItems>
+    </Menu>
+    <nav>
           <div className="relative">
             <button
               onClick={toggleDropdown}
