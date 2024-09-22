@@ -7,7 +7,7 @@ import "@/components/part.css";
 import Button from '@mui/material/Button';
 import { useSearchParams } from "next/navigation";
 
-interface clientrow{
+interface clientrow{ 
     clientid:number;   
     companyname:string;
     groupname:string;
