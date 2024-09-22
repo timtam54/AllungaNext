@@ -6,7 +6,7 @@ import Link from 'next/link'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import moment from 'moment'
-import { getToken } from '@/msal/msal'
+import {msalInstance} from '@/msal/msal'
 import Header from '@/components/header'
 import ExposureEndDate from '../ExposureEndDate.js'
 import { ArrowLeft, FileText, Brain, Send, Grid, Check, X } from 'lucide-react'
@@ -76,12 +76,18 @@ export default function SeriesTab()
     const [DateIn, setDateIn] = useState(new Date());
     const [vldtAllungaReference,setvldtAllungaReference] = useState('');
     const getalldata=async()=>{
+        checkSecurity(msalInstance.getActiveAccount()!.username)
         setLoading(true);
         await fetchExp();
         await fetchSite();
         await fetchClient();
         await fetchSeries();
         setLoading(false);
+    }
+
+    const checkSecurity=async (email:string)=>
+    {
+      ;//check email is authorised
     }
 
     const handleChangeSeriesEventUnits= (e:ChangeEvent<HTMLSelectElement>) => {
@@ -510,8 +516,6 @@ return 'L';
 
     <main className="container mx-auto px-4 py-8">
         <div className="mb-6 flex justify-between items-center">
-         
-
           <Link href="/" className="bg-black text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-800">
             <ArrowLeft className="mr-2" size={20} />
             Back
@@ -539,15 +543,7 @@ return 'L';
             </Link>
           ))}
           </div>
-         
-        
-
-    
         </div>
-
-
-
-
       {loading ? (
         <div className="flex justify-center items-center h-64">
           <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-500"></div>
