@@ -133,7 +133,7 @@ export default function Parameters() {
   return (
     <div className="min-h-screen bg-gray-100">
       <Header />
-      <main className="container mx-auto px-4 py-8">
+
         <h1 className="text-3xl font-bold text-gray-800 mb-6">Parameters</h1>
         {loading ? (
           <div className="flex justify-center items-center h-64">
@@ -162,7 +162,7 @@ export default function Parameters() {
             />
           </div>
         )}
-      </main>
+     
       {modelOpen && (
         <Param ParamID={paramID} closeModal={() => setModelOpen(false)} />
       )}

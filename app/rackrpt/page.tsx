@@ -101,7 +101,7 @@ export default function RptRack() {
   return (
     <div className="min-h-screen bg-gray-100">
       <Header />
-      <main className="container mx-auto px-4 py-8">
+
         <div style={{display: 'flex', justifyContent: 'space-between'}}>
         <h1 className="text-3xl font-bold text-gray-800 mb-6"><AddLocationIcon/>Rack Report</h1>
         <div className="mb-4">
@@ -173,7 +173,7 @@ export default function RptRack() {
             </>
             </div>
         )}
-      </main>
+      
      
     </div>
   )

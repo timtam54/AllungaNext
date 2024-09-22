@@ -185,7 +185,7 @@ export default function ClientSearch() {
       <Header />
       {modelOpen && <Client clientid={cliid} closeModal={() => setModelOpen(false)} />}
       
-      <main className="container mx-auto px-4 py-8">
+
         <div className="bg-white shadow-md rounded-lg p-6 mb-8">
           
           <div className="flex flex-wrap items-center gap-4 mb-6">
@@ -286,7 +286,7 @@ export default function ClientSearch() {
             </div>
           )}
         </div>
-      </main>
+      
     </div>
   )
 }

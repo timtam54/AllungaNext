@@ -154,8 +154,8 @@ const fetchSample = async ()=>{
       <Header />
       
 
-<main className="container mx-auto px-4 py-8">
-        <div className="mb-6 flex justify-between items-center">
+      <div className="mb-6 pt-4 flex justify-between items-center">
+  
           <Link href="/" className="bg-black text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-800">
             <ArrowLeft className="mr-2" size={20} />
             Back
@@ -209,7 +209,7 @@ const fetchSample = async ()=>{
             </div>
           </div>
         )}
-      </main>
+    
     </div>
     )
 }

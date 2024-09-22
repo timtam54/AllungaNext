@@ -220,21 +220,18 @@ export default function Home() {
       <Header />
       {clientModel && <ClientSelect selectClient={selectClient} closeModal={() => setClientModel(false)} />}
 
-      <main className="container mx-auto px-4 py-1">
+  
         <div className="bg-white shadow-md rounded-lg overflow-hidden">
         <form onSubmit={handleSearch} className="p-4 space-y-4">
           <div style={{backgroundColor:'#944780'}} className="text-white p-4 flex flex-wrap items-center gap-4">
             <h1 className="text-2xl font-bold">Search Series</h1>
-         
-              
-
-              <div className="flex-1 relative">
+            <div className="flex-1 relative">
                 <input
                   type="text" 
                   placeholder="Search Client/Series"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full p-2 pr-10 border rounded"
+                  className="w-full p-2 pr-10 border rounded text-black"
                 />
                 <button type="submit" className="absolute right-2 top-1/2 transform -translate-y-1/2">
                   <Search className="text-gray-400" />
@@ -398,7 +395,7 @@ export default function Home() {
             />
           )}
         </div>
-      </main>
+     
     </>
   )
 }

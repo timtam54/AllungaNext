@@ -215,8 +215,8 @@ export default function Samples() {
       {modelOpen && <Report reportname={reportname} reportid={reportID} closeModal={() => setModelOpen(false)} />}
       {modalOpen && currentReport && <ReportDet report={currentReport} closeModal={() => setModalOpen(false)} />}
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-6">
+      <div className="mb-6 pt-4 flex justify-between items-center">
+  
           <Link href="/" className="bg-black text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-800">
             <ArrowLeft className="mr-2" size={20} />
             Back
@@ -279,7 +279,7 @@ export default function Samples() {
             />
           </div>
         )}
-      </main>
+    
     </div>
   )
 }
