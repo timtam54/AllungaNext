@@ -134,7 +134,7 @@ const ReportDet = ({ report, closeModal }: Props) => {
 
     try {
       const resp = await fetch('/api/contact', {
-        method: "post",
+        method: "post", 
         body: formData,
       });
       if (!resp.ok) {
