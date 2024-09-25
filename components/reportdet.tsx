@@ -1,6 +1,6 @@
 "use client"
 
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { getToken, msalInstance } from "@/msal/msal";
 import DatePicker from 'react-date-picker';
 import 'react-date-picker/dist/DatePicker.css'
@@ -8,9 +8,7 @@ import {
   Button, 
   TextField, 
   Checkbox, 
-  Select, 
-  MenuItem, 
-  FormControlLabel, 
+   FormControlLabel, 
   Typography, 
   Box, 
   Paper, 
@@ -19,6 +17,8 @@ import {
   ThemeProvider,
   createTheme,
 } from '@mui/material';
+import ClientEmails from "./clientemails";
+import ExcelReadings from "./ExcelReadings";
 
 type Props = {
   report: reportrow;
@@ -38,6 +38,37 @@ interface reportrow {
   DaysInLab: number;
 }
 
+interface Sample {
+  SampleOrder: number;
+  Number:number;
+  description:string;
+  SampleID:number;
+}
+interface Comments{
+  SampleID:number,
+  Comment:string,
+  ReportID:number
+}
+interface Reading{
+  Readingid:number, 
+  Paramid:number,
+  sampleid:number,
+  value:string,
+  reportid:number,
+  deleted:boolean
+}
+interface Params{
+
+  ParamID:number,
+  ParamName:string;
+  Ordering?:number;
+}
+
+interface ClientEmail {
+  email: string;
+  role: string;
+}
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -50,10 +81,63 @@ const theme = createTheme({
 });
 
 const ReportDet = ({ report, closeModal }: Props) => {
+
+  const [dataSample, setDataSample] = useState<Sample[]>([]);
+    const [dataComments, setDataComments] = useState<Comments[]>([]);
+      const [dataReading, setDataReading] = useState<Reading[]>([]);
+      const [dataParam, setDataParam] = useState<Params[]>([]);
+
+  useEffect(() => { getData(report.reportid) }  , [report]);
+
+  const getData = async (rptid:number) => {
+    const urlParam = `https://allungawebapi.azurewebsites.net/api/Params/int/` + rptid.toString();
+        const token = await getToken()
+        const headers = new Headers()
+        const bearer = `Bearer ${token}`
+        headers.append('Authorization', bearer)
+        const options = {
+          method: 'GET',
+          headers: headers,
+        }
+        const response = fetch(urlParam, options);
+        var ee = await response;
+        if (!ee.ok) {
+          throw Error((ee).statusText);
+        }
+        const params:Params[] = await ee.json();
+        setDataParam(params);
+        console.table(params);
+        const urlSample = `https://allungawebapi.azurewebsites.net/api/Samples/report/` + rptid;
+
+      const resp = fetch(urlSample, options);
+      var ee = await resp;
+      if (!ee.ok) {
+        throw Error((ee).statusText);
+      }
+      const sample:Sample[] = await ee.json();
+      setDataSample(sample);
+      console.table(sample);
+      const urlCom= `https://allungawebapi.azurewebsites.net/api/Comments/` + rptid.toString(); 
+      const responsec = fetch(urlCom, options);
+      var ee = await responsec;
+      if (!ee.ok) {
+        throw Error((ee).statusText);
+      }
+      const comments = await ee.json();
+      setDataComments(comments);
+
+    const urlReading = `https://allungawebapi.azurewebsites.net/api/Readings/` + rptid.toString();
+   
+    const responseR = fetch(urlReading, options);
+    var ee = await responseR;
+   
+    const readings = await ee.json();
+    setDataReading(readings);
+  }
+
   const [reportDate, setReportDate] = useState<Date | null>(new Date(report.date));
   const [data, setData] = useState<reportrow>(report);
   const [units] = useState(["N", "A", "C", "S"]);
-  //alert(report.completedDate);
   const [completedDate, setCompletedDate] = useState<Date | null>((report.completedDate==null)?null:new Date(report.completedDate));
   const [dirty, setDirty] = useState(false);
 
@@ -76,8 +160,7 @@ const ReportDet = ({ report, closeModal }: Props) => {
     setData({ ...data, [e.target.name]: e.target.checked });
   };
 
-  const handleChangeReportSelect = (e: ChangeEvent<HTMLSelectElement>) => {
-//  const handleChangeReportSelect = (e:  SelectChangeEvent<string>, child: ReactNode) => {  
+  const handleChangeReportSelect = (e: ChangeEvent<HTMLSelectElement>) => { 
     if (!dirty) {
       setDirty(true);
     }
@@ -126,12 +209,25 @@ const ReportDet = ({ report, closeModal }: Props) => {
 
   const user = msalInstance.getActiveAccount();
 
+ 
+  const [email, setEmail] = useState<ClientEmail[]>([])
   const sendEmail = async () => {
-    const formData = new FormData();
-    const email = user?.username || '';
-    formData.append('recipient', email);
-    formData.append('labels', `${data.reportname} report has been completed`);
+     const ep='https://allungawebapicore.azurewebsites.net/api/ClientsEmail/{reportid}?reporid='+report.reportid.toString();
+      const response = await fetch(ep);
+      if (!response.ok) {
+        throw new Error('Failed to fetch data')
+      }
+      const result = await response.json()
+      setEmail(result);
 
+      var email = user?.username|| '';
+      alert(email);
+     // result.forEach((element:ClientEmail) => {
+     //   email+=";"+element.email;
+     // });
+      const formData = new FormData();
+      formData.append('recipient', email);
+    formData.append('labels', `${data.reportname} report has been completed`);
     try {
       const resp = await fetch('/api/contact', {
         method: "post", 
@@ -149,21 +245,44 @@ const ReportDet = ({ report, closeModal }: Props) => {
     }
   };
 
+  const setCompletedDateX=async(value:any)=>{
+    setDirty(true);
+    if (value==null)return;
+
+    setCompletedDate(value!);
+ }
+
+  const setReportDateX=async(value:any)=>{
+    setDirty(true);
+    if (value==null)return;
+    setReportDate(value!);
+   
+ }
+
+ const [modalEmail,setModalEmail]=useState(false);
   return (
     <div className="modal-container">
+      {modalEmail && <ClientEmails id={report.reportid} closeModal={()=>{setModalEmail(false)}} />}
     <ThemeProvider theme={theme}>
       <Container maxWidth="md">
         <Paper elevation={3} style={{ padding: '20px', marginTop: '20px' }}>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
             <Typography variant="h4">Report Details</Typography>
+            <Button
+                    onClick={handleSubmit}
+                    variant="contained"
+                    color="primary"
+                    disabled={!dirty}>
+                    Submit
+                  </Button>
             <Button variant="outlined" onClick={closeModal}>Close</Button>
           </Box>
-          <form onSubmit={handleSubmit}>
+          <form>
             <Grid container spacing={3}>
               <Grid item xs={12} sm={6}>
                 
               <p>Report Date:</p>
-              <DatePicker format="dd/MM/yyyy" onSelect={setReportDate}  value={reportDate} />
+              <DatePicker format="dd/MM/yyyy" onChange={setReportDateX}  value={reportDate} />
        
                 
               </Grid>
@@ -209,6 +328,11 @@ const ReportDet = ({ report, closeModal }: Props) => {
                   label="Return (else Report)"
                 />
               </Grid>
+              <Grid item xs={12} sm={6}>
+                <p>Completed Date</p>
+                <DatePicker format="dd/MM/yyyy"  onChange={setCompletedDateX} value={completedDate} />
+   
+              </Grid>
               <Grid item xs={12}>
                 <TextField
                   fullWidth
@@ -232,30 +356,20 @@ const ReportDet = ({ report, closeModal }: Props) => {
                   label="Deleted"
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <p>Completed Date</p>
-                <DatePicker format="dd/MM/yyyy" onSelect={setCompletedDate} value={completedDate} />
-   
-              </Grid>
+              
               <Grid item xs={12}>
                 <Box display="flex" justifyContent="space-between">
+                  <ExcelReadings params={dataParam} samples={dataSample} comments={dataComments} readings={dataReading} />
+                  <Button variant="outlined" color="secondary" onClick={(e:any)=>{e.preventDefault();setModalEmail(true);}}>Clients Email recipients</Button>
                   <Button
-                    type="submit"
                     variant="contained"
-                    color="primary"
-                    disabled={!dirty}
-                  >
-                    Submit
-                  </Button>
-                  <Button
-                    variant="outlined"
                     color="secondary"
                     onClick={(e) => {
                       e.preventDefault();
                       sendEmail();
                     }}
                   >
-                    Email Report to Client
+                    Email Report to Client.
                   </Button>
                 </Box>
               </Grid>

@@ -4,7 +4,7 @@ const nodemailer = require('nodemailer');
 export async function POST(request) {
   try {
     console.log('server email');
-    const username = 'MedicalDentalInstallations@outlook.com';//process.env.EMAIL_ADDRESS;
+    const username = 'MedicalDentalInstallations@outlook.com';// 'allungaexposure@outlook.com';//process.env.EMAIL_ADDRESS;
     const password = 'Mds1234!';//process.env.EMAIL_PASSWORD;
 
     const formData = await request.formData()

@@ -97,21 +97,11 @@ export default function Samples() {
       name: 'AEL Ref',
       selector: (row: SampleRow) => row.Number,
       sortable: true,
-      width: '90px',
-      cell: (row: SampleRow) => (
-        <button
-          onClick={() => {
-            setSampID(row.SampleID)
-            setModalOpen(true)
-          }}
-          className="text-blue-600 hover:underline"
-        >
-          {row.Number}
-        </button>
-      ),
+      width: '110px',
+      cell: (row: SampleRow) => row.Number,
     },
     {
-      name: 'Client id',
+      name: 'Client Ref',
       selector: (row: SampleRow) => row.description,
       sortable: true,
       width: '110px',
@@ -134,15 +124,14 @@ export default function Samples() {
       width: '130px',
       cell: (row: SampleRow) => (
         <button
-          onClick={() => {
-            setSampID(row.SampleID)
-            setChartTitle(`${row.description} vs date.`)
-            setModelOpen(true)
-          }}
-          className="text-blue-600 hover:underline"
-        >
-          {row.longdescription}
-        </button>
+        onClick={() => {
+          setSampID(row.SampleID)
+          setModalOpen(true)
+        }}
+        className="text-blue-600 hover:underline"
+      >
+        {row.longdescription}
+      </button>
       ),
     },
     {
@@ -321,7 +310,7 @@ export default function Samples() {
         />
       )}
       {modalOpen && (
-        <Sample sampleid={sampID} closeModal={() => { setModalOpen(false); fetchSample() }} SeriesID={SeriesID} />
+        <Sample sampleid={sampID} closeModal={() => { setModalOpen(false); fetchSample();}} SeriesID={SeriesID} />
       )}
       {modalOpenHist && (
         <SampleHist sampleid={sampID} closeModal={() => setModalOpenHist(false)} SeriesID={SeriesID} />

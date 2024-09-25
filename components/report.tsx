@@ -2,16 +2,22 @@
 import { ReactGrid, Column, Row, CellChange, TextCell, Cell, DefaultCellTypes, CellTemplate, NumberCell } from "@silevis/reactgrid";
 import "@silevis/reactgrid/styles.css";
 import { getToken } from "@/msal/msal";
-import { ExportAsExcel, ExportAsPdf, CopyToClipboard, CopyTextToClipboard, PrintDocument, ExcelToJsonConverter, FileUpload } from "react-export-table";
+import { ExportAsExcel } from "react-export-table";
 import BorderAllIcon from '@mui/icons-material/BorderAll';
 import "@/components/part.css";
 import React,{ useState, useEffect} from 'react';
 import Button from '@mui/material/Button';
+import ExcelReadings from "./ExcelReadings";
 //import { useSearchParams } from "next/navigation";
 interface Param {
     ParamID:number;
     ParamName:string;
     Ordering:number;
+}
+interface Comments{
+  SampleID:number,
+  Comment:string,
+  ReportID:number
 }
 interface Reading {
   Readingid:number;
@@ -27,6 +33,7 @@ interface Sample
   SampleID:number;
   description:string;
   Number:number;
+  SampleOrder: number;
 }
 type Props = {
   reportid: number;
@@ -46,9 +53,9 @@ const [excel,setExcel]=useState([]);//todotim
 
       useEffect(() => {
         if (typeof window !== "undefined") {
-          fill();
+           fill();
+          fetchComments(reportid);
         }
-        
       }, []);
 
       const saveReadings= async () => {//e
@@ -180,6 +187,28 @@ const [excel,setExcel]=useState([]);//todotim
         setLoading(false);
         ;//alert('rows:'+rows.length.toString())
       }
+
+      const [dataComments, setDataComments] = useState<Comments[]>([]);
+  const fetchComments = async (rptid:number) => {
+    const urlCom= `https://allungawebapi.azurewebsites.net/api/Comments/` + rptid.toString();
+    const token = await getToken()
+    const headers = new Headers()
+    const bearer = `Bearer ${token}`
+    headers.append('Authorization', bearer)
+    const options = {
+      method: 'GET',
+      headers: headers,
+    }
+    const response = fetch(urlCom, options);
+    var ee = await response;
+    if (!ee.ok) {
+      throw Error((ee).statusText);
+    }
+    const json = await ee.json();
+    console.log(json);
+    setDataComments(json);
+    
+  }
 //
       const handleChanges = (changes: any) => {//CellChange<TextCell>[] 
         applyChangesToPeople(changes,rows);
@@ -292,11 +321,12 @@ const [excel,setExcel]=useState([]);//todotim
 
 
 
- return  <div className="modal-container"> <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
- <div className="bg-white p-5 rounded-lg shadow-xl w-11/12 max-w-4xl">
-   <div className="flex justify-between items-center mb-4">
+ return  <div className="modal-container"> 
+  <div className="modal-container fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
+    <div className="bg-white p-5 rounded-lg shadow-xl w-full h-full max-w-none">
+      <div className="flex justify-between items-center mb-4">
      <h3 className="text-2xl font-bold text-purple-800">{reportname} Readings</h3>
-     <div className="space-x-2">
+     <div style={{display:'flex',justifyContent:'space-around'}}>
        <Button variant="contained" onClick={closeModal} className="bg-gray-500 hover:bg-gray-600">
          Close
        </Button>
@@ -311,6 +341,9 @@ const [excel,setExcel]=useState([]);//todotim
            </Button>
          )}
        </ExportAsExcel>
+
+<ExcelReadings params={datacol} samples={dataSample} comments={dataComments} readings={dataReading} />
+
      </div>
    </div>
 

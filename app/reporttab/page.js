@@ -4,9 +4,8 @@ import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Link from "next/link";
 import { Circles } from 'react-loader-spinner'
-
+import { getToken } from "@/msal/msal";
 import { useSearchParams } from "next/navigation";
-
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import moment from 'moment';
 import DatePicker from 'react-date-picker';
@@ -15,8 +14,7 @@ import Button from '@mui/material/Button';
 
 export default function ReportTab() {
   const [loading, setLoading] = useState(true);
-  const [units] = useState(["N", "A", "C", "S"]);
- 
+  const units = [{id:"N",description:"New"},{id:"A",description:"Active"},{id:"C",description:"Complete"}, {id:"S",description:"Sent/Emailed"}];
   const [value, setValue] = React.useState('1');
   const searchParams = useSearchParams();
   const [reportidx, setReportidx] = useState(searchParams.get("id"));//.id
@@ -93,8 +91,7 @@ export default function ReportTab() {
       return;
     }
     setDirty(false);
-
-    const token = await bearerToken()
+    const token = await getToken()
     const headers = new Headers()
     const bearer = `Bearer ${token}`
     headers.append('Authorization', bearer)
@@ -119,8 +116,7 @@ export default function ReportTab() {
     else {
       setCompletedDate(null);
     }
-    setData(json);
-    
+    setData(json);   
   }
 
   const handleChangeReport = (e) => {
@@ -153,7 +149,7 @@ export default function ReportTab() {
     data.completeddate = moment(completedDate).format("YYYY-MM-DD HH:mm:ss");
     setData({ ...data, 'completeddate': moment(completedDate).format("YYYY-MM-DD HH:mm:ss") });
 
-    const token = await bearerToken()
+    const token = await getToken()
     const headers = new Headers()
     const bearer = `Bearer ${token}`
     headers.append('Authorization', bearer)
@@ -177,14 +173,16 @@ export default function ReportTab() {
 
 
   const getData = async (val,rptid) => {
-    if (val==1)
+    if (val==2)
     {
+     // alert('tab1');
       setLoading(true);//loading=true;//
       await fetchInfo(rptid);
       setLoading(false);//loading=false;//
     }
-    else if (val==2)
+    else if (val==3)
     {
+      //alert('tab2');
       setLoading(true);
       await fetchParamsAll(rptid);
       await fetchParam(rptid);
@@ -192,10 +190,11 @@ export default function ReportTab() {
     }
     else
     {
+      //alert('tab3');
+
       setLoading(true);//loading=true;//
       if (dataParamsAll.length==0)
       {
-
         await fetchParamsAll(rptid);
         await fetchParam(rptid);
       }
@@ -203,14 +202,12 @@ export default function ReportTab() {
       await fetchReading(rptid);
       await fetchComments(rptid);
       setLoading(false);//loading=false;//
-    }
-    
+    }    
   }
-
 
   useEffect(() => {
     getData('1',reportidx);
-   // if (!dirty) return;
+
     function onBeforeUnload(e) {
         e.preventDefault();
         return (e.returnValue = "");
@@ -232,12 +229,11 @@ export default function ReportTab() {
     return false;
   }
 
-
   const [dataParamsAll, setDataParamsAll] = useState([]);
 
   const fetchParamsAll = async (rptid) => {
     const url = `https://allungawebapi.azurewebsites.net/api/ReportParams/` + rptid;
-    const token = await bearerToken()
+    const token = await getToken()
     const headers = new Headers()
     const bearer = `Bearer ${token}`
     headers.append('Authorization', bearer)
@@ -265,7 +261,7 @@ export default function ReportTab() {
     var rt = ret.map(t => t.paramid);
 
     ////////////////
-    const token = await bearerToken()
+    const token = await getToken()
     const headers = new Headers()
     const bearer = `Bearer ${token}`
     headers.append('Authorization', bearer)
@@ -290,7 +286,7 @@ export default function ReportTab() {
 
 
  const saveComments= async () => {
-  const token = await bearerToken()
+  const token = await getToken()
   const headers = new Headers()
   const bearer = `Bearer ${token}`
   headers.append('Authorization', bearer)
@@ -315,7 +311,7 @@ export default function ReportTab() {
   }
 
   const saveReadings= async () => {
-    const token = await bearerToken()
+    const token = await getToken()
     const headers = new Headers()
     const bearer = `Bearer ${token}`
     headers.append('Authorization', bearer)
@@ -330,6 +326,7 @@ export default function ReportTab() {
     if (!ee.ok) {
       throw Error((ee).statusText);
     }
+  
     setDirty(false);
     alert('saved');
   }
@@ -391,7 +388,7 @@ export default function ReportTab() {
   const [dataSample, setDataSample] = useState([]);
   const fetchSample = async (rptid) => {
     const urlSample = `https://allungawebapi.azurewebsites.net/api/Samples/report/` + rptid;
-    const token = await bearerToken()
+    const token = await getToken()
     const headers = new Headers()
     const bearer = `Bearer ${token}`
     headers.append('Authorization', bearer)
@@ -415,7 +412,7 @@ export default function ReportTab() {
   const fetchParam = async (rptid) => {
     setDirty(false);
     const urlParam = `https://allungawebapi.azurewebsites.net/api/Params/int/` + rptid;
-    const token = await bearerToken()
+    const token = await getToken()
     const headers = new Headers()
     const bearer = `Bearer ${token}`
     headers.append('Authorization', bearer)
@@ -453,7 +450,7 @@ export default function ReportTab() {
   const fetchReading = async (rptid) => {
     setDirty(false);
     const urlReading = `https://allungawebapi.azurewebsites.net/api/Readings/` + rptid;
-    const token = await bearerToken()
+    const token = await getToken()
     const headers = new Headers()
     const bearer = `Bearer ${token}`
     headers.append('Authorization', bearer)
@@ -474,7 +471,7 @@ export default function ReportTab() {
   const [dataComments, setDataComments] = useState([]);
   const fetchComments = async (rptid) => {
     const urlCom= `https://allungawebapi.azurewebsites.net/api/Comments/` + rptid;
-    const token = await bearerToken()
+    const token = await getToken()
     const headers = new Headers()
     const bearer = `Bearer ${token}`
     headers.append('Authorization', bearer)
@@ -518,10 +515,10 @@ export default function ReportTab() {
         </td>
   
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-    
-            <Tab label="Report Detail" value="1" />
-            <Tab label="Parameters" value="2" />
-            <Tab label="Readings" value="3" />
+            <Tab label="Readings" value="1" />
+            <Tab label="Report Detail" value="2"  />
+            <Tab label="Parameters" value="3"  />
+          
          
         </Box>
        
@@ -566,7 +563,7 @@ export default function ReportTab() {
           {
           units.map((ep,i)=>{
             return (
-              <option value={ep} selected={(ep==data.reportstatus)?true:false}>{ep}</option>
+              <option value={ep.id} selected={(ep.id==data.reportstatus)?true:false}>{ep.description}</option>
             )})
           }
           </select>
@@ -662,7 +659,7 @@ export default function ReportTab() {
                 <tr>
                   <td>
 
-               <Link to={"/rprt"} state={{id: reportidx }}><Button variant="outlined">Excel View x</Button></Link>
+               <Link href={"/rprt?id"+ reportidx.toString() }><Button variant="outlined">Excel View x</Button></Link>
                 </td>
                 <td>
                   {dirty?

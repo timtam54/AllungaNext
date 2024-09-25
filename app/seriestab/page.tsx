@@ -10,6 +10,7 @@ import {getToken, msalInstance} from '@/msal/msal'
 import Header from '@/components/header'
 import ExposureEndDate from '../ExposureEndDate.js'
 import { ArrowLeft, FileText, Brain, Send, Grid, Check, X } from 'lucide-react'
+import { Button } from '@mui/material'
 interface SeriesEvent{
   EventDesc:string;
   EventType:string;
@@ -551,9 +552,8 @@ return 'L';
           <div className="grid md:grid-cols-2 gap-6">
             <div className="bg-white shadow-md rounded-lg p-6 space-y-4">
               <div className="flex justify-between items-center">
-                <Link href={`/client?id=${data!.clientid}`} target='other' className="text-blue-600 hover:underline">
-                  Client
-                </Link>
+              <Button variant="outlined" onClick={(e:any)=>{window.open('/client?id='+data!.clientid.toString())}}>Client</Button>
+          
                 <select
                   name="clientid"
                   onChange={handleChange}
@@ -904,4 +904,10 @@ return 'L';
     </div>
   </div>
 )
+}
+
+{      
+/*<Link href={`/client?id=${data!.clientid}`} target='other' className="text-blue-600 hover:underline">
+Client
+</Link>*/
 }

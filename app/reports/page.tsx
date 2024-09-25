@@ -53,7 +53,8 @@ export default function Samples() {
       })
       if (!response.ok) throw new Error(response.statusText)
       const json = await response.json()
-      setDataReport(json)
+      setDataReport(json);
+      console.table(json);
     } catch (error) {
       console.error('Failed to fetch reports:', error)
     } finally {
@@ -95,20 +96,7 @@ export default function Samples() {
     },
     {
       name: 'Date',
-      cell: (row: ReportRow) => (
-        <Button variant='outlined'
-          onClick={() => {
-            setReportID(row.reportid);
-            setReportName(row.reportname);
-            setModelOpen(true)
-          }}
-          className="hover:underline"
-          style={{ color: '#944780',borderColor: '#944780' }}
-
-        >
-          {formatDate(row.date)}
-        </Button>
-      ),
+      cell: (row: ReportRow) =>  formatDate(row.date),
       sortable: true,
       width: '130px',
     },

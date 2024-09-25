@@ -1,46 +1,46 @@
-
-import React, { useState, useEffect, Component } from "react";
+import React, { useState, useEffect } from "react";
 import { Circles } from 'react-loader-spinner'
-import Button from '@mui/material/Button';
 import { getToken } from "@/msal/msal";
-import "@/components/part.css";
+
 type Props = {
   sampleid: number;
-  SeriesID:number;
-  closeModal:  () => void;
+  SeriesID: number;
+  closeModal: () => void;
 };
 
-interface samplerow{
-  seriesid:number;
-  Reportable:boolean;
-  Deleted:boolean;
-  SampleOrder:number;
-  ExposureTypeID:number;
-  SampleID:number;
-   Number:number;
-    description:string;
-    
-    longdescription:string;
-    EquivalentSamples:number;
-    /* 
-    ExposureType:string;*/
+interface SampleRow {
+  seriesid: number;
+  Reportable: boolean;
+  Deleted: boolean;
+  SampleOrder: number;
+  ExposureTypeID: number;
+  SampleID: number;
+  Number: number;
+  description: string;
+  longdescription: string;
+  EquivalentSamples: number;
 }
 
-interface ExposureTypeRow
-{
-  ExposureTypeID:number;
-  Name:string;
+interface ExposureTypeRow {
+  ExposureTypeID: number;
+  Name: string;
 }
-export const Sample  = ({  closeModal, sampleid,SeriesID }:Props) => {
-  const [loading,setLoading] = useState(true);
-  const [value, setValue] = useState(`1`);
 
-  //const location = useLocation()
-  const [SampleID,setSampleID] = useState(sampleid);
-
-  //const SeriesID = location.state.seriesid;//.id
-
+export default function ImprovedSample({ closeModal, sampleid, SeriesID }: Props) {
+  const [loading, setLoading] = useState(true);
+  const [SampleID, setSampleID] = useState(sampleid);
   const [exp, setExp] = useState<ExposureTypeRow[]>([]);
+  const [data, setData] = useState<SampleRow>();
+
+  useEffect(() => {
+    fetchAll();
+  }, []);
+
+  const fetchAll = async () => {
+    await fetchExp();
+    await fetchSample();
+    setLoading(false);
+  }
 
   const fetchExp = async()=>{
     setLoading(true);
@@ -65,22 +65,6 @@ export const Sample  = ({  closeModal, sampleid,SeriesID }:Props) => {
     
   }
 
-
-  const [data, setData] = useState<samplerow>();
-
-  const handleChange = (e:any) => {
-    setData({ ...data!, [e.target.name]: e.target.value });
- }
-
-  /*const fetchInfo = () => {
-
-    return fetch(url)
-      .then((res) => res.json())
-      .then((d) => setData(d))
-      //.then(data.seriesid=SeriesID)
-       .then (fetchHistory());
-  }
-*/
   const fetchSample = async ()=>{
     const urlSample = `https://allungawebapi.azurewebsites.net/api/Samples/int/`+SampleID;
     const token = await getToken()
@@ -103,213 +87,142 @@ export const Sample  = ({  closeModal, sampleid,SeriesID }:Props) => {
     console.log(json);
     setData(json);
     }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setData({ ...data!, [e.target.name]: e.target.value });
+  }
+
+  const handleCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setData({ ...data!, [e.target.name]: e.target.checked });
+  }
+
+  const handleSubmit = async (e:any) => {
+    setLoading(true);
+      e.preventDefault()
+      if (SampleID==0)
+      {
+        data!.seriesid=SeriesID;
+        const token = await getToken()
+        const headers = new Headers()
+        const bearer = `Bearer ${token}`
+        headers.append('Authorization', bearer)
+        headers.append('Content-type', "application/json; charset=UTF-8")
+        const options = {
+          method: 'PUT',
+          body: JSON.stringify(data),
+         headers: headers,
+        }  
+        const response = fetch(`https://allungawebapi.azurewebsites.net/api/Samples/`,options);
+        var ee=await response;
+        if (!ee.ok)
+        {
+          throw Error((ee).statusText);
+        }
+        
+        const json=await ee.json();
+        setSampleID( json.SampleID);
+        setData(json);
+        //fetchHistory();
+      }
+      else
+      {
+        const token = await getToken()
+        const headers = new Headers()
+        const bearer = `Bearer ${token}`
+        headers.append('Authorization', bearer)
+        headers.append('Content-type', "application/json; charset=UTF-8")
+    
+        const options = {
+          method: 'PUT',
+          body: JSON.stringify(data),
+         headers: headers,
+        }  
   
-  useEffect(() => {
-  fetchAll(); 
-//fetchInfo()   ; 
-
-  }, []);
-
-  const fetchAll=async()=>
-  {
-   await  fetchExp();
-    await fetchSample();
+        const response = fetch(`https://allungawebapi.azurewebsites.net/api/Samples/`+SampleID,options);
+        var ee=await response;
+        if (!ee.ok)
+        {
+          throw Error((ee).statusText);
+        }
+      }
     setLoading(false);
-  }
-  /*const [dataHistory, setDataHistory] = useState([]);
-
-  const fetchHistory = async e=>{
-    const urlSample = `https://allungawebapi.azurewebsites.net/api/SampleHistories/`+SampleID;
-    const token = await getToken()
-    const headers = new Headers()
-    const bearer = `Bearer ${token}`
-  
-    headers.append('Authorization', bearer)
-  
-    const options = {
-      method: 'GET',
-      headers: headers,
-    }  
-    const response = fetch(urlSample,options);
-    var ee=await response;
-    if (!ee.ok)
-    {
-      throw Error((ee).statusText);
     }
-    const json=await ee.json();
-    console.log(json);
-    
-  setDataHistory(json);
-  setLoading(false);
-  }
- */ 
-  const handleCheck = (e:any) => {
-    if (e.target.checked)
-    {
-    setData({ ...data!, [e.target.name]: true});
-    }
-  else{
-    setData({ ...data!, [e.target.name]: false});
-  }
-  };
 
-
- const handleSubmit = async (e:any) => {
-  setLoading(true);
-    e.preventDefault()
-    if (SampleID==0)
-    {
-      data!.seriesid=SeriesID;
-      const token = await getToken()
-      const headers = new Headers()
-      const bearer = `Bearer ${token}`
-      headers.append('Authorization', bearer)
-      headers.append('Content-type', "application/json; charset=UTF-8")
-      const options = {
-        method: 'PUT',
-        body: JSON.stringify(data),
-       headers: headers,
-      }  
-      const response = fetch(`https://allungawebapi.azurewebsites.net/api/Samples/`,options);
-      var ee=await response;
-      if (!ee.ok)
-      {
-        throw Error((ee).statusText);
-      }
-      
-      const json=await ee.json();
-      setSampleID( json.SampleID);
-      setData(json);
-      //fetchHistory();
-    }
-    else
-    {
-      const token = await getToken()
-      const headers = new Headers()
-      const bearer = `Bearer ${token}`
-      headers.append('Authorization', bearer)
-      headers.append('Content-type', "application/json; charset=UTF-8")
-  
-      const options = {
-        method: 'PUT',
-        body: JSON.stringify(data),
-       headers: headers,
-      }  
-
-      const response = fetch(`https://allungawebapi.azurewebsites.net/api/Samples/`+SampleID,options);
-      var ee=await response;
-      if (!ee.ok)
-      {
-        throw Error((ee).statusText);
-      }
-    }
-  setLoading(false);
-  }
-
+  if (loading) {
     return (
-      <div className="modal-container">
-    <div className="modal" style={{backgroundColor:'WhiteSmoke'}} >
-<h1 style={{fontSize:'24px',fontWeight:'bold'}}>Sample Details</h1>
-<Button type="submit" variant="outlined" onClick={(e)=>{e.preventDefault();closeModal()}}>Close</Button>
-    <form>
-        {loading ? 
-          <div className="relative h-16">
-  <div className="absolute p-4 text-center transform -translate-x-1/2 translate-y-1/2 border top-1/2 left-1/2">
-    <Circles
-    height="200"
-    width="200"
-    color="#944780"
-    ariaLabel="circles-loading"
-    wrapperStyle={{}}
-    wrapperClass=""
-    visible={true}
-  />
-  </div></div>
-:
-<>
-
-      <table>
-        <tr>
-          <th>ID:</th>
-          <td>
-          {data!.SampleID}
-          </td>
-        </tr>
-        <tr>
-          <th>Client ID:</th>
-          <td>
-          <input type="text" name="description" onChange={handleChange} value={data!.description} />
-          </td>
-        </tr>
-        <tr>
-          <th>AEL Ref:</th>
-          <td>
-          <input type="text" name="Number" onChange={handleChange} value={data!.Number} />
-          </td>
-        </tr>
-        <tr>
-          <th>Description:</th>
-          <td>
-          <input type="text" name="longdescription" onChange={handleChange} value={data!.longdescription} />
-          </td>
-        </tr>
-        <tr>
-          <th>Equivalent Samples:</th>
-          <td>
-          <input type="text" name="EquivalentSamples" onChange={handleChange} value={data!.EquivalentSamples} />
-          </td>
-        </tr>
-        <tr>
-          <th>Exposure Type:</th><td> 
-          <select name="ExposureTypeID"  onChange={handleChange}>
-          {
-          exp.map((ep,i)=>{
-            return (
-              <option value={ep.ExposureTypeID} selected={(ep.ExposureTypeID==data!.ExposureTypeID)?true:false}>{ep.Name}</option>
-            )})
-          }
-          </select>
-      </td>
-        </tr>
-        <tr>
-          <th>Reportable:</th>
-          <td>
-          <input type="checkbox" onChange={handleCheck}  name="Reportable" checked={data!.Reportable} />
-          </td>
-        </tr>
-        <tr>
-          <th>Deleted:</th>
-          <td>
-          <input type="checkbox" onChange={handleCheck}  name="Deleted" checked={data!.Deleted} />
-          </td>
-        </tr>
-        
-        
-        
-        <tr>
-          <th>SampleOrder:</th>
-          <td>
-          <input type="text" name="SampleOrder" onChange={handleChange} value={data!.SampleOrder} />
-          </td>
-        </tr>
-
-  </table>
-
-  <Button type="submit" variant="outlined" onClick={handleSubmit}>
-          Submit
-        </Button>
- </>
-    
-     
-
-}
-
-
-
- </form>
-</div>
-</div>
+      <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
+        <div className="bg-white p-8 rounded-lg shadow-xl">
+          <Circles height="80" width="80" color="#4F46E5" ariaLabel="circles-loading" visible={true} />
+        </div>
+      </div>
     );
   }
 
-export default Sample
+  return (
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+      <div className="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
+        <div className="flex justify-between items-center pb-3">
+          <h1 className="text-2xl font-bold text-gray-700">Sample Details</h1>
+          <button onClick={closeModal} className="text-gray-400 hover:text-gray-500">
+            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="mt-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="form-group">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="SampleID">ID:</label>
+              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="SampleID" type="text" value={data?.SampleID} readOnly />
+            </div>
+            <div className="form-group">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">Client ID:</label>
+              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="description" name="description" type="text" value={data?.description} onChange={handleChange} />
+            </div>
+            <div className="form-group">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="Number">AEL Ref:</label>
+              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="Number" name="Number" type="text" value={data?.Number} onChange={handleChange} />
+            </div>
+            <div className="form-group">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="longdescription">Description:</label>
+              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="longdescription" name="longdescription" type="text" value={data?.longdescription} onChange={handleChange} />
+            </div>
+            <div className="form-group">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="EquivalentSamples">Equivalent Samples:</label>
+              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="EquivalentSamples" name="EquivalentSamples" type="text" value={data?.EquivalentSamples} onChange={handleChange} />
+            </div>
+            <div className="form-group">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="ExposureTypeID">Exposure Type:</label>
+              <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="ExposureTypeID" name="ExposureTypeID" onChange={handleChange} value={data?.ExposureTypeID}>
+                {exp.map((ep) => (
+                  <option key={ep.ExposureTypeID} value={ep.ExposureTypeID}>{ep.Name}</option>
+                ))}
+              </select>
+            </div>
+            <div className="form-group">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="SampleOrder">Sample Order:</label>
+              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="SampleOrder" name="SampleOrder" type="text" value={data?.SampleOrder} onChange={handleChange} />
+            </div>
+          </div>
+
+          <div className="mt-4 flex items-center">
+            <input className="mr-2 leading-tight" type="checkbox" id="Reportable" name="Reportable" checked={data?.Reportable} onChange={handleCheck} />
+            <label className="text-sm" htmlFor="Reportable">Reportable</label>
+          </div>
+
+          <div className="mt-2 flex items-center">
+            <input className="mr-2 leading-tight" type="checkbox" id="Deleted" name="Deleted" checked={data?.Deleted} onChange={handleCheck} />
+            <label className="text-sm" htmlFor="Deleted">Deleted</label>
+          </div>
+
+          <div className="mt-6 flex justify-end">
+            <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
