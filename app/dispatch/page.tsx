@@ -1,215 +1,178 @@
-"use client"
+'use client'
 
-import Header from '@/components/header'
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from 'react';
-import Link from "next/link";
-import { ArrowLeft, FileText, Brain, Send, Grid, BarChart2,FileSpreadsheet } from 'lucide-react'
-import { getToken } from "@/msal/msal";
-import DataTable from "react-data-table-component";
+import { useState, useEffect } from 'react'
+import { ChevronUp, ChevronDown , ArrowLeft, FileText, Brain, Send, Grid, BarChart2,FileSpreadsheet } from 'lucide-react'
+import Header from '@/components/header';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
-interface samplerow{
-    Staff:string;
-    Dte:Date;
-    Description:string;
-    FullReturn_ElsePart:boolean;
-    ByRequest:boolean;
-    ReexposureDate:Date;
-    Comments:string;
-    Status:string;
+interface Dispatch {
+  dispatchid: number;
+  seriesid: number;
+  dte: Date;
+  description?: string;
+  staffid?: number;
+  byrequest?: boolean;
+  fullreturn_elsepart?: boolean;
+  reexposuredate?: Date;
+  comments?: string;
+  status?: string;
+  splitfromdispatchid?: number;
 }
-export default function Dispatch()
-{    const searchParams = useSearchParams();
-    const seriesname=searchParams!.get("seriesname");
-    const id =parseInt( searchParams!.get("id")!);
-    const [loading,setLoading] = useState(true);
-    const [deleted,setDeleted] = useState(false);
-    useEffect(() => {
-        getalldata()
-   
-    } , []);
-    const customStyles = {
-        headCells: {
-          style: {
-            paddingLeft: '2px', // override the cell padding for head cells
-            paddingRight: '2px',
-            size:'12px',
-            fontWeight:'bold'
-          },
-          
-        },
-        cells: {
-          style: {
-            paddingLeft: '2px', // override the cell padding for data cells
-            paddingRight: '2px',
-            
-          },
-        },
-      }
-      const conditionalRowStyles = [
-        {
-          when: (row:samplerow) => true,
-          style:  (row:samplerow) => ({
-            color: row.FullReturn_ElsePart?'red':'blue',
-          })
+
+type SortKey = keyof Dispatch
+type SortOrder = 'asc' | 'desc'
+
+export default function DispatchTable() {
+  const [dispatches, setDispatches] = useState<Dispatch[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [sortKey, setSortKey] = useState<SortKey>('dispatchid')
+  const [sortOrder, setSortOrder] = useState<SortOrder>('asc')
+
+  const searchParams = useSearchParams();
+  const seriesname=searchParams!.get("seriesname");
+  const id =parseInt( searchParams!.get("id")!);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('https://allungawebapicore.azurewebsites.net/api/Dispatch/3222')
+        if (!response.ok) {
+          throw new Error('Network response was not ok')
         }
-      ];
-    const getalldata=async()=>{
-        await fetchSample();
-        setLoading(false);
+        const data = await response.json()
+        setDispatches(data)
+        setLoading(false)
+      } catch (error) {
+        setError('Failed to fetch data')
+        setLoading(false)
+      }
     }
-    const columns =[
-        {
-          name:'Staff',
-          sortable: true,
-          width: "60px",  
-          wrap:true,  
-          selector: (row:samplerow)=>row.Staff
-        }/*,
-        {
-            name:'Date',
-            sortable: true,
-            width: "100px",  
-            wrap:true,  
-            selector: (row:samplerow)=>row.Dte
-          }
-          ,
-          {
-              name:'Description',
-              sortable: true,
-              width: "150px",  
-              wrap:true,  
-              selector: (row:samplerow)=>row.Description
-            },
-            {
-                name:'Full Return',
-                sortable: true,
-                width: "130px",  
-                wrap:true,  
-                selector: (row:samplerow)=>row.FullReturn_ElsePart
-              }
-              ,
-            {
-                name:'Status',
-                sortable: true,
-                width: "130px",  
-                wrap:true,  
-                selector: (row:samplerow)=>row.Status
-              }
-              ,
-            {
-                name:'By Request',
-                sortable: true,
-                width: "130px",  
-                wrap:true,  
-                selector: (row:samplerow)=>row.ByRequest
-              }
-             ,
-            {
-                name:'ReexposureDate',
-                sortable: true,
-                width: "130px",  
-                wrap:true,  
-                selector: (row:samplerow)=>row.ReexposureDate
-              },
-              {
-                  name:'Comments',
-                  sortable: true,
-                  width: "130px",  
-                  wrap:true,  
-                  
-                    selector:  (row:samplerow)=>row.Comments
-                  }*/
-    ]
-    const [results, setDataSample] = useState<samplerow[]>([]);
-const fetchSample = async ()=>{
-  
-  setLoading(true);
-  const urlSample = `https://allungawebapi.azurewebsites.net/api/dispatches/`+id;
-  const token = await getToken()
-  const headers = new Headers()
-  const bearer = `Bearer ${token}`
 
-  headers.append('Authorization', bearer)
+    fetchData()
+  }, [])
 
-  const options = {
-    method: 'GET',
-    headers: headers,
-  }  
-  const response = fetch(urlSample,options);
-  var ee=await response;
-  if (!ee.ok)
-  {
-    throw Error((ee).statusText);
+  const sortData = (key: SortKey) => {
+    const isAsc = sortKey === key && sortOrder === 'asc'
+    setSortKey(key)
+    setSortOrder(isAsc ? 'desc' : 'asc')
+
+    const sortedData = [...dispatches].sort((a:any, b:any) => {
+      if (a[key] < b[key]) return isAsc ? 1 : -1
+      if (a[key] > b[key]) return isAsc ? -1 : 1
+      return 0
+    })
+
+    setDispatches(sortedData)
   }
-  const json=await ee.json();
-  console.log(json);
-  setDataSample(json);
-  //setLoading(false);
 
-
+  const SortIcon = ({ columnKey }: { columnKey: SortKey }) => {
+    if (sortKey !== columnKey) return null
+    return sortOrder === 'asc' ? <ChevronUp className="inline w-4 h-4" /> : <ChevronDown className="inline w-4 h-4" />
   }
-    return (
-      <div className="min-h-screen bg-gray-100">
-      <Header />
-      
 
-      <div className="mb-6 pt-4 flex justify-between items-center">
+  if (loading) return <div>Loading...</div>
+  if (error) return <div>Error: {error}</div>
+
+  return (
+    <>
+    <Header/>
+    <div className="mb-6 pt-4 flex justify-between items-center">
   
-          <Link href="/" className="bg-black text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-800">
-            <ArrowLeft className="mr-2" size={20} />
-            Back
-          </Link>
-          <h1 className="text-2xl font-bold"  style={{color:'#944780'}}>Series: {seriesname}</h1>
-          <div className="flex justify-center space-x-4 ">
-          {[
-            { href: `/seriestab?id=${id}&seriesname=${seriesname}`, icon: FileText, text: 'Details' },
-            { href: `/samples?id=${id}&seriesname=${seriesname}`, icon: Send, text: 'Samples' },//Grain, 
-            { href: `/reports?id=${id}&seriesname=${seriesname}`, icon: FileSpreadsheet, text: 'Reports' },
-            { href: `/dispatch?id=${id}&seriesname=${seriesname}`, icon: Send, text: 'Dispatch', active: true },
-            { href: `/reportparam?id=${id}&seriesname=${seriesname}`, icon: Grid, text: 'Params' },
-          ].map((item, index) => (
-            <Link
-              key={index}
-              href={item.href}
-              className={`flex items-center px-4 py-2 rounded-md ${
-                item.active
-                  ? 'bg-[#944780] text-white'
-                  : 'bg-white text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              <item.icon className="mr-2" size={20} />
-              {item.text}
-            </Link>
+  <Link href="/" className="bg-black text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-800">
+    <ArrowLeft className="mr-2" size={20} />
+    Back
+  </Link>
+  <h1 className="text-2xl font-bold"  style={{color:'#944780'}}>Series: {seriesname}</h1>
+  <div className="flex justify-center space-x-4 ">
+  {[
+    { href: `/seriestab?id=${id}&seriesname=${seriesname}`, icon: FileText, text: 'Details' },
+    { href: `/samples?id=${id}&seriesname=${seriesname}`, icon: Send, text: 'Samples' },//Grain, 
+    { href: `/reports?id=${id}&seriesname=${seriesname}`, icon: FileSpreadsheet, text: 'Reports' },
+    { href: `/dispatch?id=${id}&seriesname=${seriesname}`, icon: Send, text: 'Dispatch', active: true },
+    { href: `/reportparam?id=${id}&seriesname=${seriesname}`, icon: Grid, text: 'Params' },
+  ].map((item, index) => (
+    <Link
+      key={index}
+      href={item.href}
+      className={`flex items-center px-4 py-2 rounded-md ${
+        item.active
+          ? 'bg-[#944780] text-white'
+          : 'bg-white text-gray-700 hover:bg-gray-100'
+      }`}
+    >
+      <item.icon className="mr-2" size={20} />
+      {item.text}
+    </Link>
+  ))}
+  </div>
+ 
+
+
+
+</div>
+
+    <div className="overflow-x-auto">
+      <table className="min-w-full bg-white border border-gray-300">
+        <thead>
+          <tr className="bg-gray-100">
+            <th className="px-4 py-2 border-b cursor-pointer" onClick={() => sortData('dispatchid')}>
+              Dispatch ID <SortIcon columnKey="dispatchid" />
+            </th>
+            <th className="px-4 py-2 border-b cursor-pointer" onClick={() => sortData('seriesid')}>
+              Series ID <SortIcon columnKey="seriesid" />
+            </th>
+            <th className="px-4 py-2 border-b cursor-pointer" onClick={() => sortData('dte')}>
+              Date <SortIcon columnKey="dte" />
+            </th>
+            <th className="px-4 py-2 border-b cursor-pointer" onClick={() => sortData('description')}>
+              Description <SortIcon columnKey="description" />
+            </th>
+            <th className="px-4 py-2 border-b cursor-pointer" onClick={() => sortData('staffid')}>
+              Staff ID <SortIcon columnKey="staffid" />
+            </th>
+            <th className="px-4 py-2 border-b cursor-pointer" onClick={() => sortData('byrequest')}>
+              By Request <SortIcon columnKey="byrequest" />
+            </th>
+            <th className="px-4 py-2 border-b cursor-pointer" onClick={() => sortData('fullreturn_elsepart')}>
+              Full Return <SortIcon columnKey="fullreturn_elsepart" />
+            </th>
+            <th className="px-4 py-2 border-b cursor-pointer" onClick={() => sortData('reexposuredate')}>
+              Re-exposure Date <SortIcon columnKey="reexposuredate" />
+            </th>
+            <th className="px-4 py-2 border-b cursor-pointer" onClick={() => sortData('comments')}>
+              Comments <SortIcon columnKey="comments" />
+            </th>
+            <th className="px-4 py-2 border-b cursor-pointer" onClick={() => sortData('status')}>
+              Status <SortIcon columnKey="status" />
+            </th>
+            <th className="px-4 py-2 border-b cursor-pointer" onClick={() => sortData('splitfromdispatchid')}>
+              Split From Dispatch ID <SortIcon columnKey="splitfromdispatchid" />
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {dispatches.map((dispatch) => (
+            <tr key={dispatch.dispatchid} className="hover:bg-gray-50">
+              <td className="px-4 py-2 border-b">{dispatch.dispatchid}</td>
+              <td className="px-4 py-2 border-b">{dispatch.seriesid}</td>
+              <td className="px-4 py-2 border-b">{new Date(dispatch.dte).toLocaleDateString()}</td>
+              <td className="px-4 py-2 border-b">{dispatch.description || 'N/A'}</td>
+              <td className="px-4 py-2 border-b">{dispatch.staffid || 'N/A'}</td>
+              <td className="px-4 py-2 border-b">{dispatch.byrequest ? 'Yes' : 'No'}</td>
+              <td className="px-4 py-2 border-b">{dispatch.fullreturn_elsepart ? 'Yes' : 'No'}</td>
+              <td className="px-4 py-2 border-b">
+                {dispatch.reexposuredate ? new Date(dispatch.reexposuredate).toLocaleDateString() : 'N/A'}
+              </td>
+              <td className="px-4 py-2 border-b">{dispatch.comments || 'N/A'}</td>
+              <td className="px-4 py-2 border-b">{dispatch.status || 'N/A'}</td>
+              <td className="px-4 py-2 border-b">{dispatch.splitfromdispatchid || 'N/A'}</td>
+            </tr>
           ))}
-          </div>
-         
-        
-
-    
-        </div>
-
-
-        {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-500"></div>
-          </div>
-        ) : (
-          <div className="bg-white shadow-md rounded-lg overflow-hidden">
-            <div className="p-6">
-              
-              <DataTable columns={columns}
-        fixedHeader
-        pagination
-        dense
-        customStyles={customStyles}        
-        data={results}
-        conditionalRowStyles={conditionalRowStyles} >
-        </DataTable>
-            </div>
-          </div>
-        )}
-    
+        </tbody>
+      </table>
     </div>
-    )
+    </>
+  )
 }

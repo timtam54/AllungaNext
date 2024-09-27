@@ -40,7 +40,7 @@ type Props = {
   closeModal:  () => void;
   reportname:string;
 };
-function Rprt({closeModal,reportid,reportname}:Props) {
+function Report({closeModal,reportid,reportname}:Props) {
   const [loading, setLoading] = useState(true);
 
     const [columns, setColumns] = React.useState<Column[]>([]);
@@ -49,7 +49,7 @@ function Rprt({closeModal,reportid,reportname}:Props) {
 const [rows,setRows]=React.useState<Row[]>([]);
 
 const [dataSample, setDataSample] = React.useState<Sample[]>([]);
-const [excel,setExcel]=useState([]);//todotim
+//const [excel,setExcel]=useState([]);//todotim
 
       useEffect(() => {
         if (typeof window !== "undefined") {
@@ -361,4 +361,4 @@ const [excel,setExcel]=useState([]);//todotim
 }
 
 
-export default Rprt
+export default Report

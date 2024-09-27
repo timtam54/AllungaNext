@@ -2,8 +2,11 @@
 
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { getToken, msalInstance } from "@/msal/msal";
-import DatePicker from 'react-date-picker';
-import 'react-date-picker/dist/DatePicker.css'
+
+
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
+
 import { 
   Button, 
   TextField, 
@@ -282,7 +285,7 @@ const ReportDet = ({ report, closeModal }: Props) => {
               <Grid item xs={12} sm={6}>
                 
               <p>Report Date:</p>
-              <DatePicker format="dd/MM/yyyy" onChange={setReportDateX}  value={reportDate} />
+              <DatePicker dateFormat="dd/MM/yyyy" onChange={setReportDateX}  selected={reportDate} />
        
                 
               </Grid>
@@ -330,7 +333,13 @@ const ReportDet = ({ report, closeModal }: Props) => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <p>Completed Date</p>
-                <DatePicker format="dd/MM/yyyy"  onChange={setCompletedDateX} value={completedDate} />
+                <DatePicker
+                 dateFormat="dd/MM/yyyy" 
+                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                 
+
+                 onChange={setCompletedDateX} 
+                 selected={completedDate} />
    
               </Grid>
               <Grid item xs={12}>
