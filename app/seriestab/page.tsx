@@ -548,7 +548,7 @@ return 'L';
           <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-500"></div>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form className="space-y-6">
           <div className="grid md:grid-cols-2 gap-6">
             <div className="bg-white shadow-md rounded-lg p-6 space-y-4">
               <div className="flex justify-between items-center">
@@ -892,7 +892,7 @@ return 'L';
 
           <div className="flex justify-end">
             <button
-              type="submit"
+              onClick={handleSubmit}
               className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Submit
