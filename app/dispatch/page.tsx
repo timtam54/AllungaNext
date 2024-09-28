@@ -80,7 +80,7 @@ export default function DispatchTable() {
   return (
     <>
     <Header/>
-    {sampleModal && <DispatchSample dispsamid={18} closeModal={(e:any)=>{setSampleModal(false)}}/>}
+    {sampleModal && <DispatchSample dispsamid={18} closeModal={()=>setSampleModal(false)}/>}
     <div className="mb-6 pt-4 flex justify-between items-center">
   
   <Link href="/" className="bg-black text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-800">
