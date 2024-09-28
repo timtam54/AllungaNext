@@ -17,18 +17,20 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import Weather from './weather' 
 import { useState } from 'react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import ChartSimple from "./chartsimple";
 export default function Component() {
   
   const [radrptOpen, setRadrptOpen] = useState(false)
   const user = msalInstance.getActiveAccount()
   const [isOpen, setIsOpen] = useState(false)
-
+  const [chartSimpleOpen, setChartSimpleOpen] = useState(false)
   const toggleDropdown = () => setIsOpen(!isOpen)
-  /*
-  {weatherOpen && <Weather closeModal={() => setWeatherOpen(false)} />}
+  
       {chartSimpleOpen && <ChartSimple closeModal={() => setChartSimpleOpen(false)} />}
-      {schedrptOpen && <ScheduleActual Rpt={rpt} closeModal={() => setSchedrptOpen(false)} />}*/
-  return (
+ /*     {weatherOpen && <Weather closeModal={() => setWeatherOpen(false)} />}
+  {schedrptOpen && <ScheduleActual Rpt={rpt} closeModal={() => setSchedrptOpen(false)} />}*/
+ 
+ return (
     <header>
 
 
@@ -159,55 +161,45 @@ export default function Component() {
               Radiation
             </Link>
           </MenuItem>
-          
-        </div>
+          <MenuItem>
+          <Link   href={"/schedulereport?Rpt=Actual"}  className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+            ><CalendarMonthIcon className="w-4 h-4 mr-2" />
+              Report Actual Schedule
+            </Link>
+          </MenuItem>
+          <MenuItem>
+          <Link   href={"/schedulereport?Rpt=Projected"}  className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+            ><CalendarMonthIcon className="w-4 h-4 mr-2" />
+              Report Projected Schedule
+            </Link>
+          </MenuItem>
+          <MenuItem>
+          <Link   href={"/schedulereport?Rpt=SampleOnOffSiteActual"}  className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+            ><CalendarMonthIcon className="w-4 h-4 mr-2" />
+              Sample On/Off Site - Actual
+            </Link>
+          </MenuItem>
+          <MenuItem>
+          <Link   href={"/schedulereport?Rpt=SampleOnOffSiteProjected"}  className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+            ><CalendarMonthIcon className="w-4 h-4 mr-2" />
+               Sample On/Off Site - Projected
+            </Link>
+          </MenuItem>
+          <MenuItem>
+          <Link href="" onClick={() => setChartSimpleOpen(true)} className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+            ><CalendarMonthIcon className="w-4 h-4 mr-2" />
+               Param Chart
+            </Link>
+          </MenuItem>
+         
+              
+         </div>
 
         
 
       </MenuItems>
     </Menu>
-    <nav>
-          <div className="relative">
-            <button
-              onClick={toggleDropdown}
-              className="flex items-center space-x-1 text-gray-700 hover:text-gray-900 focus:outline-none focus:text-gray-900"
-              aria-expanded={isOpen}
-              aria-haspopup="true"
-            >
-              <div style={{display:'flex',alignContent:'center'}}><Home className="w-4 h-4 mr-2" />Home</div>
-              <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'transform rotate-180' : ''}`} />
-            </button>
-            
-            {isOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
-                <a
-                  href="/"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                  onClick={() => setIsOpen(false)}
-                >
-                  <Search className="w-4 h-4 mr-2" />
-                  Search
-                </a>
-                <a
-                  href="#sign-out"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                  onClick={() => {setIsOpen(false);handleLogout('redirect');}}
-                >
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Sign out
-                </a>
-                <a
-                  href="/clientaccess"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                  onClick={() => setIsOpen(false)}
-                >
-                  <Users className="w-4 h-4 mr-2" />
-                  Client Access
-                </a>
-              </div>
-            )}
-          </div>
-        </nav>
+    
 
           <div title={user?.name} style={{display:'flex',alignContent:'center'}}>
           <UserAvatar  />

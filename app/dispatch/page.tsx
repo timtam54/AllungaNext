@@ -5,6 +5,8 @@ import { ChevronUp, ChevronDown , ArrowLeft, FileText, Brain, Send, Grid, BarCha
 import Header from '@/components/header';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import DispatchSample from '@/components/dispatchsample';
+import { Button } from '@mui/material';
 
 interface Dispatch {
   dispatchid: number;
@@ -52,7 +54,7 @@ export default function DispatchTable() {
 
     fetchData()
   }, [])
-
+  const [sampleModal,setSampleModal]= useState(false);
   const sortData = (key: SortKey) => {
     const isAsc = sortKey === key && sortOrder === 'asc'
     setSortKey(key)
@@ -74,10 +76,11 @@ export default function DispatchTable() {
 
   if (loading) return <div>Loading...</div>
   if (error) return <div>Error: {error}</div>
-
+  
   return (
     <>
     <Header/>
+    {sampleModal && <DispatchSample dispsamid={18} closeModal={(e:any)=>{setSampleModal(false)}}/>}
     <div className="mb-6 pt-4 flex justify-between items-center">
   
   <Link href="/" className="bg-black text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-800">
@@ -117,12 +120,7 @@ export default function DispatchTable() {
       <table className="min-w-full bg-white border border-gray-300">
         <thead>
           <tr className="bg-gray-100">
-            <th className="px-4 py-2 border-b cursor-pointer" onClick={() => sortData('dispatchid')}>
-              Dispatch ID <SortIcon columnKey="dispatchid" />
-            </th>
-            <th className="px-4 py-2 border-b cursor-pointer" onClick={() => sortData('seriesid')}>
-              Series ID <SortIcon columnKey="seriesid" />
-            </th>
+           
             <th className="px-4 py-2 border-b cursor-pointer" onClick={() => sortData('dte')}>
               Date <SortIcon columnKey="dte" />
             </th>
@@ -155,9 +153,8 @@ export default function DispatchTable() {
         <tbody>
           {dispatches.map((dispatch) => (
             <tr key={dispatch.dispatchid} className="hover:bg-gray-50">
-              <td className="px-4 py-2 border-b">{dispatch.dispatchid}</td>
-              <td className="px-4 py-2 border-b">{dispatch.seriesid}</td>
-              <td className="px-4 py-2 border-b">{new Date(dispatch.dte).toLocaleDateString()}</td>
+
+              <td className="px-4 py-2 border-b"><Button variant="outlined" onClick={(e:any)=>{e.preventDefault();setSampleModal(true);}}>{new Date(dispatch.dte).toLocaleDateString()}</Button></td>
               <td className="px-4 py-2 border-b">{dispatch.description || 'N/A'}</td>
               <td className="px-4 py-2 border-b">{dispatch.staffid || 'N/A'}</td>
               <td className="px-4 py-2 border-b">{dispatch.byrequest ? 'Yes' : 'No'}</td>

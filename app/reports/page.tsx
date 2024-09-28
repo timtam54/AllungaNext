@@ -28,7 +28,7 @@ interface ReportRow {
   DaysInLab: number
 }
 
-export default function Samples() {
+export default function Reports() {
   const searchParams = useSearchParams()
   const seriesname = searchParams!.get('seriesname')
   const SeriesID = parseInt(searchParams!.get('id')!)
