@@ -1,35 +1,51 @@
 'use client'
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-import Link from "next/link"
-import { useState } from 'react'
+import Link from "next/link";
+import AddLocationIcon from '@mui/icons-material/AddLocation';
+import UserAvatar from "./UserAvatar"
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import GroupIcon from '@mui/icons-material/Group';
+import ExposureIcon from '@mui/icons-material/Exposure';
 import { msalInstance, handleLogout } from '@/msal/msal'
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { ChevronDown, Search, LogOut, Users, Home, Database, FileText } from 'lucide-react'
-import AddLocationIcon from '@mui/icons-material/AddLocation'
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
-import GroupIcon from '@mui/icons-material/Group'
-import ExposureIcon from '@mui/icons-material/Exposure'
-import ViewHeadlineIcon from '@mui/icons-material/ViewHeadline'
-import WbSunnyIcon from '@mui/icons-material/WbSunny'
-import ExitToAppIcon from '@mui/icons-material/ExitToApp'
+//import { ChevronDown, LogOut, Home, Database, CloudSun } from 'lucide-react'
+import ScheduleActual from '@/components/ScheduleActual'
+import ViewHeadlineIcon from '@mui/icons-material/ViewHeadline';
 import Radiation from '@/components/radiation'
-import ChartSimple from "./chartsimple"
-
+import WbSunnyIcon from '@mui/icons-material/WbSunny';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import Weather from './weather' 
+import { useState } from 'react';
+import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import ChartSimple from "./chartsimple";
 export default function Component() {
+  
   const [radrptOpen, setRadrptOpen] = useState(false)
-  const [chartSimpleOpen, setChartSimpleOpen] = useState(false)
   const user = msalInstance.getActiveAccount()
+  const [isOpen, setIsOpen] = useState(false)
+  const [chartSimpleOpen, setChartSimpleOpen] = useState(false)
+  const toggleDropdown = () => setIsOpen(!isOpen)
+  
+      {chartSimpleOpen && <ChartSimple closeModal={() => setChartSimpleOpen(false)} />}
+ /*     {weatherOpen && <Weather closeModal={() => setWeatherOpen(false)} />}
+  {schedrptOpen && <ScheduleActual Rpt={rpt} closeModal={() => setSchedrptOpen(false)} />}*/
+ 
+ return (
+    <header>
 
-  return (
-    <header className="bg-gradient-to-r text-black shadow-lg">
-      <div className="container mx-auto px-4 py-3">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-4">
-            <img src="/logo.png" alt="Logo" className="h-10 w-auto" />
-            <img src="/tagline.png" alt="Tagline" className="h-4 w-auto" />
+
+      {radrptOpen && <Radiation closeModal={() => setRadrptOpen(false)} />}
+
+      <div style={{display:'flex', justifyContent:'space-between',alignContent:'center'}}>
+      <div style={{display:'flex',alignContent:'center'}}>
+            <img src="/logo.png" alt="Logo"  />
+            <img src="/tagline.png" alt="Tagline" className="h-4 w-auto " />
           </div>
 
-          <Menu as="div" className="relative inline-block text-left">
+
+
+       
+   <Menu as="div" className="relative inline-block text-left">
       <div>
         <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
         <Home className="w-4 h-4 mr-2" />Home
@@ -146,13 +162,8 @@ export default function Component() {
             </Link>
           </MenuItem>
           <MenuItem>
-          <Link href={"/exposurebillingsiterpt"}  className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900" ><CalendarMonthIcon className="w-4 h-4 mr-2" />
-              Exposure Site Billing Rpt
-            </Link>
-
-          </MenuItem>
-          <MenuItem>
-          <Link href={"/schedulereport?Rpt=Actual"}  className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900" ><CalendarMonthIcon className="w-4 h-4 mr-2" />
+          <Link   href={"/schedulereport?Rpt=Actual"}  className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+            ><CalendarMonthIcon className="w-4 h-4 mr-2" />
               Report Actual Schedule
             </Link>
           </MenuItem>
@@ -188,25 +199,16 @@ export default function Component() {
 
       </MenuItems>
     </Menu>
+    
 
-          <div className="flex items-center space-x-4">
-            <div title={user?.name} className="flex items-center">
-              <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
-                {user?.name ? user.name[0].toUpperCase() : '?'}
-              </div>
-              <button
-                onClick={() => handleLogout('redirect')}
-                className="ml-2 text-white hover:text-gray-200 transition-colors"
-              >
-                <LogOut className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
+          <div title={user?.name} style={{display:'flex',alignContent:'center'}}>
+          <UserAvatar  />
+          <button
+            onClick={() => handleLogout('redirect')}>
+            <LogOut className="w-5 h-5" />
+          </button>
         </div>
-      </div>
-
-      {radrptOpen && <Radiation closeModal={() => setRadrptOpen(false)} />}
-      {chartSimpleOpen && <ChartSimple closeModal={() => setChartSimpleOpen(false)} />}
+          </div>
     </header>
   )
 }

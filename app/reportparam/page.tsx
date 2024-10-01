@@ -9,6 +9,7 @@ import Report from '@/components/report'
 import ChartSampleParam from '@/components/chartsampleparam'
 import { ArrowLeft, FileText, Brain, Send, Grid, BarChart2 } from 'lucide-react'
 import {  Plus, FileSpreadsheet, Camera } from 'lucide-react'//Grain, 
+import { Button } from '@mui/material'
 interface ReportRow {
   reportname: string
   date: Date
@@ -183,7 +184,7 @@ const [reportname, setReportName] = useState('')
                 </button>
               </div>
 
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto bg-white shadow-md rounded-lg">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
@@ -192,7 +193,7 @@ const [reportname, setReportName] = useState('')
                       </th>
                       {dataReport.map((result) => (
                         <th key={result.reportid} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          <button
+                          <Button variant="outlined" color="primary"
                             onClick={() => {
                               setReportID(result.reportid);
                               setReportName(result.reportname);
@@ -201,7 +202,7 @@ const [reportname, setReportName] = useState('')
                             className="text-blue-600 hover:text-blue-800 transition-colors"
                           >
                             {result.reportname} ({new Date(result.date).toLocaleDateString()})
-                          </button>
+                          </Button>
                         </th>
                       ))}
                     </tr>

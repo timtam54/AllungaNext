@@ -2,8 +2,8 @@
 import { ReactGrid, Column, Row, CellChange, TextCell, Cell, DefaultCellTypes, CellTemplate, NumberCell } from "@silevis/reactgrid";
 import "@silevis/reactgrid/styles.css";
 import { getToken } from "@/msal/msal";
-import { ExportAsExcel } from "react-export-table";
-import BorderAllIcon from '@mui/icons-material/BorderAll';
+
+
 import "@/components/part.css";
 import React,{ useState, useEffect} from 'react';
 import Button from '@mui/material/Button';
@@ -333,14 +333,7 @@ const [dataSample, setDataSample] = React.useState<Sample[]>([]);
        <Button variant="contained" onClick={saveReadings} className="bg-green-500 hover:bg-green-600">
          Submit
        </Button>
-       <ExportAsExcel data={dataSample} headers={xlheaders}>
-         {(props) => (
-           <Button variant="contained" {...props} className="bg-blue-500 hover:bg-blue-600">
-             <BorderAllIcon className="mr-2" />
-             Export as Excel
-           </Button>
-         )}
-       </ExportAsExcel>
+       
 
 <ExcelReadings params={datacol} samples={dataSample} comments={dataComments} readings={dataReading} />
 
@@ -352,8 +345,8 @@ const [dataSample, setDataSample] = React.useState<Sample[]>([]);
        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-500"></div>
      </div>
    ) :
-<> <ReactGrid onCellsChanged={handleChanges}  onColumnResized={handleColumnResize} enableRowSelection enableFillHandle enableRangeSelection  enableColumnSelection rows={rows} columns={columns} stickyTopRows={1} />
-</>
+<div className="overflow-x-auto"><ReactGrid onCellsChanged={handleChanges}  onColumnResized={handleColumnResize} enableRowSelection enableFillHandle enableRangeSelection  enableColumnSelection rows={rows} columns={columns} stickyLeftColumns={2} stickyTopRows={1} />
+</div>
  }
 
 </div>
@@ -362,3 +355,13 @@ const [dataSample, setDataSample] = React.useState<Sample[]>([]);
 
 
 export default Report
+
+/*
+<ExportAsExcel data={dataSample} headers={xlheaders}>
+         {(props) => (
+           <Button variant="contained" {...props} className="bg-blue-500 hover:bg-blue-600">
+             <BorderAllIcon className="mr-2" />
+             Export as Excel
+           </Button>
+         )}
+       </ExportAsExcel>*/

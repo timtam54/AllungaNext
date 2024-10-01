@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import DispatchSample from '@/components/dispatchsample';
 import { Button } from '@mui/material';
+import DispatchDet from '@/components/dispatchdet';
 
 interface Dispatch {
   dispatchid: number;
@@ -37,23 +38,26 @@ export default function DispatchTable() {
   const id =parseInt( searchParams!.get("id")!);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('https://allungawebapicore.azurewebsites.net/api/Dispatch/3222')
-        if (!response.ok) {
-          throw new Error('Network response was not ok')
-        }
-        const data = await response.json()
-        setDispatches(data)
-        setLoading(false)
-      } catch (error) {
-        setError('Failed to fetch data')
-        setLoading(false)
-      }
-    }
+    
 
     fetchData()
   }, [])
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch('https://allungawebapicore.azurewebsites.net/api/Dispatch/'+id.toString())
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      const data = await response.json()
+      setDispatches(data)
+      setLoading(false)
+    } catch (error) {
+      setError('Failed to fetch data')
+      setLoading(false)
+    }
+  }
+
   const [sampleModal,setSampleModal]= useState(false);
   const sortData = (key: SortKey) => {
     const isAsc = sortKey === key && sortOrder === 'asc'
@@ -68,7 +72,8 @@ export default function DispatchTable() {
 
     setDispatches(sortedData)
   }
-
+  const [dispid,setDispid]= useState(0);//setDispid
+  const [dispatchModal,setDispatchModal]= useState(false);//setDispatchModal
   const SortIcon = ({ columnKey }: { columnKey: SortKey }) => {
     if (sortKey !== columnKey) return null
     return sortOrder === 'asc' ? <ChevronUp className="inline w-4 h-4" /> : <ChevronDown className="inline w-4 h-4" />
@@ -80,7 +85,8 @@ export default function DispatchTable() {
   return (
     <>
     <Header/>
-    {sampleModal && <DispatchSample dispsamid={18} closeModal={()=>setSampleModal(false)}/>}
+    {dispatchModal &&  <DispatchDet dispid={dispid} closeModal={()=>setDispatchModal(false)}/>}
+    {sampleModal && <DispatchSample dispsamid={dispid} closeModal={()=>setSampleModal(false)}/>}
     <div className="mb-6 pt-4 flex justify-between items-center">
   
   <Link href="/" className="bg-black text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-800">
@@ -119,7 +125,7 @@ export default function DispatchTable() {
     <div className="overflow-x-auto">
       <table className="min-w-full bg-white border border-gray-300">
         <thead>
-          <tr className="bg-gray-100">
+          <tr style={{backgroundColor: '#944780',color:'white'}}>
            
             <th className="px-4 py-2 border-b cursor-pointer" onClick={() => sortData('dte')}>
               Date <SortIcon columnKey="dte" />
@@ -154,8 +160,8 @@ export default function DispatchTable() {
           {dispatches.map((dispatch) => (
             <tr key={dispatch.dispatchid} className="hover:bg-gray-50">
 
-              <td className="px-4 py-2 border-b"><Button variant="outlined" onClick={(e:any)=>{e.preventDefault();setSampleModal(true);}}>{new Date(dispatch.dte).toLocaleDateString()}</Button></td>
-              <td className="px-4 py-2 border-b">{dispatch.description || 'N/A'}</td>
+              <td className="px-4 py-2 border-b"><Button variant="outlined" onClick={(e:any)=>{e.preventDefault();setDispid(dispatch.dispatchid);setSampleModal(true);}}>{new Date(dispatch.dte).toLocaleDateString()}</Button></td>
+              <td className="px-4 py-2 border-b"><Button variant="outlined" onClick={(e:any)=>{e.preventDefault();setDispid(dispatch.dispatchid);setDispatchModal(true);}}>{dispatch.description || 'N/A'}</Button></td>
               <td className="px-4 py-2 border-b">{dispatch.staffid || 'N/A'}</td>
               <td className="px-4 py-2 border-b">{dispatch.byrequest ? 'Yes' : 'No'}</td>
               <td className="px-4 py-2 border-b">{dispatch.fullreturn_elsepart ? 'Yes' : 'No'}</td>
