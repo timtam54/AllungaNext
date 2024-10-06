@@ -222,7 +222,7 @@ sendEmail();
   if (dataParam && dataParam.length > 0) {
     mm = dataParam.map((param: Params) => param.ParamName).join('</th><th>');
   }
-  const head= '<tr><th>'+mm+'</th></tr>'
+  const head= '<tr><th>#</th><th></th><th>Sample</th><th>'+mm+'</th></tr>'
   //alert(head);
   const xrows: any[] = createExcelRows(dataSample, XGetComments, dataComments, dataParam, XGetReading, dataReading);      
   var nn='';
