@@ -119,7 +119,7 @@ const ChartParamSample = ({ title, closeModal, sampleID, seriesid }: Props) => {
     formData.append('data', chartdata);
     formData.append('recipient', user?.username || '');
     formData.append('labels', title);
-
+    formData.append('subject', title);
     const resp = await fetch('/api/contact', { method: "post", body: formData });
     if (resp.ok) {
       alert('Message successfully sent');

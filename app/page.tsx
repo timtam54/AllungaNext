@@ -303,7 +303,7 @@ export default function Home() {
 
             <div className="grid grid-cols-2 md:grid-cols-6 gap-2 text-sm">
 
-              <button onClick={(e) => {e.preventDefault();ssearch(actives, inactives, fields, clientid,'O');setStatus('O');}} type="button" className="bg-red-200 text-red-800 p-2 rounded hover:bg-red-300 active:bg-red-400 focus:outline-none focus:ring-2 focus:ring-red-500">Rtn / Rpt overdue</button>
+              <button onClick={(e) => {e.preventDefault();ssearch(actives, inactives, fields, clientid,'O');setStatus('O');}} type="button" className="bg-red-200 text-red-800 p-2 rounded hover:bg-red-300 active:bg-red-300 focus:outline-none focus:ring-2 focus:ring-red-500">Rtn / Rpt overdue</button>
               <button onClick={(e) => {e.preventDefault();ssearch(actives, inactives, fields, clientid,'L');setStatus('L');}} type="button" className="bg-yellow-200 text-yellow-800 p-2 rounded hover:bg-yellow-300 active:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-500">Locked</button>
               <button onClick={(e) => {e.preventDefault();ssearch(actives, inactives, fields, clientid,'C');setStatus('C');}} type="button" className="bg-green-200 text-green-800 p-2 rounded  hover:bg-green-300 active:bg-green-400 focus:outline-none focus:ring-2 focus:ring-green-500">Rtn / Rpt Complete</button>
               <button onClick={(e) => {e.preventDefault();ssearch(actives, inactives, fields, clientid,'0');setStatus('0');}} type="button"  className="bg-gray-200 text-gray-800 p-2 rounded hover:bg-gray-300 active:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500">All Samples off site</button>       
@@ -378,7 +378,7 @@ export default function Home() {
                 {
                   when: (row) => (row.dateNextReport<new Date()),//(row.dateNextReport!=null &&  || ((row.dateNextReturn!=null && row.dateNextReturn)<new Date())),
                   style: {
-                    backgroundColor: '#EF9A9A',
+                    backgroundColor: 'rgb(254 202 202)',
                     color: '#C62828',
                   },
                   
@@ -386,7 +386,7 @@ export default function Home() {
                 {
                   when: (row) => (row.dateNextReturn<new Date()),//(row.dateNextReport!=null &&  || ((row.dateNextReturn!=null && row.dateNextReturn)<new Date())),
                   style: {
-                    backgroundColor: '#EF9A9A',
+                    backgroundColor: 'rgb(254 202 202)',
                     color: '#C62828',
                   },
                   

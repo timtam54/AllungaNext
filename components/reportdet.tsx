@@ -90,7 +90,7 @@ const ReportDet = ({ report, closeModal }: Props) => {
       const [dataReading, setDataReading] = useState<Reading[]>([]);
       const [dataParam, setDataParam] = useState<Params[]>([]);
 
-  useEffect(() => { getData(report.reportid) }  , [report]);
+  useEffect(() => { getData(report.reportid) }  , []);//[report]
 
   const getData = async (rptid:number) => {
     const urlParam = `https://allungawebapi.azurewebsites.net/api/Params/int/` + rptid.toString();
@@ -167,6 +167,11 @@ const ReportDet = ({ report, closeModal }: Props) => {
     if (!dirty) {
       setDirty(true);
     }
+    if (e.target.value.toLowerCase()=='c')
+    {
+      setData({ ...data, 'completedDate': new Date() });
+sendEmail();
+    }
     setData({ ...data, 'reportstatus': e.target.value as string });
   };
 
@@ -211,9 +216,27 @@ const ReportDet = ({ report, closeModal }: Props) => {
   };
 
   const user = msalInstance.getActiveAccount();
-
- 
   const [email, setEmail] = useState<ClientEmail[]>([])
+  const tablehead=()=>{
+  var mm = '<tr><th>';
+  if (dataParam && dataParam.length > 0) {
+    mm = dataParam.map((param: Params) => param.ParamName).join('</th><th>');
+  }
+  const head= '<tr><th>'+mm+'</th></tr>'
+  //alert(head);
+  const xrows: any[] = createExcelRows(dataSample, XGetComments, dataComments, dataParam, XGetReading, dataReading);      
+  var nn='';
+  for (let i=0;i<xrows.length;i++)
+  {
+    nn = nn+'<tr><td>'+xrows[i].map((param: string) => param).join('</td><td>')+'</td></tr>';
+  }
+  
+
+
+  //alert(nn);
+  return head+nn;
+  }
+
   const sendEmail = async () => {
      const ep='https://allungawebapicore.azurewebsites.net/api/ClientsEmail/{reportid}?reporid='+report.reportid.toString();
       const response = await fetch(ep);
@@ -222,15 +245,12 @@ const ReportDet = ({ report, closeModal }: Props) => {
       }
       const result = await response.json()
       setEmail(result);
-
       var email = user?.username|| '';
-      alert(email);
-     // result.forEach((element:ClientEmail) => {
-     //   email+=";"+element.email;
-     // });
       const formData = new FormData();
       formData.append('recipient', email);
-    formData.append('labels', `${data.reportname} report has been completed`);
+      formData.append('subject', data.reportname);
+      const hdr=tablehead();
+      formData.append('labels', `<html><div>${data.reportname} report has been completed</div><table border="1">`+hdr+`</table></html>`);
     try {
       const resp = await fetch('/api/contact', {
         method: "post", 
@@ -242,7 +262,8 @@ const ReportDet = ({ report, closeModal }: Props) => {
       const responseData = await resp.json();
       console.log(responseData['message']);
       alert('Message successfully sent');
-    } catch (error) {
+    } 
+    catch (error) {
       console.error('Error sending email:', error);
       alert('Failed to send email');
     }
@@ -280,7 +301,7 @@ const ReportDet = ({ report, closeModal }: Props) => {
                   </Button>
             <Button variant="outlined" onClick={closeModal}>Close</Button>
           </Box>
-          <form>
+      
             <Grid container spacing={3}>
               <Grid item xs={12} sm={6}>
                 
@@ -308,7 +329,7 @@ const ReportDet = ({ report, closeModal }: Props) => {
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-              Report Status-           
+              Report Status:       
                 <select
                   name="reportstatus"
                   value={data.reportstatus}
@@ -368,22 +389,22 @@ const ReportDet = ({ report, closeModal }: Props) => {
               
               <Grid item xs={12}>
                 <Box display="flex" justifyContent="space-between">
-                  <ExcelReadings params={dataParam} samples={dataSample} comments={dataComments} readings={dataReading} />
+                {(dataParam?.length!=0) && dataSample?.length!=0 && dataComments?.length!=0 && dataReading?.length!=0 &&
+                  <ExcelReadings params={dataParam} samples={dataSample} comments={dataComments} readings={dataReading} />}
                   <Button variant="outlined" color="secondary" onClick={(e:any)=>{e.preventDefault();setModalEmail(true);}}>Clients Email recipients</Button>
-                  <Button
+                  {(dataParam?.length!=0) && dataSample?.length!=0 && dataComments?.length!=0 && dataReading?.length!=0 &&<Button
                     variant="contained"
                     color="secondary"
                     onClick={(e) => {
                       e.preventDefault();
                       sendEmail();
                     }}
-                  >
-                    Email Report to Client.
-                  </Button>
+                  >Email Report to Client
+                  </Button>}
                 </Box>
               </Grid>
             </Grid>
-          </form>
+          
         </Paper>
       </Container>
     </ThemeProvider></div>
@@ -391,3 +412,37 @@ const ReportDet = ({ report, closeModal }: Props) => {
 };
 
 export default ReportDet;
+
+
+
+function createExcelRows(samples: Sample[], XGetComments: (SampleID: number, comments: Comments[]) => string, comments: Comments[], params: Params[], XGetReading: (ParamID: number, SampleID: number, reading: Reading[]) => string, readings: Reading[]) {
+  const xrows: any[] = [];
+  samples.forEach((elementSample: Sample) => {
+    const row = [];
+    row.push(elementSample.Number);
+    row.push(elementSample.description);
+    row.push(XGetComments(elementSample.SampleID, comments));
+    params //.sort((a:Params, b:Params) => a.Ordering > b.Ordering)
+      .forEach((element: Params) => {
+        row.push(XGetReading(element.ParamID, elementSample.SampleID, readings));
+      });
+    xrows.push(row);
+  });
+  return xrows;
+}
+
+const XGetComments=(SampleID:number,comments:Comments[])=>{
+  var xx = comments.filter((i) => i.SampleID === SampleID);
+  if (xx.length > 0) {
+    return xx[0].Comment;// '2';
+  }
+  return '';
+}
+const XGetReading = (ParamID:number, SampleID:number,reading:Reading[]) => {
+  var xx = reading.filter((i) => i.Paramid === ParamID && i.sampleid === SampleID);
+
+  if (xx.length > 0) {
+    return xx[0].value;// '2';
+  }
+  return '';
+}

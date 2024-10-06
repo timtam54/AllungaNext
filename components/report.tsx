@@ -334,8 +334,8 @@ const [dataSample, setDataSample] = React.useState<Sample[]>([]);
          Submit
        </Button>
        
-
-<ExcelReadings params={datacol} samples={dataSample} comments={dataComments} readings={dataReading} />
+       {(datacol?.length!=0) && dataSample?.length!=0 && dataComments?.length!=0 && dataReading?.length!=0 &&
+<ExcelReadings params={datacol} samples={dataSample} comments={dataComments} readings={dataReading} />}
 
      </div>
    </div>

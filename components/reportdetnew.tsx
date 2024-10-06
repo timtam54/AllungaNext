@@ -97,6 +97,7 @@ export default function ReportDet({ report, closeModal }: Props) {
     const formData = new FormData()
     const email = user?.username || ''
     formData.append('recipient', email)
+    formData.append('subject', data.reportname);
     formData.append('labels', `${data.reportname} report has been completed`)
 
     try {
@@ -225,17 +226,14 @@ export default function ReportDet({ report, closeModal }: Props) {
             <button
               type="submit" onClick={handleSubmit}
               disabled={!dirty}
-              className={`flex items-center px-4 py-2 rounded-md text-white ${dirty ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-400'} transition-colors duration-200`}
-            >
-              <Save className="w-5 h-5 mr-2" />
+              className={`flex items-center px-4 py-2 rounded-md text-white ${dirty ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-400'} transition-colors duration-200`}><Save className="w-5 h-5 mr-2" />
               Save Changes
             </button>
             <button
               type="button"
               onClick={sendEmail}
               className="flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors duration-200"
-            >
-              <Mail className="w-5 h-5 mr-2" />
+            ><Mail className="w-5 h-5 mr-2" />
               Email Report to Client
             </button>
           </div>

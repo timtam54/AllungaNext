@@ -4,21 +4,19 @@ const nodemailer = require('nodemailer');
 export async function POST(request) {
   try {
     console.log('server email');
-    const username = 'MedicalDentalInstallations@outlook.com';// 'allungaexposure@outlook.com';//process.env.EMAIL_ADDRESS;
-    const password = 'Mds1234!';//process.env.EMAIL_PASSWORD;
+    const username = 'MedicalDentalServiceRepair@gmail.com';// 'allungaexposure@outlook.com';//process.env.EMAIL_ADDRESS;
+    const password = 'epfy wzpa qvxf wkdi';//process.env.EMAIL_PASSWORD;
 
     const formData = await request.formData()
+    var subject = formData.get('subject');
     var message = formData.get('labels');
     const myEmail=formData.get('recipient');//'timhams@gmail.com';
     const name = formData.get('recipient');;//'tim';
     const email = formData.get('recipient');;//'timhams@gmail.com';
     const transporter = nodemailer.createTransport({
-      host: "smtp-mail.outlook.com",
+      host: "smtp.gmail.com",
       port: 587,
-      tls: {
-          ciphers: "SSLv3",
-          rejectUnauthorized: false,
-      },
+      
       auth: {
           user: username,
           pass: password
@@ -63,7 +61,7 @@ console.log('chartImageUrl:'+chartImageUrl);
         from: username,
         to: myEmail,
         replyTo: email,
-        subject: labelsStr,//`MDS Chart from ${email}`,
+        subject: subject,//`MDS Chart from ${email}`,
         html: message
         //`<img src="https://quickchart.io/chart?c={type:'bar',data:{labels:[2012,2013,2014,2015,2016],datasets:[{label:'Users',data:[120,60,50,180,120]}]}} />`,
         //        <img src=${message}</img>

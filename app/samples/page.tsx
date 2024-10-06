@@ -224,14 +224,15 @@ export default function Samples() {
   return (
     <div className="min-h-screen bg-gray-100">
       <Header />
-      <div style={{display: 'flex',justifyContent:'space-between',alignItems: 'center',backgroundColor:'white'}}>
-       
-
+      <div className="mb-6 pt-4 flex justify-between items-center">
+    
           <Link href="/" className="bg-black text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-800">
+     
             <ArrowLeft className="mr-2" size={20} />
             Back
           </Link>
-          <h1 className="text-2xl font-bold"  style={{color:'#944780'}}>Series: {seriesname}</h1>
+          <h1 className="text-2xl font-bold"  style={{color:'#944780'}}>{seriesname}</h1>
+       
           <div className="flex justify-center space-x-4 ">
           {[
             { href: `/seriestab?id=${SeriesID}&seriesname=${seriesname}`, icon: FileText, text: 'Details' },

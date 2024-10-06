@@ -514,9 +514,7 @@ return 'L';
  return (
   <div className="min-h-screen bg-gray-100">
     <Header />
-    <div className="bg-white shadow-md rounded-lg overflow-hidden">
-    <div className="container mx-auto px-4 py-8">
-        <div className="mb-6 flex justify-between items-center">
+    <div className="mb-6 pt-4 flex justify-between items-center">
           <Link href="/" className="bg-black text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-800">
             <ArrowLeft className="mr-2" size={20} />
             Back
@@ -560,7 +558,7 @@ return 'L';
                     onClick={(e) => { window.open('/client?id=' + data!.clientid.toString()) }}
                     className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition duration-300"
                   >
-                    Client Details
+                    Client
                   </button>
                   <select
                     name="clientid"
@@ -908,7 +906,6 @@ return 'L';
           </form>
         )}
       </div>
-    </div>
-    </div>
+  
   )
 }

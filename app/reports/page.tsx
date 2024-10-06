@@ -206,13 +206,13 @@ export default function Reports() {
       <div className="mb-6 pt-4 flex justify-between items-center">
   
           <Link href="/" className="bg-black text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-800">
-            <ArrowLeft className="mr-2" size={20} />
+            <ArrowLeft className="mr-2 " size={20} />
             Back
           </Link>
-          <div className="mb-4">
+          <div className="px-4 py-2 rounded-md ">
                 <ExportAsExcel
                   data={results}
-                  headers={['reportname', 'date', 'reportstatus', 'bookandpage', 'DaysInLab', 'comment']}
+                  headers={['id','reportname', 'date', 'reportstatus', 'bookandpage', 'DaysInLab', 'comment']}
                 >
                   {(props) => (
                     <button

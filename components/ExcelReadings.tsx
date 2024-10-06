@@ -25,7 +25,6 @@ interface Sample {
 }
     
   interface Params{
-
     ParamID:number,
     ParamName:string;
     Ordering?:number;
@@ -36,65 +35,37 @@ interface Sample {
     comments:Comments[];
     readings:Reading[];
 }
-export default function  ExcelReadings({params,samples,comments,readings}:Props)
+export default function ExcelReadings({params,samples,comments,readings}:Props)
 {
-    const XGetComments=(SampleID:number,comments:Comments[])=>{
-        var xx = comments.filter((i) => i.SampleID === SampleID);
-        if (xx.length > 0) {
-          return xx[0].Comment;// '2';
-        }
-        return '';
-    }
-      const XGetReading = (ParamID:number, SampleID:number,reading:Reading[]) => {
-        var xx = reading.filter((i) => i.Paramid === ParamID && i.sampleid === SampleID);
-
-        if (xx.length > 0) {
-          return xx[0].value;// '2';
-        }
-        return '';
-      }
+   
 
       const [rows,setRows]= useState<any[]>([]);
       const [headers,setHeaders]  = useState<string[]>([]);
-
-      useEffect(() => { createData() } , [readings,samples,params,comments]);
-
+      useEffect(() => { createData() } ,[]);
+      
       const createData= ()=>
       {
-         setRows([]);
-         setHeaders([]);
-         const hdrs:string[]=[];
-        //if (headers.length>0)
-        //  return;
-      //  alert("createData");
-      hdrs.push("Sample No");
-      hdrs.push("Sample Name");
-      hdrs.push("Comments"); 
+        if (headers.length>0)
+          return; 
+      
+        setHeaders([]);
+        const hdrs:string[]=[];  
+        hdrs.push("Sample No");
+        hdrs.push("Sample Name");
+        hdrs.push("Comments"); 
         params//.sort((a:Params, b:Params) => a.Ordering > b.Ordering)
         .forEach((element:Params) => {
             hdrs.push( element.ParamName );
-            ;//alert(element.ParamName);
         });
-        setHeaders(hdrs);
-    samples.forEach((elementSample:Sample) => {
-      const row = [];
-
-      row.push(elementSample.Number);
-      row.push(elementSample.description);
-      row.push(XGetComments(elementSample.SampleID,comments)); 
-      params//.sort((a:Params, b:Params) => a.Ordering > b.Ordering)
-        .forEach((element:Params) => {
-          row.push( XGetReading(element.ParamID, elementSample.SampleID,readings) );
-        });
-        rows.push(row);
-    });      
-    
-       
-       
+      setHeaders(hdrs);
+      setRows([]);
+      const xrows: any[] = createExcelRows(samples, XGetComments, comments, params, XGetReading, readings);      
+        
+        setRows(xrows);
         console.table(headers);
-        setRows(rows);
-      }
-    return<ExportAsExcel 
+}
+
+    return <ExportAsExcel 
                   data={rows}
                   headers={headers}
                 >
@@ -108,4 +79,36 @@ export default function  ExcelReadings({params,samples,comments,readings}:Props)
                     </button>
                   )}
                 </ExportAsExcel>
+}
+
+function createExcelRows(samples: Sample[], XGetComments: (SampleID: number, comments: Comments[]) => string, comments: Comments[], params: Params[], XGetReading: (ParamID: number, SampleID: number, reading: Reading[]) => string, readings: Reading[]) {
+  const xrows: any[] = [];
+  samples.forEach((elementSample: Sample) => {
+    const row = [];
+    row.push(elementSample.Number);
+    row.push(elementSample.description);
+    row.push(XGetComments(elementSample.SampleID, comments));
+    params //.sort((a:Params, b:Params) => a.Ordering > b.Ordering)
+      .forEach((element: Params) => {
+        row.push(XGetReading(element.ParamID, elementSample.SampleID, readings));
+      });
+    xrows.push(row);
+  });
+  return xrows;
+}
+
+const XGetComments=(SampleID:number,comments:Comments[])=>{
+  var xx = comments.filter((i) => i.SampleID === SampleID);
+  if (xx.length > 0) {
+    return xx[0].Comment;// '2';
+  }
+  return '';
+}
+const XGetReading = (ParamID:number, SampleID:number,reading:Reading[]) => {
+  var xx = reading.filter((i) => i.Paramid === ParamID && i.sampleid === SampleID);
+
+  if (xx.length > 0) {
+    return xx[0].value;// '2';
+  }
+  return '';
 }

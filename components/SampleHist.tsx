@@ -114,7 +114,7 @@ export const SampleHist = ({ closeModal, sampleid, SeriesID }: Props) => {
     const email = user?.username.toString()!;
     formData.append('recipient', email);
     formData.append('labels', title);
-
+    formData.append('subject', title);
     const resp = await fetch('/api/contact', {
       method: "post",
       body: formData,

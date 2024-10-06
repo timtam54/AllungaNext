@@ -130,7 +130,7 @@ async function sendChartEmail(chartdata: string, title: string) {
   const email = user?.username.toString()!;
   formData.append('recipient', email);
   formData.append('labels', title);
-
+  formData.append('subject', title);
   const resp = await fetch('/api/contact', {
     method: "post",
     body: formData, //,email:'timhams@gmail.com'

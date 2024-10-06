@@ -14,6 +14,7 @@ import WbSunnyIcon from '@mui/icons-material/WbSunny'
 import ExitToAppIcon from '@mui/icons-material/ExitToApp'
 import Radiation from '@/components/radiation'
 import ChartSimple from "./chartsimple"
+import LogoutIcon from '@mui/icons-material/Logout';
 
 export default function Component() {
   const [radrptOpen, setRadrptOpen] = useState(false)
@@ -43,10 +44,11 @@ export default function Component() {
       >
         <div className="py-1">
           <MenuItem>
-            <Link 
-             href={"/"}  className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"><Search className="w-4 h-4 mr-2" />
+          <Link   href={"/"}  className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900">
+          <CalendarMonthIcon className="w-4 h-4 mr-2" />
               Search
             </Link>
+         
           </MenuItem>
           
           <MenuItem>
@@ -56,12 +58,8 @@ export default function Component() {
             </Link>
           </MenuItem>
            <MenuItem>
-            <Link 
-              href={"/clientaccess"}
-              className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-            > <Users className="w-4 h-4 mr-2" />
-                  Client Access
-            </Link>
+           <Link   href={"/clientaccess"}  className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900">
+           <GroupIcon className="w-4 h-4 mr-2"/>Access </Link>
           </MenuItem>
         </div>
 
@@ -190,19 +188,22 @@ export default function Component() {
     </Menu>
 
           <div className="flex items-center space-x-4">
-            <div title={user?.name} className="flex items-center">
+            <div title={user?.name} className="flex items-center text-black" style={{color:'black'}}>
               <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
                 {user?.name ? user.name[0].toUpperCase() : '?'}
               </div>
               <button
                 onClick={() => handleLogout('redirect')}
-                className="ml-2 text-white hover:text-gray-200 transition-colors"
+                className="ml-2 hover:text-gray-200 transition-colors"
               >
-                <LogOut className="w-5 h-5" />
+                <LogOut className="w-5 h-5 text-navy-500" />
               </button>
             </div>
+           
           </div>
+          
         </div>
+        
       </div>
 
       {radrptOpen && <Radiation closeModal={() => setRadrptOpen(false)} />}
