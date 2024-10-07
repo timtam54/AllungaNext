@@ -25,7 +25,6 @@ import ExcelReadings from "./ExcelReadings";
 
 type Props = {
   report: reportrow;
-  closeModal: () => void;
 };
 
 interface reportrow {
@@ -83,7 +82,7 @@ const theme = createTheme({
   },
 });
 
-const ReportDet = ({ report, closeModal }: Props) => {
+const ReportDetEmbed = ({ report }: Props) => {
 
   const [dataSample, setDataSample] = useState<Sample[]>([]);
     const [dataComments, setDataComments] = useState<Comments[]>([]);
@@ -170,7 +169,7 @@ const ReportDet = ({ report, closeModal }: Props) => {
     if (e.target.value.toLowerCase()=='c')
     {
       setData({ ...data, 'completedDate': new Date() });
-      sendEmail();
+sendEmail();
     }
     setData({ ...data, 'reportstatus': e.target.value as string });
   };
@@ -250,7 +249,7 @@ const ReportDet = ({ report, closeModal }: Props) => {
       formData.append('recipient', email);
       formData.append('subject', data.reportname);
       const hdr=tablehead();
-      formData.append('labels', `<html><div>${data.reportname} report has been completed</div><a href="https://yellow-mud-0d5c84400.5.azurestaticapps.net/reportall?id=${data.reportid.toString()}">Report Link</a><table border="1">`+hdr+`</table></html>`);
+      formData.append('labels', `<html><div>${data.reportname} report has been completed</div><table border="1">`+hdr+`</table></html>`);
     try {
       const resp = await fetch('/api/contact', {
         method: "post", 
@@ -285,21 +284,14 @@ const ReportDet = ({ report, closeModal }: Props) => {
 
  const [modalEmail,setModalEmail]=useState(false);
   return (
-    <div className="modal-container">
+    <>
       {modalEmail && <ClientEmails id={report.reportid} closeModal={()=>{setModalEmail(false)}} />}
     <ThemeProvider theme={theme}>
       <Container maxWidth="md">
         <Paper elevation={3} style={{ padding: '20px', marginTop: '20px' }}>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
             <Typography variant="h4">Report Details</Typography>
-            <Button
-                    onClick={handleSubmit}
-                    variant="contained"
-                    color="primary"
-                    disabled={!dirty}>
-                    Submit
-                  </Button>
-            <Button variant="outlined" onClick={closeModal}>Close</Button>
+        
           </Box>
       
             <Grid container spacing={3}>
@@ -407,11 +399,11 @@ const ReportDet = ({ report, closeModal }: Props) => {
           
         </Paper>
       </Container>
-    </ThemeProvider></div>
+    </ThemeProvider></>
   );
 };
 
-export default ReportDet;
+export default ReportDetEmbed;
 
 
 

@@ -78,25 +78,29 @@ export default function Reports() {
     {
       name:  <>Description<Button variant='contained' style={{backgroundColor:'black',color:'white'}} onClick={()=>{alert('as')}}><Plus className="mr-2" size={20} />Add</Button></>,
       cell: (row: ReportRow) => (
-        <Button variant='outlined'
-          onClick={(e) => {
-            e.preventDefault();
-            setCurrentReport(row);
-            console.table(row);
-            setModalOpen(true);
-          }}
-          className="hover:underline"
-          style={{ color: '#944780',borderColor: '#944780' }}
-        >
-          {row.reportname}
-        </Button>
+        <a href={"/reportall?id="+row.reportid.toString()}
+          target="other">
+          <u>{row.reportname}</u>
+        </a>
       ),
+      selector: (row: ReportRow) => row.reportname,
       sortable: true,
       width: '270px',
     },
     {
       name: 'Date',
-      cell: (row: ReportRow) =>  formatDate(row.date),
+      cell: (row: ReportRow) => <Button variant='outlined'
+      onClick={(e) => {
+        e.preventDefault();
+        setCurrentReport(row);
+        console.table(row);
+        setModalOpen(true);
+      }}
+      className="hover:underline"
+      style={{ color: '#944780',borderColor: '#944780' }}
+    >
+       {formatDate(row.date)}
+    </Button>,
       sortable: true,
       width: '130px',
     },
