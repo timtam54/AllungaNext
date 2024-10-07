@@ -8,7 +8,7 @@ import { ArrowLeft, Mail, Save } from 'lucide-react'
 
 type Props = {
   report: ReportRow
-  closeModal: () => void
+  closeModal?: () => void
 }
 
 interface ReportRow {

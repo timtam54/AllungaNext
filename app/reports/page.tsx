@@ -78,7 +78,7 @@ export default function Reports() {
     {
       name:  <>Description<Button variant='contained' style={{backgroundColor:'black',color:'white'}} onClick={()=>{alert('as')}}><Plus className="mr-2" size={20} />Add</Button></>,
       cell: (row: ReportRow) => (
-        <a href={"/reportall?id="+row.reportid.toString()}
+        <a href={"/reportall?seriesid="+SeriesID.toString()+"&id="+row.reportid.toString()}
           target="other">
           <u>{row.reportname}</u>
         </a>

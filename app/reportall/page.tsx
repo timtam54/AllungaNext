@@ -4,6 +4,8 @@ import ReportDetEmbed from "@/components/reportdetembed"
 import ReportEmbed from "@/components/reportembed"
 import ReportPhotosEmbed from "@/components/reportphotosembed"
 import { getToken } from "@/msal/msal"
+import { ArrowLeft } from "lucide-react"
+import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 interface ReportRow {
@@ -22,6 +24,7 @@ export default function ReportAll() {
     const searchParams = useSearchParams()
     //const seriesname = searchParams!.get('seriesname')
     const reportid = parseInt(searchParams!.get('id')!)
+    const seriesid = parseInt(searchParams!.get('seriesid')!)
     const [data, setData] = useState<ReportRow>();
 
     useEffect(() => {   
@@ -63,7 +66,10 @@ export default function ReportAll() {
     return (
         <>
         <Header/>
-
+        <Link href={"/seriestab?id="+seriesid.toString() } className="bg-black text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-800">
+            <ArrowLeft className="mr-2 " size={20} />
+            Back
+          </Link>
       
         {data && <ReportDetEmbed report={data!} />}
         {data && <ReportEmbed reportname={data.reportname} reportid={data.reportid} />}
