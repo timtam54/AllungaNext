@@ -85,7 +85,7 @@ export default function DispatchTable() {
   return (
     <>
     <Header/>
-    {dispatchModal &&  <DispatchDet dispid={dispid} closeModal={()=>setDispatchModal(false)}/>}
+    {dispatchModal &&  <DispatchDet dispid={dispid} closeModal={()=>{setDispatchModal(false);fetchData();}}/>}
     {sampleModal && <DispatchSample dispsamid={dispid} closeModal={()=>setSampleModal(false)}/>}
     <div className="mb-6 pt-4 flex justify-between items-center">
   
@@ -94,6 +94,9 @@ export default function DispatchTable() {
     Back
   </Link>
   <h1 className="text-2xl font-bold"  style={{color:'#944780'}}>Series: {seriesname}</h1>
+  <button onClick={(e:any)=>{e.preventDefault();setDispid(0);setDispatchModal(true);}} className="bg-[#944780] text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-800">
+    New
+  </button>
   <div className="flex justify-center space-x-4 ">
   {[
     { href: `/seriestab?id=${id}&seriesname=${seriesname}`, icon: FileText, text: 'Details' },

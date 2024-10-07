@@ -59,6 +59,12 @@ export default function DispatchDet({ dispid, closeModal }: Props) {
 
   const fetchDispatch = async () => {
     try {
+      if (dispid==0)
+      {
+        setDispatch({dispatchid:0, seriesid:0, dte:new Date(), description:'', staffid:0, byrequest:false, fullreturn_elsepart:false, reexposuredate:new Date(), comments:'', status:'', splitfromdispatchid:0})
+        setIsLoading(false)
+        return;
+      }
       const response = await fetch('https://allungawebapicore.azurewebsites.net/api/Dispatch/int/'+dispid.toString())
       if (!response.ok) {
         throw new Error('Failed to fetch dispatch data')
@@ -112,14 +118,18 @@ export default function DispatchDet({ dispid, closeModal }: Props) {
     if (dispatch==null) return
 
     try {
-      const response = await fetch(`https://allungawebapicore.azurewebsites.net/api/Dispatch/${dispatch.dispatchid}`, {
-        method: 'PUT',
+      const response = await fetch((dispid==0)?`https://allungawebapicore.azurewebsites.net/api/Dispatch/`:`https://allungawebapicore.azurewebsites.net/api/Dispatch/${dispatch.dispatchid}`, {
+        method: (dispid==0)?'POST':'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(dispatch),
       })
-
+      if (dispid==0 )
+      {
+        closeModal();
+        return;
+      }
       if (!response.ok) {
         throw new Error('Failed to update dispatch data')
       }
