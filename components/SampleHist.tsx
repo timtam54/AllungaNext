@@ -130,12 +130,12 @@ export const SampleHist = ({ closeModal, sampleid, SeriesID }: Props) => {
   }
 
   return (
-    <div className="modal-container">
-    <Container maxWidth="md">
-      <StyledPaper elevation={3}>
-        <Typography variant="h4" gutterBottom>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl transform transition-all ease-in-out duration-300 scale-100 opacity-100">
+        <div className="p-6">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">
           Sample History
-        </Typography>
+        </h2>
         {loading ? (
           <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
             <CircularProgress />
@@ -157,8 +157,8 @@ export const SampleHist = ({ closeModal, sampleid, SeriesID }: Props) => {
             </Box>
           </>
         )}
-      </StyledPaper>
-    </Container>
+      </div>
+    </div>
     </div>
   );
 };

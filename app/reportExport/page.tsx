@@ -1,92 +1,65 @@
 "use client"
 
-import { useState } from 'react'
-import { FileSpreadsheet, File  } from 'lucide-react'
-import * as XLSX from 'xlsx'
-import { jsPDF } from 'jspdf'
-import 'jspdf-autotable'
-import autoTable from 'jspdf-autotable'
 
-export default function ReportGenerator() {
-  const [data] = useState([
-    { id: 1, name: 'John Doe', sales: 5000 },
-    { id: 2, name: 'Jane Smith', sales: 6200 },
-    { id: 3, name: 'Bob Johnson', sales: 4800 },
-    { id: 4, name: 'Alice Brown', sales: 5500 },
-    { id: 5, name: 'Charlie Davis', sales: 7000 },
-  ])
+import { usePDF } from 'react-to-pdf'
 
-  const exportToExcel = () => {
-    const ws = XLSX.utils.json_to_sheet(data)
-    const wb = XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(wb, ws, "Sales Report")
-    XLSX.writeFile(wb, "sales_report.xlsx")
-  }
+const sampleData = [
+  { id: 1, name: "John Doe", email: "john@example.com", role: "Developer" },
+  { id: 2, name: "Jane Smith", email: "jane@example.com", role: "Designer" },
+  { id: 3, name: "Bob Johnson", email: "bob@example.com", role: "Manager" },
+  { id: 4, name: "Alice Brown", email: "alice@example.com", role: "Tester" },
+  { id: 5, name: "Charlie Davis", email: "charlie@example.com", role: "DevOps" },
+]
 
-  const exportToPDF = () => {
-    const doc = new jsPDF()
+interface ButtonProps {
+  onClick: () => void;
+  children: React.ReactNode;
+}
 
-    // Load the logo image
-    const img = new Image()
-    img.src = '/logo.png'
-    img.onload = () => {
-      // Add the logo to the PDF
-      doc.addImage(img, 'PNG', 10, 10, 50, 20)
+const Button = ({ onClick, children }:ButtonProps) => (
+  <button
+    onClick={onClick}
+    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+  >
+    {children}
+  </button>
+)
 
-      // Add the table after the logo
-    /*todotim  doc.autoTable({
-        startY: 40, // Adjust startY to position the table below the logo
-        head: [['ID', 'Name', 'Sales']],
-        body: data.map(item => [item.id, item.name, item.sales]),
-      })
-*/
-      doc.save('sales_report.pdf')
-    }
-  }
+export default function Component() {
+  const { toPDF, targetRef } = usePDF({filename: 'table-data.pdf'});
 
   return (
-    <div className="w-full max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
-      <div className="p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Sales Report</h1>
-          <img src="/logo.png" alt="Company Logo" className="h-10 w-10" />
+    <div className="container mx-auto p-4">
+      <div ref={targetRef}>
+        <div className="flex items-center justify-between mb-8">
+          <img
+            src="/logo.png"
+            alt="Company Logo"
+            className="h-15"
+          />
+          <h1 className="text-2xl font-bold">Employee Data</h1>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="py-2 px-4 border-b">ID</th>
-                <th className="py-2 px-4 border-b">Name</th>
-                <th className="py-2 px-4 border-b text-right">Sales</th>
+        <table className="min-w-full bg-white border border-gray-300">
+          <thead>
+            <tr>
+              <th className="px-6 py-3 border-b border-gray-300 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Name</th>
+              <th className="px-6 py-3 border-b border-gray-300 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Email</th>
+              <th className="px-6 py-3 border-b border-gray-300 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Role</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sampleData.map((employee) => (
+              <tr key={employee.id}>
+                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{employee.name}</td>
+                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{employee.email}</td>
+                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-300">{employee.role}</td>
               </tr>
-            </thead>
-            <tbody>
-              {data.map((item) => (
-                <tr key={item.id} className="hover:bg-gray-50">
-                  <td className="py-2 px-4 border-b">{item.id}</td>
-                  <td className="py-2 px-4 border-b">{item.name}</td>
-                  <td className="py-2 px-4 border-b text-right">${item.sales.toLocaleString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <div className="flex justify-end space-x-2 mt-6">
-          <button
-            onClick={exportToExcel}
-            className="flex items-center space-x-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
-          >
-            <FileSpreadsheet className="h-4 w-4" />
-            <span>Export to Excel</span>
-          </button>
-          <button
-            onClick={exportToPDF}
-            className="flex items-center space-x-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
-          >
-            <File className="h-4 w-4" />
-            <span>Export to PDF</span>
-          </button>
-        </div>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="mt-4">
+        <Button onClick={() => toPDF()}>Export to PDF</Button>
       </div>
     </div>
   )

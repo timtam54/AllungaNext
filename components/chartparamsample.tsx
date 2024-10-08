@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Line } from 'react-chartjs-2';
+
 import { CategoryScale, Chart as ChartJS, LinearScale, PointElement, LineElement, Legend, Tooltip } from "chart.js";
 import { getToken, msalInstance } from "@/msal/msal";
 import { Button, Paper, Typography, Box, Container, CircularProgress, ThemeProvider, createTheme } from '@mui/material';
@@ -159,13 +160,12 @@ const ChartParamSample = ({ title, closeModal, sampleID, seriesid }: Props) => {
   };
 
   return (
-    <div className="modal-container">
-    <ThemeProvider theme={theme}>
-      <Container maxWidth="lg">
-        <StyledPaper elevation={3}>
-          <Typography variant="h4" gutterBottom>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl transform transition-all ease-in-out duration-300 scale-100 opacity-100">
+        <div className="p-6">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">
             {title}
-          </Typography>
+          </h2>
           {loading ? (
             <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
               <CircularProgress />
@@ -195,9 +195,8 @@ const ChartParamSample = ({ title, closeModal, sampleID, seriesid }: Props) => {
               </Box>
             </>
           )}
-        </StyledPaper>
-      </Container>
-    </ThemeProvider></div>
+        </div>
+    </div></div>
   );
 };
 
