@@ -12,6 +12,7 @@ import SampleHist from '@/components/SampleHist'
 import ChartParamSample from '@/components/chartparamsample'
 import { ArrowLeft, FileText, Brain, Send, Grid, ChevronUp, ChevronDown, BarChart2, Snowflake, History } from 'lucide-react'
 import {  Plus, FileSpreadsheet, Camera } from 'lucide-react'//Grain, 
+import { usePDF } from 'react-to-pdf'
 
 interface SampleRow {
   SampleID: number
@@ -25,6 +26,7 @@ interface SampleRow {
 }
 
 export default function Samples() {
+  const { toPDF, targetRef } = usePDF({filename: 'table-data.pdf'});
   const searchParams = useSearchParams()
   const seriesname = searchParams!.get('seriesname')
   const SeriesID = parseInt(searchParams!.get('id')!)
@@ -128,8 +130,7 @@ export default function Samples() {
           setSampID(row.SampleID)
           setModalOpen(true)
         }}
-        className="text-blue-600 hover:underline"
-      >
+        className="text-blue-600 hover:underline">
         {row.longdescription}
       </button>
       ),
@@ -220,19 +221,23 @@ export default function Samples() {
       width: '90px',
     },
   ]
-
+  const [pdfMode,setPdf] = useState(false);
   return (
     <div className="min-h-screen bg-gray-100">
       <Header />
       <div className="mb-6 pt-4 flex justify-between items-center">
-    
-          <Link href="/" className="bg-black text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-800">
-     
+          <Link href="/" className="bg-black text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-800">   
             <ArrowLeft className="mr-2" size={20} />
             Back
           </Link>
-          <h1 className="text-2xl font-bold"  style={{color:'#944780'}}>{seriesname}</h1>
-       
+          <div className="mt-4">
+          {!pdfMode &&  <Button onClick={() => {setPdf(true)}}>Preview PDF</Button>}
+          </div>
+          <div className="mt-4">
+
+        {pdfMode && <Button onClick={() => {toPDF();setPdf(false);}}>Export to PDF</Button>}
+      </div>
+          <h1 className="text-2xl font-bold"  style={{color:'#944780'}}>{seriesname}</h1>       
           <div className="flex justify-center space-x-4 ">
           {[
             { href: `/seriestab?id=${SeriesID}&seriesname=${seriesname}`, icon: FileText, text: 'Details' },
@@ -255,10 +260,6 @@ export default function Samples() {
             </Link>
           ))}
           </div>
-         
-        
-
-    
         </div>
 
         {loading ? (
@@ -267,7 +268,49 @@ export default function Samples() {
           </div>
         ) : (
           <div className="bg-white shadow-md rounded-lg overflow-hidden">
+            {pdfMode && <div ref={targetRef}>
+            <div className="flex items-center justify-between mb-8">
+          <img
+            src="/logo.png"
+            alt="Company Logo"
+            className="h-15"
+          />
+          <h1 className="text-2xl font-bold">Series {seriesname} Samples</h1>
+        </div>
             <DataTable
+              columns={columns}
+              data={results}
+              
+              dense
+              customStyles={{
+                headRow: {
+                  style: {
+                    backgroundColor: '#F3F4F6',
+                    fontSize: '0.875rem',
+                    color: '#374151',
+                    fontWeight: 'bold',
+                  },
+                },
+                rows: {
+                  style: {
+                    '&:nth-of-type(odd)': {
+                      backgroundColor: '#F9FAFB',
+                    },
+                  },
+                },
+              }}
+              conditionalRowStyles={[
+                {
+                  when: (row) => !row.Reportable,
+                  style: {
+                    color: '#EF4444',
+                  },
+                },
+              ]}
+            />
+           
+          </div>}
+          {!pdfMode && <DataTable
               columns={columns}
               data={results}
               pagination
@@ -297,10 +340,9 @@ export default function Samples() {
                   },
                 },
               ]}
-            />
-          </div>
-        )}
-     
+            />}
+          </div>     
+      )}
 
       {modelOpen && (
         <ChartParamSample
@@ -320,3 +362,13 @@ export default function Samples() {
     </div>
   )
 }
+interface ButtonProps {
+  onClick: () => void;
+  children: React.ReactNode;
+}
+const Button = ({ onClick, children }:ButtonProps) => (
+  <button
+    onClick={onClick}
+    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+  >{children}</button>
+)

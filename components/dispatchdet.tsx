@@ -29,10 +29,11 @@ interface DispatchStatus {
   statusdesc: string
 }
 interface Props {
+  seriesID:number
   dispid: number
   closeModal: () => void
 }
-export default function DispatchDet({ dispid, closeModal }: Props) {
+export default function DispatchDet({seriesID, dispid, closeModal }: Props) {
   const [dispatch, setDispatch] = useState<DispatchDet | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -61,7 +62,7 @@ export default function DispatchDet({ dispid, closeModal }: Props) {
     try {
       if (dispid==0)
       {
-        setDispatch({dispatchid:0, seriesid:0, dte:new Date(), description:'', staffid:0, byrequest:false, fullreturn_elsepart:false, reexposuredate:new Date(), comments:'', status:'', splitfromdispatchid:0})
+        setDispatch({dispatchid:0, seriesid:seriesID, dte:new Date(), description:'', staffid:0, byrequest:false, fullreturn_elsepart:false, reexposuredate:new Date(), comments:'', status:'N', splitfromdispatchid:0})
         setIsLoading(false)
         return;
       }
@@ -109,7 +110,7 @@ export default function DispatchDet({ dispid, closeModal }: Props) {
 }
 
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setDispatch({ ...dispatch!, [e.target.name]: e.target.value });
+    setDispatch({ ...dispatch!, [e.target.name]: parseInt(e.target.value) });
   }
 
   const handleSave = async (e:any) => {
@@ -118,12 +119,14 @@ export default function DispatchDet({ dispid, closeModal }: Props) {
     if (dispatch==null) return
 
     try {
+      const jsn = JSON.stringify(dispatch);
+      console.table(jsn);
       const response = await fetch((dispid==0)?`https://allungawebapicore.azurewebsites.net/api/Dispatch/`:`https://allungawebapicore.azurewebsites.net/api/Dispatch/${dispatch.dispatchid}`, {
         method: (dispid==0)?'POST':'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(dispatch),
+        body: jsn,
       })
       if (dispid==0 )
       {

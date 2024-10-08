@@ -85,7 +85,7 @@ export default function DispatchTable() {
   return (
     <>
     <Header/>
-    {dispatchModal &&  <DispatchDet dispid={dispid} closeModal={()=>{setDispatchModal(false);fetchData();}}/>}
+    {dispatchModal &&  <DispatchDet seriesID={id} dispid={dispid} closeModal={()=>{setDispatchModal(false);fetchData();}}/>}
     {sampleModal && <DispatchSample dispsamid={dispid} closeModal={()=>setSampleModal(false)}/>}
     <div className="mb-6 pt-4 flex justify-between items-center">
   
