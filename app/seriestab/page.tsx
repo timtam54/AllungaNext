@@ -819,8 +819,8 @@ return 'L';
                   ))}
                 </tbody>
               </table>
-
-              <div className="mt-4 space-y-2">
+            <div style={{display:'flex', justifyContent:'start'}}>
+           
                 <label className="flex items-center">
                   <input
                     type="checkbox"
@@ -831,6 +831,7 @@ return 'L';
                   />
                   <span className="ml-2">Visual Reporting</span>
                 </label>
+                <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                 <label className="flex items-center">
                   <input
                     type="checkbox"
@@ -841,9 +842,9 @@ return 'L';
                   />
                   <span className="ml-2">Photos</span>
                 </label>
-              </div>
+              
             </div>
-
+            </div>
             <div className="bg-white shadow-md rounded-lg p-6 space-y-6">
               <h2 className="text-xl font-semibold text-purple-800 mb-4">Additional Information</h2>
               <div className="grid grid-cols-2 gap-4">

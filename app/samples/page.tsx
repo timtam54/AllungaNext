@@ -7,13 +7,15 @@ import DataTable from 'react-data-table-component'
 import { getToken } from '@/msal/msal'
 import Header from '@/components/header'
 import Sample from '@/components/Sample'
+import BulkAddSamples from '@/components/bulkaddsamples'
 import SampleExplode from '@/components/SampleExplode'
 import SampleHist from '@/components/SampleHist'
 import ChartParamSample from '@/components/chartparamsample'
 import { ArrowLeft, FileText, Brain, Send, Grid, ChevronUp, ChevronDown, BarChart2, Snowflake, History } from 'lucide-react'
 import {  Plus, FileSpreadsheet, Camera } from 'lucide-react'//Grain, 
 import { usePDF } from 'react-to-pdf'
-
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 interface SampleRow {
   SampleID: number
   Number: number
@@ -24,6 +26,17 @@ interface SampleRow {
   SampleOrder: number
   ExposureType: string
 }
+
+/*interface BulkAddSamples  {
+  count: number;
+  prefix: string;
+  startindex: number;
+  exposuretype: number;
+  reportable: boolean;
+  equivalentsample: number;
+  longdesc: string;
+}*/
+
 
 export default function Samples() {
   const { toPDF, targetRef } = usePDF({filename: 'table-data.pdf'});
@@ -41,9 +54,15 @@ export default function Samples() {
   const [sampID, setSampID] = useState(0)
 
   useEffect(() => {
-    fetchSample()
+    fetchSample();
+   
   }, [])
 
+  
+  const BulkAddSampleFn=()=>{
+    
+     fetchSample();
+  }
   const fetchSample = async () => {
     setLoading(true)
     try {
@@ -222,19 +241,24 @@ export default function Samples() {
     },
   ]
   const [pdfMode,setPdf] = useState(false);
+  const [addSampleModal,setAddSampleModal] = useState(false);
   return (
     <div className="min-h-screen bg-gray-100">
       <Header />
+      
+      {addSampleModal && <BulkAddSamples seriesid={SeriesID} BulkAddSamplefn={BulkAddSampleFn} closeModal={()=>{setAddSampleModal(false);}} />}
       <div className="mb-6 pt-4 flex justify-between items-center">
+      <div className="mt-4">
           <Link href="/" className="bg-black text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-800">   
             <ArrowLeft className="mr-2" size={20} />
             Back
           </Link>
-          <div className="mt-4">
-          {!pdfMode &&  <Button onClick={() => {setPdf(true)}}>Preview PDF</Button>}
           </div>
           <div className="mt-4">
-
+          {!pdfMode &&  <Button onClick={() => {setPdf(true)}}><PictureAsPdfIcon/>Preview PDF</Button>}
+          </div>
+          <div className="mt-4">
+          <Button onClick={() => {setAddSampleModal(true);}}><AddCircleOutlineIcon/>Bulk Add Sample</Button>
         {pdfMode && <Button onClick={() => {toPDF();setPdf(false);}}>Export to PDF</Button>}
       </div>
           <h1 className="text-2xl font-bold"  style={{color:'#944780'}}>{seriesname}</h1>       
