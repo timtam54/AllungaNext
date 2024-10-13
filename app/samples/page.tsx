@@ -64,11 +64,13 @@ export default function Samples() {
      fetchSample();
   }
   const fetchSample = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       const token = await getToken()
+      const ep=`https://allungawebapi.azurewebsites.net/api/Samples/${SeriesID}~${deleted ? 1 : 0}`;
+      //alert(ep)
       const response = await fetch(
-        `https://allungawebapi.azurewebsites.net/api/Samples/${SeriesID}~${deleted ? 1 : 0}`,
+        ep,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -258,7 +260,11 @@ export default function Samples() {
           {!pdfMode &&  <Button onClick={() => {setPdf(true)}}><PictureAsPdfIcon/>Preview PDF</Button>}
           </div>
           <div className="mt-4">
-          <Button onClick={() => {setAddSampleModal(true);}}><AddCircleOutlineIcon/>Bulk Add Sample</Button>
+          <Button onClick={() => {setModalOpen(true);setSampID(0)}}><AddCircleOutlineIcon/>Add New</Button>
+        {pdfMode && <Button onClick={() => {toPDF();setPdf(false);}}>Export to PDF</Button>}
+      </div>
+          <div className="mt-4">
+          <Button onClick={() => {setAddSampleModal(true);}}>Bulk Add</Button>
         {pdfMode && <Button onClick={() => {toPDF();setPdf(false);}}>Export to PDF</Button>}
       </div>
           <h1 className="text-2xl font-bold"  style={{color:'#944780'}}>{seriesname}</h1>       

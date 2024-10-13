@@ -204,8 +204,8 @@ export default function Reports() {
     <div className="min-h-screen bg-gray-100">
       <Header />
       {photoModelOpen && <ReportPhotos reportid={reportID} closeModal={() => setPhotoModelOpen(false)} />}
-      {modelOpen && <Report reportname={reportname} reportid={reportID} closeModal={() => setModelOpen(false)} />}
-      {modalOpen && currentReport && <ReportDet report={currentReport} closeModal={() => setModalOpen(false)} />}
+      {modelOpen && <Report reportname={reportname} reportid={reportID} closeModal={() => {setModelOpen(false);fetchReport();}} />}
+      {modalOpen && currentReport && <ReportDet report={currentReport} closeModal={() => {setModalOpen(false);fetchReport();}} />}
 
       <div className="mb-6 pt-4 flex justify-between items-center">
   

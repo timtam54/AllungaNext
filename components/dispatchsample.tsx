@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { XIcon } from 'lucide-react'
-
+import { getToken, msalInstance } from "@/msal/msal";
 interface DispatchSample {
   dispatchsampleid: number
   dispatchid?: number
@@ -13,36 +13,90 @@ interface DispatchSample {
   number?: number
   longdescription?: string
   splitfromdispatchsampleid?: number
+  sel?: boolean
 }
 
 interface Props {
-  dispsamid: number
+  dispatchid: number
   closeModal: () => void
+  seriesid:number
 }
 
-export default function DispatchSample({ dispsamid, closeModal }: Props) {
+export default function DispatchSample({ dispatchid, closeModal,seriesid }: Props) {
   const [samples, setSamples] = useState<DispatchSample[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const handleCheckboxChange = (index: number) => {
+    setSamples(prevItems => 
+      prevItems.map((item, i) => 
+        i === index ? { ...item, sel: !item.sel } : item
+      )
+    )
+  }
+ 
 
   useEffect(() => {
-    const fetchSamples = async () => {
-      try {
-        const response = await fetch(`https://allungawebapicore.azurewebsites.net/api/DispatchSample/${dispsamid}`)
-        if (!response.ok) {
-          throw new Error('Failed to fetch data')
-        }
-        const data: DispatchSample[] = await response.json()
-        setSamples(data)
-      } catch (err) {
-        setError('An error occurred while fetching the data')
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
     fetchSamples()
-  }, [dispsamid])
+    
+   
+  }, [dispatchid])
+
+
+  
+  const fetchSamples = async () => {
+    try {
+      const ep = `https://allungawebapicore.azurewebsites.net/api/DispatchSample/${dispatchid}/${seriesid}`
+      const response = await fetch(ep)
+      //alert(ep);
+      if (!response.ok) {
+        throw new Error('Failed to fetch data')
+      }
+      const data: DispatchSample[] = await response.json()
+      setSamples(data)
+    } catch (err) {
+      setError('An error occurred while fetching the data')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleSave = async () => {
+    try {
+     const token = await getToken()
+      samples.forEach(async (element) => { 
+        const headers = new Headers()
+        headers.append('Authorization', `Bearer ${token}`)
+        const options = { method: 'PUT', headers: headers }
+        
+        const epx=`https://allungawebapicore.azurewebsites.net/api/DispatchSample/`+element.sampleid?.toString()+`/`+dispatchid.toString() + `/` + element.sel;
+        //alert(epx);
+        const response = fetch(epx, options);
+        
+        var ee=await response;
+    if (!ee.ok)
+    {
+      alert((ee).statusText);
+      return;
+    }
+    /*else{
+      alert('ok');
+    }*/
+   else{
+   ;// const json=await ee.json();
+    //console.log(json);
+   }
+      });
+      /*
+      if (!response.ok) {
+        throw new Error('Failed to save data')
+      }*/
+      alert('Changes saved successfully!')
+      closeModal();
+    } catch (err) {
+      console.error(err)
+      alert('Failed to save changes')
+    }
+  }
 
   return (
     <motion.div
@@ -67,6 +121,12 @@ export default function DispatchSample({ dispsamid, closeModal }: Props) {
             >
               <XIcon size={24} />
             </button>
+            <button
+        onClick={handleSave}
+        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+      >
+        Save Changes
+      </button>
           </div>
         </div>
 
@@ -82,7 +142,7 @@ export default function DispatchSample({ dispsamid, closeModal }: Props) {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    {['Equivalent Samples', 'Description', 'Number', 'Long Description', 'Split From ID'].map((header) => (
+                    {['Active','Equivalent Samples', 'Description', 'Number', 'Long Description', 'Split From ID'].map((header) => (
                       <th
                         key={header}
                         scope="col"
@@ -94,13 +154,21 @@ export default function DispatchSample({ dispsamid, closeModal }: Props) {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {samples.map((sample) => (
-                    <tr key={sample.dispatchsampleid} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{sample.equivalentsamples ?? 'N/A'}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{sample.description ?? 'N/A'}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{sample.number ?? 'N/A'}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{sample.longdescription ?? 'N/A'}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{sample.splitfromdispatchsampleid ?? 'N/A'}</td>
+                {samples.map((item, index) => (
+            <tr key={index} className="hover:bg-gray-100">
+              <td className="py-2 px-4 border-b text-center">
+                <input
+                  type="checkbox"
+                  checked={item.sel}
+                  onChange={() => handleCheckboxChange(index)}
+                  className="form-checkbox h-5 w-5 text-blue-600"
+                />
+              </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.equivalentsamples ?? 'N/A'}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.description ?? 'N/A'}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.number ?? 'N/A'}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.longdescription ?? 'N/A'}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.splitfromdispatchsampleid ?? 'N/A'}</td>
                     </tr>
                   ))}
                 </tbody>

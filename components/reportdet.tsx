@@ -291,7 +291,7 @@ const ReportDet = ({ report, closeModal }: Props) => {
       <Container maxWidth="md">
         <Paper elevation={3} style={{ padding: '20px', marginTop: '20px' }}>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-            <Typography variant="h4">Report Details</Typography>
+            <Typography variant="h4">Report Details.</Typography>
             <Button
                     onClick={handleSubmit}
                     variant="contained"

@@ -1,188 +1,132 @@
 "use client"
-import React, { useState, useEffect, Component, ChangeEvent } from "react";
-import "@/components/part.css";
+
+import React, { useState, useEffect, ChangeEvent } from "react"
 import { Circles } from 'react-loader-spinner'
-import { getToken } from "@/msal/msal";
-import Button from '@mui/material/Button';
-interface paramrow
-{
-  ParamID:number;
-  ParamName:string;
-  ValueRange:string;
-  EquivalentValues:string;
-  Ordering:number;
-  Unit:string;
-  VisualNoReadings:string;
-  ReportParamCostGroupID:number;
-  ReportRateDiscounted:number;
-  ReportRateStandard:number;
+import { getToken } from "@/msal/msal"
+
+interface ParamRow {
+  ParamID: number
+  ParamName: string
+  ValueRange: string
+  EquivalentValues: string
+  Ordering: number
+  Unit: string
+  VisualNoReadings: string
+  ReportParamCostGroupID: number
+  ReportRateDiscounted: number
+  ReportRateStandard: number
 }
+
 type Props = {
-  ParamID:number;
-  closeModal:  () => void;
-  
-};
-function Param({ParamID,closeModal}:Props) {
-  const [loading,setLoading] = useState(true);
-  const [value, setValue] = useState();
+  ParamID: number
+  closeModal: () => void
+}
 
-//const location = useLocation()
-  //const ParamID = location.state.id;//.id
+export default function Component({ ParamID, closeModal }: Props) {
+  const [loading, setLoading] = useState(true)
+  const [data, setData] = useState<ParamRow>()
 
-  const urlExp = `https://allungawebapi.azurewebsites.net/api/Params/`;
-  const [exp, setExp] = useState([]);
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setData({ ...data!, [e.target.name]: e.target.value })
+  }
 
-  const url = `https://allungawebapi.azurewebsites.net/api/Params/`+ParamID;
-  const [data, setData] = useState<paramrow>();
-
-  const handleChange = (e:ChangeEvent<HTMLInputElement>) => {
-    setData({ ...data!, [e.target.name]: e.target.value });
- }
-
-  const fetchInfo = async ()=>{
-
-    setLoading(true);
+  const fetchInfo = async () => {
+    setLoading(true)
     const token = await getToken()
-
     const headers = new Headers()
     const bearer = `Bearer ${token}`
-  
     headers.append('Authorization', bearer)
-  
+
     const options = {
       method: 'GET',
       headers: headers,
-    }  
-    const response = fetch(url,options);
-    var ee=await response;
-    if (!ee.ok)
-    {
-      throw Error((ee).statusText);
     }
-    const json=await ee.json();
-    console.log(json);
-    setData(json);
 
-    setLoading(false);
+    try {
+      const response = await fetch(`https://allungawebapi.azurewebsites.net/api/Params/${ParamID}`, options)
+      if (!response.ok) {
+        throw new Error(response.statusText)
+      }
+      const json = await response.json()
+      setData(json)
+    } catch (error) {
+      console.error("Error fetching data:", error)
+    } finally {
+      setLoading(false)
+    }
   }
+
   useEffect(() => {
+    fetchInfo()
+  }, [ParamID])
 
-fetchInfo()   ; 
-
-  }, []);
-
-
-
-
- const handleSubmit = (e:any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    fetch(`https://allungawebapi.azurewebsites.net/api/Params/`+ParamID, {
-      method: "PUT",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-    //.then(response => response.json())
-   // .then(data => this.setState({ postId: data.ParamID }))
-    ;
+    try {
+      const response = await fetch(`https://allungawebapi.azurewebsites.net/api/Params/${ParamID}`, {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      })
+      if (!response.ok) {
+        throw new Error("Failed to update parameter")
+      }
+      alert("Parameter updated successfully!")
+    } catch (error) {
+      console.error("Error updating parameter:", error)
+      alert("Failed to update parameter. Please try again.")
+    }
   }
 
-
+  if (loading) {
     return (
-      <body>
-        {loading ? 
-     <Circles
-     height="300"
-     width="300"
-     color="#944780"
-     ariaLabel="circles-loading"
-     wrapperStyle={{}}
-     wrapperClass=""
-     visible={true}
-   />
-:
-<div className="modal-container">
-    <div className="modal" style={{backgroundColor:'whitesmoke'}} >
-<h1 style={{fontSize:'24px',fontWeight:'bold'}}>Parameter Details</h1>
- <Button  variant='contained' type="submit" onClick={(e:any)=>{e.preventDefault();closeModal()}}>Close</Button>
-      <table border={1}>
-        <tr>
-          <th>Parameter ID:</th>
-          <td>
-          <input type="text" name="ParamID" onChange={handleChange} value={data!.ParamID} />
-          </td>
-        </tr>
-        <tr>
-          <th>Parameter Name:</th>
-          <td>
-          <input type="text" name="ParamName" onChange={handleChange} value={data!.ParamName} />
-          </td>
-        </tr>
-        <tr>
-          <th>Unit:</th>
-          <td>
-          <input type="text" name="Unit" onChange={handleChange} value={data!.Unit} />
-          </td>
-        </tr>
-        <tr>
-          <th>Value Range:</th>
-          <td>
-          <input type="text" name="ValueRange" onChange={handleChange} value={data!.ValueRange} />
-          </td>
-        </tr>
-        <tr>
-          <th>Equivalent Values:</th>
-          <td>
-          <input type="text" name="EquivalentValues" onChange={handleChange} value={data!.EquivalentValues} />
-          </td>
-        </tr>
-        <tr>
-          <th>Ordering:</th>
-          <td>
-          <input type="text" name="Ordering" onChange={handleChange} value={data!.Ordering} />
-          </td>
-        </tr>
-        <tr>
-          <th>Visual No Readings:</th>
-          <td>
-          <input type="text" name="VisualNoReadings" onChange={handleChange} value={data!.VisualNoReadings} />
-          </td>
-        </tr>
-        <tr>
-          <th>ReportParamCostGroupID:</th>
-          <td>
-          <input type="text" name="ReportParamCostGroupID" onChange={handleChange} value={data!.ReportParamCostGroupID} />
-          </td>
-        </tr>
-        <tr>
-          <th>Report Rate Discounted:</th>
-          <td>
-          <input type="text" name="ReportRateDiscounted" onChange={handleChange} value={data!.ReportRateDiscounted} />
-          </td>
-        </tr>
-        <tr>
-          <th>Report Rate Standard:</th>
-          <td>
-          <input type="text" name="ReportRateStandard" onChange={handleChange} value={data!.ReportRateStandard} />
-          </td>
-        </tr>
-<tr><td>
- <button type="submit" onClick={handleSubmit}>
-          Submit
-        </button>
-        </td>
-        </tr>
-  </table>
-</div>
-</div>
-}
-<table>
-        <tr>
-</tr>
-      </table>
- </body>
-    );
+      <div className="flex items-center justify-center h-screen">
+        <Circles height="80" width="80" color="#4F46E5" ariaLabel="circles-loading" visible={true} />
+      </div>
+    )
   }
 
-export default Param
+  return (
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center p-4">
+      <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-4xl">
+        <h1 className="text-3xl font-bold mb-6 text-gray-800">Parameter Details</h1>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {Object.entries(data || {}).map(([key, value]) => (
+              <div key={key} className="flex flex-col">
+                <label htmlFor={key} className="text-sm font-medium text-gray-700 mb-1">
+                  {key}:
+                </label>
+                <input
+                  type="text"
+                  id={key}
+                  name={key}
+                  value={value}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+            ))}
+          </div>
+          <div className="flex justify-end space-x-4 mt-8">
+            <button
+              type="button"
+              onClick={closeModal}
+              className="px-6 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-150 ease-in-out"
+            >
+              Close
+            </button>
+            <button
+              type="submit"
+              className="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}

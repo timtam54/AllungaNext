@@ -22,6 +22,10 @@ interface Dispatch {
   status?: string;
   splitfromdispatchid?: number;
 }
+interface Staff {
+  staffid: number;
+  staffname: string;
+}
 
 type SortKey = keyof Dispatch
 type SortOrder = 'asc' | 'desc'
@@ -39,9 +43,26 @@ export default function DispatchTable() {
 
   useEffect(() => {
     
-
+    fetchStaff();
     fetchData()
   }, [])
+
+  const [staffList, setStaffList] = useState<Staff[]>([]);
+
+  const getStaffNameById = (staffid: number): string | null => {
+    const staff = staffList.find((s) => s.staffid === staffid);
+    return staff ? staff.staffname : null;
+  };
+  
+  const fetchStaff = async () => {
+      try {
+        const response = await fetch('https://allungawebapicore.azurewebsites.net/api/Staff');
+        const data = await response.json();
+        setStaffList(data);
+      } catch (error) {
+        console.error('Error fetching staff data:', error);
+      }
+    };
 
   const fetchData = async () => {
     try {
@@ -69,7 +90,6 @@ export default function DispatchTable() {
       if (a[key] > b[key]) return isAsc ? -1 : 1
       return 0
     })
-
     setDispatches(sortedData)
   }
   const [dispid,setDispid]= useState(0);//setDispid
@@ -86,7 +106,7 @@ export default function DispatchTable() {
     <>
     <Header/>
     {dispatchModal &&  <DispatchDet seriesID={id} dispid={dispid} closeModal={()=>{setDispatchModal(false);fetchData();}}/>}
-    {sampleModal && <DispatchSample dispsamid={dispid} closeModal={()=>setSampleModal(false)}/>}
+    {sampleModal && <DispatchSample seriesid={id} dispatchid={dispid} closeModal={()=>setSampleModal(false)}/>}
     <div className="mb-6 pt-4 flex justify-between items-center">
   
   <Link href="/" className="bg-black text-white px-4 py-2 rounded-md flex items-center hover:bg-gray-800">
@@ -165,7 +185,7 @@ export default function DispatchTable() {
 
               <td className="px-4 py-2 border-b"><Button variant="outlined" onClick={(e:any)=>{e.preventDefault();setDispid(dispatch.dispatchid);setSampleModal(true);}}>{new Date(dispatch.dte).toLocaleDateString()}</Button></td>
               <td className="px-4 py-2 border-b"><Button variant="outlined" onClick={(e:any)=>{e.preventDefault();setDispid(dispatch.dispatchid);setDispatchModal(true);}}>{dispatch.description || 'N/A'}</Button></td>
-              <td className="px-4 py-2 border-b">{dispatch.staffid || 'N/A'}</td>
+              <td className="px-4 py-2 border-b">{getStaffNameById(dispatch.staffid||0)}</td>
               <td className="px-4 py-2 border-b">{dispatch.byrequest ? 'Yes' : 'No'}</td>
               <td className="px-4 py-2 border-b">{dispatch.fullreturn_elsepart ? 'Yes' : 'No'}</td>
               <td className="px-4 py-2 border-b">
