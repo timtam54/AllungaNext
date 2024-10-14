@@ -36,7 +36,6 @@ export default function DispatchTable() {
   const [error, setError] = useState<string | null>(null)
   const [sortKey, setSortKey] = useState<SortKey>('dispatchid')
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc')
-
   const searchParams = useSearchParams();
   const seriesname=searchParams!.get("seriesname");
   const id =parseInt( searchParams!.get("id")!);
@@ -78,7 +77,10 @@ export default function DispatchTable() {
       setLoading(false)
     }
   }
-
+  const selsamples=(dispatchid:number)=>{
+    setDispid(dispatchid);
+    setSampleModal(true)
+  }
   const [sampleModal,setSampleModal]= useState(false);
   const sortData = (key: SortKey) => {
     const isAsc = sortKey === key && sortOrder === 'asc'
@@ -105,7 +107,7 @@ export default function DispatchTable() {
   return (
     <>
     <Header/>
-    {dispatchModal &&  <DispatchDet seriesID={id} dispid={dispid} closeModal={()=>{setDispatchModal(false);fetchData();}}/>}
+    {dispatchModal &&  <DispatchDet  seriesID={id} dispid={dispid} closeModal={() => { setDispatchModal(false); fetchData(); } } selectsamples={selsamples}/>}
     {sampleModal && <DispatchSample seriesid={id} dispatchid={dispid} closeModal={()=>setSampleModal(false)}/>}
     <div className="mb-6 pt-4 flex justify-between items-center">
   

@@ -8,6 +8,7 @@ import { ExportAsExcel } from "react-export-table"
 import { Download } from 'lucide-react'
 import Header from "@/components/header"
 import AddLocationIcon from '@mui/icons-material/AddLocation';
+import Link from "next/link"
 interface RackRptRow {
   SeriesID: number
   RackNo: string
@@ -86,7 +87,9 @@ export default function RptRack() {
     },
     {
       name: 'Allunga Reference',
-      selector: (row: RackRptRow) => row.AllungaReference,
+      selector: (row: RackRptRow) =>         <Link target="other" href={{ pathname: "/seriestab", query: { id: row.SeriesID, seriesname: row.AllungaReference } }} className="text-blue-600 hover:underline">
+      <u>{row.AllungaReference}</u>
+    </Link>,
       sortable: true,
       width: "180px",
     },

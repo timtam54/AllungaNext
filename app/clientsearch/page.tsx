@@ -233,7 +233,7 @@ export default function ClientSearch() {
               paginationPerPage={10}
               paginationRowsPerPageOptions={[10, 20, 30, 40, 50]}
               fixedHeader
-              fixedHeaderScrollHeight="calc(100vh - 400px)"
+       
               highlightOnHover
               responsive
               customStyles={{
