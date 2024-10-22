@@ -30,7 +30,7 @@ export default function RptRack() {
   useEffect(() => {
     fetchRack()
   }, [])
-
+ 
   const fetchRack = async () => {
     try {
       const endPoint = `https://allungawebapi.azurewebsites.net/api/Rprts/Rack/`
