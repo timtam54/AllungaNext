@@ -95,7 +95,7 @@ export default function Sample({ closeModal, sampleid, SeriesID }: Props) {
     }
     else
     {
-    const urlSample = `https://allungawebapicore.azurewebsites.net/api/Sample/int/`+SampleID;//https://allungawebapi.azurewebsites.net/api/Samples/int/
+    const urlSample = process.env.NEXT_PUBLIC_API+`Sample/int/`+SampleID;//https://allungawebapi.azurewebsites.net/api/Samples/int/
     //alert(urlSample);
     const token = await getToken()
     const headers = new Headers()
@@ -146,7 +146,7 @@ export default function Sample({ closeModal, sampleid, SeriesID }: Props) {
             body: JSON.stringify(data),
             headers: headers,
           }  
-          const response = fetch(`https://allungawebapicore.azurewebsites.net/api/Sample`,options);
+          const response = fetch(process.env.NEXT_PUBLIC_API+`Sample`,options);
           var ee=await response;
           if (!ee.ok)
           {
@@ -193,7 +193,7 @@ export default function Sample({ closeModal, sampleid, SeriesID }: Props) {
          headers: headers,
         }  
   
-        const response = fetch(`https://allungawebapicore.azurewebsites.net/api/Sample/`+SampleID,options);//https://allungawebapi.azurewebsites.net/api/Samples/
+        const response = fetch(process.env.NEXT_PUBLIC_API+`Sample/`+SampleID,options);//https://allungawebapi.azurewebsites.net/api/Samples/
         var ee=await response;
         if (!ee.ok)
         {

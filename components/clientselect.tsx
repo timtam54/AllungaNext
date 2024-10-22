@@ -54,7 +54,7 @@ const handleSearch=async (event: ChangeEvent<HTMLInputElement>)=>
         method: 'GET',
         headers: headers,
       }  
-      const response = fetch(`https://allungawebapicore.azurewebsites.net/api/Clients/`+((sch=='')?'~':sch),options);
+      const response = fetch(process.env.NEXT_PUBLIC_API+`Clients/`+((sch=='')?'~':sch),options);
       var ee=await response;
       console.log(ee)
       if (!ee.ok)

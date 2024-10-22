@@ -22,7 +22,7 @@ export default function ReportHost() {
         setLoading(true)
         try {
           const token = await getToken()
-          const response = await fetch(`https://allungawebapicore.azurewebsites.net/api/Report/${ReportID}`, {
+          const response = await fetch(process.env.NEXT_PUBLIC_API+`Report/${ReportID}`, {
             headers: {
               'Authorization': `Bearer ${token}`
             }

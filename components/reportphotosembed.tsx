@@ -108,7 +108,7 @@ export default function ReportPhotosEmbed({ reportid }: Props) {
 
   const fetchPhotos = async () => {
     try {
-      const endpoint = `https://allungawebapicore.azurewebsites.net/api/ReportPhoto/{id}?reportid=${reportid}`
+      const endpoint = process.env.NEXT_PUBLIC_API+`ReportPhoto/{id}?reportid=${reportid}`
       const response = await fetch(endpoint)
       const jsonData = await response.json()
       setData(jsonData)
@@ -119,7 +119,7 @@ export default function ReportPhotosEmbed({ reportid }: Props) {
 
   const deletePhoto = async (id:number) => {
     try {
-      const endpoint = `https://allungawebapicore.azurewebsites.net/api/ReportPhoto/`+id.toString();
+      const endpoint = process.env.NEXT_PUBLIC_API+`ReportPhoto/`+id.toString();
       const token = await getToken()
       const headers = new Headers()
       const bearer = `Bearer ${token}`

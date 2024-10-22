@@ -54,7 +54,7 @@ export default function Home() {
 
   const clientsecure=async()=> 
   {
-    const endPoint = `https://allungawebapicore.azurewebsites.net/api/ClientSecure/`+msalInstance.getActiveAccount()?.username!.toString()
+    const endPoint = process.env.NEXT_PUBLIC_API+`ClientSecure/`+msalInstance.getActiveAccount()?.username!.toString()
     const response = await fetch(endPoint);
     
     const cli = await response.json();
@@ -71,7 +71,9 @@ export default function Home() {
       const headers = new Headers()
       headers.append('Authorization', `Bearer ${token}`)
       const options = { method: 'GET', headers: headers }
-      const endPoint = `https://allungawebapicore.azurewebsites.net/api/Series/${search || '~'}/${act ? 1 : 0}/${del ? 1 : 0}/${flds}/${clid}/${sts}`;
+      const endPoint = process.env.NEXT_PUBLIC_API+`Series/${search || '~'}/${act ? 1 : 0}/${del ? 1 : 0}/${flds}/${clid}/${sts}`;
+     // alert(endPoint)
+      //const endPoint = process.env.NEXT_PUBLIC_API+`Series/${search || '~'}/${act ? 1 : 0}/${del ? 1 : 0}/${flds}/${clid}/${sts}`;
       const response = await fetch(endPoint, options)
       if (!response.ok) throw new Error(response.statusText)
       const json = await response.json()

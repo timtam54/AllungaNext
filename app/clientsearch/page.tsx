@@ -60,7 +60,7 @@ export default function ClientSearch() {
     setLoading(true)
     try {
       const token = await getToken()
-      const response = await fetch(`https://allungawebapicore.azurewebsites.net/api/Clients/${sch === '' ? '~' : sch}`, {
+      const response = await fetch(process.env.NEXT_PUBLIC_API+`Clients/${sch === '' ? '~' : sch}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

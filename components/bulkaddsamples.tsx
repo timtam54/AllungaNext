@@ -121,7 +121,7 @@ export default function BulkAddSamples({seriesid,BulkAddSamplefn,closeModal}:pro
             body: JSON.stringify(newSample),
             headers: headers,
           }  
-          const response = fetch(`https://allungawebapicore.azurewebsites.net/api/Sample`,options);
+          const response = fetch(process.env.NEXT_PUBLIC_API+`Sample`,options);
           var ee=await response;
           if (!ee.ok)
           {

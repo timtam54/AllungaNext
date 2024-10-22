@@ -271,7 +271,7 @@ const columns =[
     data,
   };
   const fetchRack = async ()=>{   
-  const endPoint =`https://allungawebapicore.azurewebsites.net/api/ScheduleActual/id/From/To?id=0&From=2023-09-01&To=2023-10-01`
+  const endPoint =process.env.NEXT_PUBLIC_API+`ScheduleActual/id/From/To?id=0&From=2023-09-01&To=2023-10-01`
   const token = await getToken()
   const headers = new Headers()
   const bearer = `Bearer ${token}`

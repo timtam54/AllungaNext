@@ -45,7 +45,7 @@ export const SampleHist = ({ closeModal, sampleid, SeriesID }: Props) => {
 
   const fetchData = async () => {
     setLoading(true);
-    const endpoint = `https://allungawebapicore.azurewebsites.net/api/SampleHistoryCht/{id}?SampleID=${sampleid}`;
+    const endpoint = process.env.NEXT_PUBLIC_API+`SampleHistoryCht/{id}?SampleID=${sampleid}`;
     const result = await AddHeaderBearerToEndpoint(endpoint);
     
     const chartItems: ChartItem[] = result.map((item: any) => ({

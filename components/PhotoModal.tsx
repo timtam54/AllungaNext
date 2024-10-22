@@ -95,7 +95,7 @@ const saveReportphotos=async(filename:string)=>{
       body: JSON.stringify(add),
       headers: headers,
     }
-    const response = fetch(`https://allungawebapicore.azurewebsites.net/api/ReportPhoto`, options);
+    const response = fetch(process.env.NEXT_PUBLIC_API+`ReportPhoto`, options);
     var ee = await response;
     if (!ee.ok) {
       alert((ee).statusText);

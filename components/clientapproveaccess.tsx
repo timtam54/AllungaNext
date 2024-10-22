@@ -72,7 +72,7 @@ interface ClientApproveAccessProps {
       method: 'GET',
       headers: headers,
     }
-    const endPoint = `https://allungawebapicore.azurewebsites.net/api/Clients/~`;
+    const endPoint = process.env.NEXT_PUBLIC_API+`Clients/~`;
     const response = fetch(endPoint,options);
     var ee=await response;
     if (!ee.ok)

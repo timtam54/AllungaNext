@@ -78,7 +78,7 @@ export default function DispatchDet({selectsamples, seriesID, dispid, closeModal
         setIsLoading(false)
         return
       }
-      const response = await fetch(`https://allungawebapicore.azurewebsites.net/api/Dispatch/int/${dispid}`)
+      const response = await fetch(process.env.NEXT_PUBLIC_API+`Dispatch/int/${dispid}`)
       if (!response.ok) {
         throw new Error('Failed to fetch dispatch data')
       }
@@ -134,7 +134,7 @@ export default function DispatchDet({selectsamples, seriesID, dispid, closeModal
       const response = await fetch(
         dispid === 0
           ? 'https://allungawebapicore.azurewebsites.net/api/Dispatch/'
-          : `https://allungawebapicore.azurewebsites.net/api/Dispatch/${dispatch.dispatchid}`,
+          : process.env.NEXT_PUBLIC_API+`Dispatch/${dispatch.dispatchid}`,
         {
           method: dispid === 0 ? 'POST' : 'PUT',
           headers: {

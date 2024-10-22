@@ -69,7 +69,7 @@ export default function ReportParams() {
 
   const fetchParRepSeries = async () => {
     const token = await getToken()
-    const response = await fetch(`https://allungawebapicore.azurewebsites.net/api/ReportParams/id?SeriesID=${id}`, {
+    const response = await fetch(process.env.NEXT_PUBLIC_API+`ReportParams/id?SeriesID=${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
     if (!response.ok) throw new Error(response.statusText)
@@ -91,7 +91,7 @@ export default function ReportParams() {
     e.preventDefault()
     try {
       const token = await getToken()
-      const response = await fetch(`https://allungawebapicore.azurewebsites.net/api/ReportParams/{id}?SeriesID=${id}`, {
+      const response = await fetch(process.env.NEXT_PUBLIC_API+`ReportParams/{id}?SeriesID=${id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

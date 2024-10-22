@@ -45,7 +45,7 @@ export default function DispatchSample({ dispatchid, closeModal,seriesid }: Prop
   
   const fetchSamples = async () => {
     try {
-      const ep = `https://allungawebapicore.azurewebsites.net/api/DispatchSample/${dispatchid}/${seriesid}`
+      const ep = process.env.NEXT_PUBLIC_API+`DispatchSample/${dispatchid}/${seriesid}`
       const response = await fetch(ep)
       //alert(ep);
       if (!response.ok) {
@@ -68,7 +68,7 @@ export default function DispatchSample({ dispatchid, closeModal,seriesid }: Prop
         headers.append('Authorization', `Bearer ${token}`)
         const options = { method: 'PUT', headers: headers }
         
-        const epx=`https://allungawebapicore.azurewebsites.net/api/DispatchSample/`+element.sampleid?.toString()+`/`+dispatchid.toString() + `/` + element.sel;
+        const epx=process.env.NEXT_PUBLIC_API+`DispatchSample/`+element.sampleid?.toString()+`/`+dispatchid.toString() + `/` + element.sel;
         //alert(epx);
         const response = fetch(epx, options);
         

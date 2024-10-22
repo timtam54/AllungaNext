@@ -7,7 +7,7 @@ export const msalConfig = {
         authority: 'https://login.microsoftonline.com/58f4e166-7a83-4d81-8e9d-05cf78a42ac0',//"https://login.microsoftonline.com/89ca7fa6-3d32-4432-8a0b-576cee1f6f43",//58f4e166-7a83-4d81-8e9d-05cf78a42ac0",//"https://login.microsoftonline.com/organizations/v2.0",//
         redirectUri: "/",
         postLogoutRedirectUri: "/",
-        scope: "user.read",
+        scope: "tasks.read",
         domain: "YourDomain",
     },
     cache: {// Optional
@@ -17,7 +17,7 @@ export const msalConfig = {
 };
 
 export const loginRequest = {
-    scopes:["api://efca4e54-fb09-4c7a-8208-b5fd4fce926f/tasks.read","user.read"],// ["api://cd5fd0c0-fa5d-496e-9d26-fda723aae74c/tasks.read","user.read"],//"api://efca4e54-fb09-4c7a-8208-b5fd4fce926f/tasks.read"
+    scopes:["api://efca4e54-fb09-4c7a-8208-b5fd4fce926f/tasks.read","tasks.read"],// ["api://cd5fd0c0-fa5d-496e-9d26-fda723aae74c/tasks.read","user.read"],//"api://efca4e54-fb09-4c7a-8208-b5fd4fce926f/tasks.read"
     //scopes: [API_SCOPE]
 };
 

@@ -61,7 +61,7 @@ const ChartParamSample = ({ title, closeModal, sampleID, seriesid }: Props) => {
 
   const fetchData = async () => {
     setLoading(true);
-    const endpoint = `https://allungawebapicore.azurewebsites.net/api/ParamSampleReports/id/SampleID?id=${seriesid}&SampleID=${sampleID}`;
+    const endpoint = process.env.NEXT_PUBLIC_API+`ParamSampleReports/id/SampleID?id=${seriesid}&SampleID=${sampleID}`;
     const result = await AddHeaderBearerToEndpoint(endpoint);
     
     //const dates = [...new Set(result.map((item: ChartItem) => DateFormat(item.date)))];

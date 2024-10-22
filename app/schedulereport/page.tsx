@@ -181,21 +181,21 @@ export default function ScheduleActual() {
   
     if (Rpt=='Actual')
     {
-      endPoint = `https://allungawebapicore.azurewebsites.net/api/ScheduleActual/id/From/To?id=0&From=` + DateFormat(dte) +`&To=`+ DateFormat(todte);
+      endPoint = process.env.NEXT_PUBLIC_API+`ScheduleActual/id/From/To?id=0&From=` + DateFormat(dte) +`&To=`+ DateFormat(todte);
     }
     else if (Rpt=='Projected')
     {
-      endPoint = `https://allungawebapicore.azurewebsites.net/api/ScheduleProjected/id/From/To?id=0&From=` + DateFormat(dte) +`&To=`+ DateFormat(todte);
+      endPoint = process.env.NEXT_PUBLIC_API+`ScheduleProjected/id/From/To?id=0&From=` + DateFormat(dte) +`&To=`+ DateFormat(todte);
     
     }
     else if (Rpt== `SampleOnOffSiteActual`)
     {
-      endPoint = `https://allungawebapicore.azurewebsites.net/api/SampleOnOffSiteActual/id/From/To?id=0&From=` + DateFormat(dte) +`&To=`+ DateFormat(todte);
+      endPoint = process.env.NEXT_PUBLIC_API+`SampleOnOffSiteActual/id/From/To?id=0&From=` + DateFormat(dte) +`&To=`+ DateFormat(todte);
     
     }
     else if (Rpt== `SampleOnOffSiteProjected`)
       {
-        endPoint = `https://allungawebapicore.azurewebsites.net/api/SampleOnOffSiteProjected/id/From/To?id=0&From=` + DateFormat(dte) +`&To=`+ DateFormat(todte);
+        endPoint = process.env.NEXT_PUBLIC_API+`SampleOnOffSiteProjected/id/From/To?id=0&From=` + DateFormat(dte) +`&To=`+ DateFormat(todte);
       
       }
     const token = await getToken()
