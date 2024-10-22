@@ -64,7 +64,7 @@ export default function ParamList() {
     if (a[sortKey] === null) return sortOrder === 'asc' ? 1 : -1;
     if (b[sortKey] === null) return sortOrder === 'asc' ? -1 : 1;
     if ((a[sortKey]||'') < (b![sortKey]||'')) return sortOrder === 'asc' ? -1 : 1;
-    if ((a[sortKey]||'') > (b![sortKey]||'')) return sortOrder === 'asc' ? 1 : -1;
+    if ((a[sortKey]||'') > (b![sortKey]||'')) return sortOrder === 'asc' ? 1 : -1; 
     return 0;
   });
 
