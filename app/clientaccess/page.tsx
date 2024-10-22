@@ -18,7 +18,7 @@ export default function ClientAccess() {
   const [approved, setApproved] = useState(true)
   const fetchData = async (apprvd:boolean) => {
     try {
-      const ep='https://allungawebapicore.azurewebsites.net/api/ClientAccess/~/'+(apprvd?'false':'true');
+      const ep=process.env.NEXT_PUBLIC_API+'ClientAccess/~/'+(apprvd?'false':'true');
       console.log(ep);
       const response = await fetch(ep);
       if (!response.ok) {

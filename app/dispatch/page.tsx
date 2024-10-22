@@ -55,7 +55,7 @@ export default function DispatchTable() {
   
   const fetchStaff = async () => {
       try {
-        const response = await fetch('https://allungawebapicore.azurewebsites.net/api/Staff');
+        const response = await fetch(process.env.NEXT_PUBLIC_API+'Staff');
         const data = await response.json();
         setStaffList(data);
       } catch (error) {
@@ -65,7 +65,7 @@ export default function DispatchTable() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch('https://allungawebapicore.azurewebsites.net/api/Dispatch/'+id.toString())
+      const response = await fetch(process.env.NEXT_PUBLIC_API+'Dispatch/'+id.toString())
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }

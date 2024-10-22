@@ -17,7 +17,7 @@ const Page = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('https://allungawebapicore.azurewebsites.net/api/ReportPhoto/{id}?reportid=4');
+                const response = await fetch(process.env.NEXT_PUBLIC_API+'ReportPhoto/{id}?reportid=4');
                 const jsonData = await response.json();
                 setData(jsonData);
             } catch (error) {

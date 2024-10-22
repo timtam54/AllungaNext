@@ -20,7 +20,7 @@ export default function ClientEmails({id, closeModal}:ClientEmailsProps) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const ep='https://allungawebapicore.azurewebsites.net/api/ClientsEmail/{reportid}?reporid='+id.toString();
+        const ep=process.env.NEXT_PUBLIC_API+'ClientsEmail/{reportid}?reporid='+id.toString();
        // alert(ep);
         const response = await fetch(ep);
         if (!response.ok) {

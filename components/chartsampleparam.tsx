@@ -158,7 +158,7 @@ const fetchAllData=async ()=>
   const [data,setData]=useState<ChartItem[]>([]);
   const fetchData = async(cc:string)=>{
     setLoading(true);
-    const endpoint ='https://allungawebapicore.azurewebsites.net/api/SampleParamReports/id/ParamID?id='+seriesid.toString()+'&ParamID='+paramID.toString();// process.env.NEXT_PUBLIC_MDSAPI+'TechCustomerEquipRepairs/'+branchid.toString()+'/'+cc;
+    const endpoint =process.env.NEXT_PUBLIC_API+'SampleParamReports/id/ParamID?id='+seriesid.toString()+'&ParamID='+paramID.toString();// process.env.NEXT_PUBLIC_MDSAPI+'TechCustomerEquipRepairs/'+branchid.toString()+'/'+cc;
     console.log(endpoint);
     const result = await AddHeaderBearerToEndpoint(endpoint);
     setData( result);

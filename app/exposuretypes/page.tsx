@@ -31,7 +31,7 @@ export default function ExposureTypes() {
     setLoading(true)
     try {
       const token = await getToken()
-      const response = await fetch('https://allungawebapicore.azurewebsites.net/api/exposuretype', {
+      const response = await fetch(process.env.NEXT_PUBLIC_API+'exposuretype', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`

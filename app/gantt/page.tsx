@@ -79,7 +79,7 @@ const fetchAllData=async ()=>
   const [data,setData]=useState<ChartItem[]>([]);
   const fetchData = async()=>{
     setLoading(true);
-    const endpoint = 'https://allungawebapicore.azurewebsites.net/api/SampleHistoryCht/{id}?SampleID=17142';
+    const endpoint = process.env.NEXT_PUBLIC_API+'SampleHistoryCht/{id}?SampleID=17142';
     console.log(endpoint);
     const result = await AddHeaderBearerToEndpoint(endpoint);
     setData( result);

@@ -44,7 +44,7 @@ interface ClientApproveAccessProps {
 //  const [data, setData] = useState<clientrow>();
   const fetchClientAccess = async () => {
     try {
-      const response = await fetch('https://allungawebapicore.azurewebsites.net/api/ClientAccess/'+id.toString());
+      const response = await fetch(process.env.NEXT_PUBLIC_API+'ClientAccess/'+id.toString());
       if (!response.ok) {
         throw new Error('Failed to fetch client access data')
       }
@@ -99,7 +99,7 @@ interface ClientApproveAccessProps {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      const response = await fetch('https://allungawebapicore.azurewebsites.net/api/ClientAccess/'+id.toString(), {
+      const response = await fetch(process.env.NEXT_PUBLIC_API+'ClientAccess/'+id.toString(), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

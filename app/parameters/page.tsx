@@ -44,7 +44,7 @@ export default function ParamList() {
   useEffect(() => {
     const fetchParams = async () => {
       try {
-        const response = await fetch('https://allungawebapicore.azurewebsites.net/api/Param')
+        const response = await fetch(process.env.NEXT_PUBLIC_API+'Param')
         if (!response.ok) {
           throw new Error('Failed to fetch data')
         }
@@ -63,8 +63,8 @@ export default function ParamList() {
   const sortedParams = [...params].sort((a, b) => {
     if (a[sortKey] === null) return sortOrder === 'asc' ? 1 : -1;
     if (b[sortKey] === null) return sortOrder === 'asc' ? -1 : 1;
-    if (a[sortKey] < b[sortKey]) return sortOrder === 'asc' ? -1 : 1;
-    if (a[sortKey] > b[sortKey]) return sortOrder === 'asc' ? 1 : -1;
+    if (a![sortKey] < b![sortKey]) return sortOrder === 'asc' ? -1 : 1;
+    if (a![sortKey] > b![sortKey]) return sortOrder === 'asc' ? 1 : -1;
     return 0;
   });
 

@@ -24,7 +24,7 @@ export default function ExposureBillingSiteRpt() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://allungawebapicore.azurewebsites.net/api/ExposureSiteMonthBill')
+        const response = await fetch(process.env.NEXT_PUBLIC_API+'ExposureSiteMonthBill')
         if (!response.ok) {
           throw new Error('Network response was not ok')
         }

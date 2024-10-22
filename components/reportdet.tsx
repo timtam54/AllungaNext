@@ -238,7 +238,7 @@ const ReportDet = ({ report, closeModal }: Props) => {
   }
 
   const sendEmail = async () => {
-     const ep='https://allungawebapicore.azurewebsites.net/api/ClientsEmail/{reportid}?reporid='+report.reportid.toString();
+     const ep=process.env.NEXT_PUBLIC_API+'ClientsEmail/{reportid}?reporid='+report.reportid.toString();
       const response = await fetch(ep);
       if (!response.ok) {
         throw new Error('Failed to fetch data')

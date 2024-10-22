@@ -51,7 +51,7 @@ export default function DispatchDet({selectsamples, seriesID, dispid, closeModal
 
   const fetchStaff = async () => {
     try {
-      const response = await fetch('https://allungawebapicore.azurewebsites.net/api/Staff')
+      const response = await fetch(process.env.NEXT_PUBLIC_API+'Staff')
       const data = await response.json()
       setStaff(data)
     } catch (error) {
@@ -93,7 +93,7 @@ export default function DispatchDet({selectsamples, seriesID, dispid, closeModal
 
   const fetchStatuses = async () => {
     try {
-      const response = await fetch('https://allungawebapicore.azurewebsites.net/api/DispatchStatus')
+      const response = await fetch(process.env.NEXT_PUBLIC_API+'DispatchStatus')
       const data = await response.json()
       setStatuses(data)
     } catch (error) {
@@ -133,7 +133,7 @@ export default function DispatchDet({selectsamples, seriesID, dispid, closeModal
     try {
       const response = await fetch(
         dispid === 0
-          ? 'https://allungawebapicore.azurewebsites.net/api/Dispatch/'
+          ? process.env.NEXT_PUBLIC_API+'Dispatch/'
           : process.env.NEXT_PUBLIC_API+`Dispatch/${dispatch.dispatchid}`,
         {
           method: dispid === 0 ? 'POST' : 'PUT',
