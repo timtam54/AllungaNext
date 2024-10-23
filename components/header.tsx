@@ -66,7 +66,7 @@ export default function Component() {
           </MenuItem>
           
           <MenuItem>
-            <Link   href="" onClick={() => handleLogout('redirect')}
+            <Link href="" onClick={() => handleLogout('redirect')}
               className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"  >
             <ExitToAppIcon className="w-4 h-4 mr-2" />Sign Out
             </Link>
@@ -201,7 +201,7 @@ export default function Component() {
     </Menu>
     
 
-          <div title={user?.name} style={{display:'flex',alignContent:'center'}}>
+          <div title={user?.username + ' ' + user?.name} style={{display:'flex',alignContent:'center'}}>
           <UserAvatar  />
           <button
             onClick={() => handleLogout('redirect')}>

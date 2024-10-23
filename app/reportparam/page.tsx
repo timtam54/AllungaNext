@@ -17,9 +17,9 @@ interface ReportRow {
 }
 
 interface Param {
-  ParamID: number
-  ParamName: string
-  Ordering: number
+  paramid: number
+  paramname: string
+  ordering: number
 }
 
 interface ParRepSeriesRow {
@@ -59,7 +59,7 @@ export default function ReportParams() {
 
   const fetchParams = async () => {
     const token = await getToken()
-    const response = await fetch('https://allungawebapi.azurewebsites.net/api/Params/', {
+    const response = await fetch('https://allungaapi.azurewebsites.net/api/Param/', {
       headers: { Authorization: `Bearer ${token}` },
     })
     if (!response.ok) throw new Error(response.statusText)
@@ -79,10 +79,12 @@ export default function ReportParams() {
 
   const fetchReport = async () => {
     const token = await getToken()
-    const response = await fetch(`https://allungawebapi.azurewebsites.net/api/Reports/${id}`, {
+    const ep=process.env.NEXT_PUBLIC_API+`Report/all/${id}`;
+    alert(ep);
+    const response = await fetch(ep, {
       headers: { Authorization: `Bearer ${token}` },
     })
-    if (!response.ok) throw new Error(response.statusText)
+    if (!response.ok) alert(response.statusText)
     const json = await response.json()
     setDataReport(json)
   }
@@ -209,27 +211,27 @@ const [reportname, setReportName] = useState('')
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {dataParams.map((param) => (
-                      <tr key={param.ParamID}>
+                      <tr key={param.paramid}>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <button
                             onClick={() => {
-                              setParamID(param.ParamID)
-                              setChartTitle(`${param.ParamName} vs date`)
+                              setParamID(param.paramid)
+                              setChartTitle(`${param.paramname} vs date`)
                               setModelOpen(true)
                             }}
                             className="text-indigo-600 hover:text-indigo-900 flex items-center"
                           >
                             <BarChart2 className="mr-2 h-4 w-4" />
-                            {param.ParamName}
+                            {param.paramname}
                           </button>
                         </td>
                         {dataReport.map((report) => (
                           <td key={report.reportid} className="px-6 py-4 whitespace-nowrap text-center">
                             <input
                               type="checkbox"
-                              name={`${report.reportid}~${param.ParamID}`}
+                              name={`${report.reportid}~${param.paramid}`}
                               onChange={handleChangeRepPar}
-                              checked={getRepPar(report.reportid, param.ParamID)}
+                              checked={getRepPar(report.reportid, param.paramid)}
                               className="form-checkbox h-5 w-5 text-blue-600 transition duration-150 ease-in-out"
                             />
                           </td>

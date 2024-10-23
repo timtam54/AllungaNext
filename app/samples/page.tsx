@@ -58,7 +58,6 @@ export default function Samples() {
    
   }, [])
 
-  
   const BulkAddSampleFn=()=>{
     
      fetchSample();
@@ -67,8 +66,8 @@ export default function Samples() {
     setLoading(true);
     try {
       const token = await getToken()
-      const ep=`https://allungawebapi.azurewebsites.net/api/Samples/${SeriesID}~${deleted ? 1 : 0}`;
-      //alert(ep)
+      const ep=process.env.NEXT_PUBLIC_API+`Sample/{seriesid}?seriesiddel=${SeriesID}~${deleted ? 1 : 0}`;
+      //alert(ep);
       const response = await fetch(
         ep,
         {
@@ -77,8 +76,9 @@ export default function Samples() {
           },
         }
       )
-      if (!response.ok) throw new Error(response.statusText)
-      const json: SampleRow[] = await response.json()
+      if (!response.ok) alert(response.statusText)
+      const json: SampleRow[] = await response.json();
+      //alert(json.length);
       setDataSample(json.sort((a, b) => a.SampleOrder - b.SampleOrder))
     } catch (error) {
       console.error('Error fetching samples:', error)
