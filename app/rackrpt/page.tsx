@@ -56,12 +56,13 @@ export default function RptRack() {
   }
 
   const columns = [
-    {
+    /*{
       name: 'Series ID',
       selector: (row: RackRptRow) => row.SeriesID,
       sortable: true,
       width: "100px",
-    },
+
+    },*/
     {
       name: 'Rack No',
       selector: (row: RackRptRow) => row.RackNo,
@@ -78,26 +79,30 @@ export default function RptRack() {
       selector: (row: RackRptRow) => row.Samples,
       sortable: true,
       width: "160px",
+      cell:(row: RackRptRow) => row.Samples,
     },
     {
       name: 'Client Reference',
       selector: (row: RackRptRow) => row.ClientReference,
       sortable: true,
       width: "180px",
+      cell: (row: RackRptRow) => row.ClientReference,
     },
     {
       name: 'Allunga Reference',
-      selector: (row: RackRptRow) =>         <Link target="other" href={{ pathname: "/seriestab", query: { id: row.SeriesID, seriesname: row.AllungaReference } }} className="text-blue-600 hover:underline">
+      cell: (row: RackRptRow) =>         <Link target="other" href={{ pathname: "/seriestab", query: { id: row.SeriesID, seriesname: row.AllungaReference } }} className="text-blue-600 hover:underline">
       <u>{row.AllungaReference}</u>
     </Link>,
       sortable: true,
       width: "180px",
+      selector:(row: RackRptRow) =>   row.AllungaReference
     },
     {
       name: 'Client Name',
       selector: (row: RackRptRow) => row.ClientName,
       sortable: true,
       width: "200px",
+      cell: (row: RackRptRow) => row.ClientName,
     },
   ]
 
