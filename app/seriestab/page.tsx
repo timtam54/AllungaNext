@@ -12,38 +12,46 @@ import ExposureEndDate from '../ExposureEndDate.js'
 import { ArrowLeft, FileText,  Send, Grid } from 'lucide-react'
 import { Button } from '@mui/material'
 interface SeriesEvent{
-  EventDesc:string;
-  EventType:string;
-  FrequencyVal:number;
-  FrequencyUnit:string;
+ // eventdesc:string;
+  eventtype:string;
+  frequencyval:number;
+  frequencyunit:string;
+}
+
+interface eventtype{
+  eventtype: number;
+  eventdesc: string;
 }
 interface exposurerow{
-    ExposureTypeID:number;
-    Name:string;
+  exposuretypeid:number;
+  name:string;
+  description:string;
 }
 interface seriesrow{
-    ExposureTypeID:number;
-    AllungaReference:string;
-    Site:number;
+    exposuretypeid:number;
+    allungareference:string;
+    site:number;
     clientid:number;
-    ShortDescription:string;
+    shortdescription:string;
     clientreference:string;
-    RackNo:string;
-    Active:boolean;
-    ExposureDurationVal:number;
-    ExposureDurationUnit:string;
-    DateIn:Date;
-    ExposureEnd:Date;
-    LogBookLetterDate:Date;
-    ReturnsFrequencyVal:number;
-    ReturnsFrequencyUnit:string;
-    FrequencyVal:number;
-    Deleted:boolean;
-    SamplesReturned:boolean;
-    LogBookCorrespType:string;
-    ExposureSpecification:string;
-    VisualReporting:boolean;
-    Photos:boolean;
+    rackno:string;
+    active:boolean;
+    exposuredurationval: number;
+exposuredurationunit: string;
+datein: Date;
+exposureend: Date;
+logbookletterdate: Date;
+returnsfrequencyval: number;
+returnsfrequencyunit: string;
+//frequencyval: number;
+deleted: boolean;
+samplesreturned: boolean;
+logbookcorresptype: string;
+exposurespecification: string;
+visualreporting: boolean;
+photos: boolean;
+    lock_computername:string;
+    lock_datetime:Date;
 }
 interface clientrow{
     clientid:number;
@@ -60,11 +68,11 @@ export default function SeriesTab()
   const handleChangeSeriesEvent=(e:ChangeEvent<HTMLInputElement>) => {
     const et=e.target.name;
     const temp=[...dataSeriesEvent];
-    var dd=temp.find(i=>i.EventType===et);
+    var dd=temp.find(i=>i.eventtype===et);
     if (e.target.checked)
-      dd!.FrequencyVal=0;
+      dd!.frequencyval=0;
     else
-      dd!.FrequencyVal=-1;
+      dd!.frequencyval=-1;
     
       setdataSeriesEvent([...temp]);
   };
@@ -79,6 +87,7 @@ export default function SeriesTab()
         checkSecurity(msalInstance.getActiveAccount()!.username)
         setLoading(true);
         await fetchExp();
+        await fetchEventTypes();
         await fetchSite();
         await fetchClient();
         await fetchSeries();
@@ -95,12 +104,12 @@ export default function SeriesTab()
       const EventType=e.target.name;
      
       const temp=[...dataSeriesEvent];
-      var dd=temp.find(i=>i.EventType===EventType);
-      dd!.FrequencyUnit=e.target.value;
+      var dd=temp.find(i=>i.eventtype===EventType);
+      dd!.frequencyunit=e.target.value;
       setdataSeriesEvent([...temp]);
     };
     const [dataSeriesEvent,setdataSeriesEvent]= useState<SeriesEvent[]>([]);
-
+    const [eventtypes,seteventtypes]=useState<eventtype[]>([]);
     const handleCheck = (e:ChangeEvent<HTMLInputElement>) => {
       if (e.target.checked)
       {
@@ -136,39 +145,39 @@ export default function SeriesTab()
   function validatePage():boolean {
     var vld=true;
     setvldtAllungaReference('');
-    if (data!.AllungaReference==null) {
+    if (data!.allungareference==null) {
       setvldtAllungaReference('Please Enter an AEL Ref');
       vld=false;
     }
     else
     {
-    if (data!.AllungaReference=='') {
+    if (data!.allungareference=='') {
       setvldtAllungaReference('Please Enter an AEL Ref');
       vld=false;
     }
   }
 
   setvldtExposureDurationVal('');
-    if (data!.ExposureDurationVal==null) {
+    if (data!.exposuredurationval==null) {
       setvldtExposureDurationVal('Please Enter Exposure Duration');
       vld=false;
     }
     else
     {
-    if (data!.ExposureDurationVal==null) {
+    if (data!.exposuredurationval==null) {
       setvldtExposureDurationVal('Please Enter Exposure Duration');
       vld=false;
     }
   }
 
   setvldtShortDescription('');
-  if (data!.ShortDescription==null) {
+  if (data!.shortdescription==null) {
     setvldtShortDescription('Please Enter Short Description');
     vld=false;
   }
   else
   {
-  if (data!.ShortDescription=='') {
+  if (data!.shortdescription=='') {
     setvldtShortDescription('Please Enter Short Description');
     vld=false;
   }
@@ -176,13 +185,13 @@ export default function SeriesTab()
 
 
 setvldtReturnsFrequencyVal('');
-if (data!.ReturnsFrequencyVal==null) {
+if (data!.returnsfrequencyval==null) {
   setvldtReturnsFrequencyVal('Please Enter Returns Frequency');
   vld=false;
 }
 else
 {
-if (data!.ReturnsFrequencyVal==null) {
+if (data!.returnsfrequencyval==null) {
   setvldtReturnsFrequencyVal('Please Enter Returns Frequency');
   vld=false;
 }
@@ -193,6 +202,26 @@ if (data!.ReturnsFrequencyVal==null) {
   const [vldtShortDescription,setvldtShortDescription] = useState('');
 
    const [isOpen, setIsOpen] = useState(false);
+   const fetchEventTypes = async()=>{
+    const token = await getToken();
+    const headers = new Headers();
+    const bearer = `Bearer ${token}`
+    headers.append('Authorization', bearer)
+    const options = {
+      method: 'GET',
+      headers: headers,
+    }
+    const endPoint = process.env.NEXT_PUBLIC_API+`EventType`;
+    const response = fetch(endPoint,options);
+    var ee=await response;
+    if (!ee.ok)
+    {
+      throw Error((ee).statusText);
+    }
+    const json=await ee.json();
+
+    seteventtypes(json)
+   }
     const fetchClient = async()=>{
         const token = await getToken();
         const headers = new Headers();
@@ -202,7 +231,7 @@ if (data!.ReturnsFrequencyVal==null) {
           method: 'GET',
           headers: headers,
         }
-        const endPoint = 'https://allungawebapi.azurewebsites.net/api/Clients';
+        const endPoint = process.env.NEXT_PUBLIC_API+`Clients/~`;
         const response = fetch(endPoint,options);
         var ee=await response;
         if (!ee.ok)
@@ -218,9 +247,9 @@ if (data!.ReturnsFrequencyVal==null) {
             return;
           e.preventDefault();
           const dtfrmt="YYYY-MM-DDT00:00:00";
-        data!.DateIn = new Date(DateIn);//DateIn
-        data!.ExposureEnd =  new Date(ExposureEnd);//moment(ExposureEnd).format(dtfrmt)
-         data!.LogBookLetterDate =new Date(LogBookLetterDate);//  moment(LogBookLetterDate).format(dtfrmt);
+        data!.datein = new Date(DateIn);//DateIn
+        data!.exposureend =  new Date(ExposureEnd);//moment(ExposureEnd).format(dtfrmt)
+         data!.logbookletterdate =new Date(LogBookLetterDate);//  moment(LogBookLetterDate).format(dtfrmt);
        setLoading(true);
          const token = await getToken()
         const headers = new Headers()
@@ -234,7 +263,7 @@ if (data!.ReturnsFrequencyVal==null) {
             body: JSON.stringify(data),
             headers: headers,
           }  
-          const response = fetch(`https://allungawebapi.azurewebsites.net/api/Series`,options);
+          const response = fetch(process.env.NEXT_PUBLIC_API+`Series`,options);
          var ee=await response;
           if (!ee.ok)
           {
@@ -254,7 +283,7 @@ if (data!.ReturnsFrequencyVal==null) {
           headers: headers,
         }  
       
-        const response = fetch(`https://allungawebapi.azurewebsites.net/api/Series/`+SeriesID,options);
+        const response = fetch(process.env.NEXT_PUBLIC_API+`Series/`+SeriesID,options);
        var ee=await response;
         if (!ee.ok)
         {
@@ -280,7 +309,7 @@ if (data!.ReturnsFrequencyVal==null) {
       headers: headers,
       
      }
-    const response = fetch(`https://allungawebapi.azurewebsites.net/api/SeriesEvent/`+SeriesID,options);
+    const response = fetch(process.env.NEXT_PUBLIC_API+`SeriesEvent/`+SeriesID,options);
    var ee=await response;
     if (!ee.ok)
     {
@@ -315,29 +344,30 @@ if (data!.ReturnsFrequencyVal==null) {
               method: 'GET',
               headers: headers,
             }
-            const endPoint = `https://allungawebapi.azurewebsites.net/api/Series/int/`+SeriesID;
+            const endPoint = process.env.NEXT_PUBLIC_API+`Series/int/`+SeriesID;
+           //alert(endPoint);
             const response = fetch(endPoint,options);
             var ee=await response;
             if (!ee.ok)
             {
-              throw Error((ee).statusText);
+              alert((ee).statusText);
             }
-            const json=await ee.json();
+            const json:seriesrow=await ee.json();
             console.log(json);
             await setData(json);
-            if (json.Lock_ComputerName!='' && json.Lock_ComputerName!=null)
+            if (json.lock_computername!='' && json.lock_computername!=null)
             {
              ;//todotim alert('locked by '+json.Lock_ComputerName);
             }
-            var xx=moment(json.DateIn).toDate();
+            var xx=moment(json.datein).toDate();
             setDateIn(xx);
-            if (json.ExposureEnd!=null)
+            if (json.exposureend!=null)
             {
-            setExposureEnd(moment(json.ExposureEnd).toDate());
+            setExposureEnd(moment(json.exposureend).toDate());
             }
-            if (json.LogBookLetterDate!=null)
+            if (json.logbookletterdate!=null)
             {
-              setLogBookLetterDate(moment(json.LogBookLetterDate).toDate());
+              setLogBookLetterDate(moment(json.logbookletterdate).toDate());
             }
           }
             fetchSeriesEvent();
@@ -356,7 +386,7 @@ if (data!.ReturnsFrequencyVal==null) {
           method: 'GET',
           headers: headers,
         }
-        const endPoint = `https://allungawebapi.azurewebsites.net/api/SeriesEvent/`+SeriesID;
+        const endPoint = process.env.NEXT_PUBLIC_API+`SeriesEvent/`+SeriesID;
         const response = fetch(endPoint,options);
         var ee=await response;
         if (!ee.ok)
@@ -385,13 +415,13 @@ if (data!.ReturnsFrequencyVal==null) {
       {
         if (e.target.name=='clientid')
         {
-          var allref=data!.AllungaReference;
+          var allref=data!.allungareference;
           if (allref==null)
           {
             var cli=client.filter(ii => ii.clientid==parseInt( e.target.value));
            const abbr=cli[0].abbreviation;
             var AllungaReference=(new Date()).getDate() + GetMonth((new Date()).getMonth()+1) + (new Date()).getFullYear() + abbr;
-            setData({ ...data!, ['AllungaReference']: AllungaReference });
+            setData({ ...data!, allungareference: AllungaReference });
     
           }
           else if (allref=='')
@@ -449,7 +479,7 @@ return 'L';
           method: 'GET',
           headers: headers,
         }
-        const urlExp = `https://allungawebapi.azurewebsites.net/api/ExposureTypes/`;
+        const urlExp = `https://allungaapi.azurewebsites.net/api/ExposureType/`;
         const endPoint = urlExp;
         const response = fetch(endPoint,options);
         var ee=await response;
@@ -477,7 +507,7 @@ return 'L';
           method: 'GET',
           headers: headers,
         }
-        const endPoint = `https://allungawebapi.azurewebsites.net/api/Sites/`;
+        const endPoint = `https://allungaapi.azurewebsites.net/api/Site`;
         const response = fetch(endPoint,options);
         var ee=await response;
         if (!ee.ok)
@@ -499,6 +529,10 @@ return 'L';
       if (value==null)return;
       setExposureEnd(value!);
       //await fetch....;
+   }
+   const geteventdesc=(eventtype:string)=>{
+    //return eventtype;
+   return eventtypes.find(i=>i.eventtype.toString()===eventtype)!.eventdesc;
    }
     const setDateInX=async(value:any)=>{
       if (value==null)return;
@@ -580,7 +614,7 @@ return 'L';
                       type="text"
                       name="AllungaReference"
                       onChange={handleChangeText}
-                      value={data!.AllungaReference}
+                      value={data!.allungareference}
                       className="mt-1 block w-full rounded-md border-gray-300 focus:border-purple-500 focus:ring focus:ring-purple-200 focus:ring-opacity-50"
                     />
                     {vldtAllungaReference && <p className="mt-2 text-sm text-red-600">{vldtAllungaReference}</p>}
@@ -603,7 +637,7 @@ return 'L';
                       type="checkbox"
                       name="Active"
                       onChange={handleCheck}
-                      checked={data!.Active}
+                      checked={data!.active}
                       className="rounded border-gray-300 text-purple-600 focus:border-purple-500 focus:ring focus:ring-purple-200 focus:ring-opacity-50"
                     />
                     <span className="ml-2">Active</span>
@@ -613,7 +647,7 @@ return 'L';
                       type="checkbox"
                       name="Deleted"
                       onChange={handleCheck}
-                      checked={data!.Deleted}
+                      checked={data!.deleted}
                       className="rounded border-gray-300 text-purple-600 focus:border-purple-500 focus:ring focus:ring-purple-200 focus:ring-opacity-50"
                     />
                     <span className="ml-2">Deleted</span>
@@ -625,7 +659,7 @@ return 'L';
                   <textarea
                     name="ShortDescription"
                     onChange={handleChangeTextArea}
-                    value={data!.ShortDescription}
+                    value={data!.shortdescription}
                     rows={3}
                     className="mt-1 block w-full rounded-md border-gray-300 focus:border-purple-500 focus:ring focus:ring-purple-200 focus:ring-opacity-50"
                   />
@@ -643,8 +677,8 @@ return 'L';
                       className="mt-1 block w-full rounded-md border-gray-300 focus:border-purple-500 focus:ring focus:ring-purple-200 focus:ring-opacity-50"
                     >
                       {exp.map((ep) => (
-                        <option key={ep.ExposureTypeID} value={ep.ExposureTypeID} selected={ep.ExposureTypeID === data!.ExposureTypeID}>
-                          {ep.Name}
+                        <option key={ep.exposuretypeid} value={ep.exposuretypeid} selected={ep.exposuretypeid === data!.exposuretypeid}>
+                          {ep.name}
                         </option>
                       ))}
                     </select>
@@ -655,7 +689,7 @@ return 'L';
                       type="text"
                       name="RackNo"
                       onChange={handleChangeText}
-                      value={data!.RackNo}
+                      value={data!.rackno}
                       className="mt-1 block w-full rounded-md border-gray-300 focus:border-purple-500 focus:ring focus:ring-purple-200 focus:ring-opacity-50"
                     />
                   </div>
@@ -668,13 +702,13 @@ return 'L';
                       type="text"
                       name="ExposureDurationVal"
                       onChange={handleChangeNum}
-                      value={data!.ExposureDurationVal}
+                      value={data!.exposuredurationval}
                       className="flex-1 rounded-l-md border-gray-300 focus:border-purple-500 focus:ring focus:ring-purple-200 focus:ring-opacity-50"
                     />
                     <select
                       name="ExposureDurationUnit"
                       onChange={handleChange}
-                      value={data!.ExposureDurationUnit}
+                      value={data!.exposuredurationunit}
                       className="rounded-r-md border-gray-300 focus:border-purple-500 focus:ring focus:ring-purple-200 focus:ring-opacity-50"
                     >
                       {units.map((unit) => (
@@ -718,9 +752,9 @@ return 'L';
 
                 {isOpen && (
                   <ExposureEndDate
-                    StartDate={data!.DateIn}
-                    DurationVal={data!.ExposureDurationVal}
-                    DurationUnit={data!.ExposureDurationUnit}
+                    StartDate={data!.datein}
+                    DurationVal={data!.exposuredurationval}
+                    DurationUnit={data!.exposuredurationunit}
                     text="Exposure End Date"
                     closePopup={() => setIsOpen(false)}
                   />
@@ -738,13 +772,13 @@ return 'L';
                       type="text"
                       name="ReturnsFrequencyVal"
                       onChange={handleChangeNum}
-                      value={data!.ReturnsFrequencyVal}
+                      value={data!.returnsfrequencyval}
                       className="flex-1 rounded-md border-gray-300 focus:border-purple-500 focus:ring focus:ring-purple-200 focus:ring-opacity-50"
                     />
                     <select
                       name="ReturnsFrequencyUnit"
                       onChange={handleChangeString}
-                      value={data!.ReturnsFrequencyUnit}
+                      value={data!.returnsfrequencyunit}
                       className="rounded-md border-gray-300 focus:border-purple-500 focus:ring focus:ring-purple-200 focus:ring-opacity-50"
                     >
                       {units.map((unit) => (
@@ -758,7 +792,7 @@ return 'L';
                         type="checkbox"
                         name="SamplesReturned"
                         onChange={handleCheck}
-                        checked={data!.SamplesReturned}
+                        checked={data!.samplesreturned}
                         className="rounded border-gray-300 text-purple-600 focus:border-purple-500 focus:ring focus:ring-purple-200 focus:ring-opacity-50"
                       />
                       <span className="ml-2">Samples Returned</span>
@@ -779,33 +813,33 @@ return 'L';
                 <tbody className="bg-white divide-y divide-gray-200">
                   {dataSeriesEvent.map((result, i) => (
                     <tr key={i} className={i % 2 === 0 ? 'bg-purple-50' : 'bg-white'}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{result.EventDesc}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{geteventdesc(result.eventtype)}</td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <input
                           type="checkbox"
-                          name={result.EventType}
+                          name={result.eventtype}
                           onChange={handleChangeSeriesEvent}
-                          checked={result.FrequencyVal !== -1}
+                          checked={result.frequencyval !== -1}
                           className="rounded border-gray-300 text-purple-600 focus:border-purple-500 focus:ring focus:ring-purple-200 focus:ring-opacity-50"
                         />
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        {result.FrequencyVal !== -1 ? (
+                        {result.frequencyval !== -1 ? (
                           <div className="flex items-center space-x-2">
                             <input
                               type="text"
-                              name={result.EventType}
+                              name={result.eventtype}
                               onChange={handleChangeSeriesEventVal}
-                              value={result.FrequencyVal}
+                              value={result.frequencyval}
                               className="block w-20 rounded-md border-gray-300 focus:border-purple-500 focus:ring focus:ring-purple-200 focus:ring-opacity-50"
                             />
                             <select
-                              name={result.EventType}
+                              name={result.eventtype}
                               onChange={handleChangeSeriesEventUnits}
                               className="block w-32 rounded-md border-gray-300 focus:border-purple-500 focus:ring focus:ring-purple-200 focus:ring-opacity-50"
                             >
                               {units.map((unit) => (
-                                <option key={unit} value={unit} selected={unit === result.FrequencyUnit}>
+                                <option key={unit} value={unit} selected={unit === result.frequencyunit}>
                                   {unit}
                                 </option>
                               ))}
@@ -826,7 +860,7 @@ return 'L';
                     type="checkbox"
                     name="VisualReporting"
                     onChange={handleCheck}
-                    checked={data!.VisualReporting}
+                    checked={data!.visualreporting}
                     className="rounded border-gray-300 text-purple-600 focus:border-purple-500 focus:ring focus:ring-purple-200 focus:ring-opacity-50"
                   />
                   <span className="ml-2">Visual Reporting</span>
@@ -837,7 +871,7 @@ return 'L';
                     type="checkbox"
                     name="Photos"
                     onChange={handleCheck}
-                    checked={data!.Photos}
+                    checked={data!.photos}
                     className="rounded border-gray-300 text-purple-600 focus:border-purple-500 focus:ring focus:ring-purple-200 focus:ring-opacity-50"
                   />
                   <span className="ml-2">Photos</span>
@@ -863,7 +897,7 @@ return 'L';
                     type="text"
                     name="LogBookCorrespType"
                     onChange={handleChangeText}
-                    value={data!.LogBookCorrespType}
+                    value={data!.logbookcorresptype}
                     className="mt-1 block w-full rounded-md border-gray-300 focus:border-purple-500 focus:ring focus:ring-purple-200 focus:ring-opacity-50"
                   />
                 </div>
@@ -877,7 +911,7 @@ return 'L';
                   className="mt-1 block w-full rounded-md border-gray-300 focus:border-purple-500 focus:ring focus:ring-purple-200 focus:ring-opacity-50"
                 >
                   {site.map((ep) => (
-                    <option key={ep.SiteID} value={ep.SiteID} selected={ep.SiteID === data!.Site}>
+                    <option key={ep.SiteID} value={ep.SiteID} selected={ep.SiteID === data!.site}>
                       {ep.SiteName}
                     </option>
                   ))}
@@ -889,7 +923,7 @@ return 'L';
                 <textarea
                   name="ExposureSpecification"
                   onChange={handleChangeTextArea}
-                  value={data!.ExposureSpecification}
+                  value={data!.exposurespecification}
                   rows={5}
                   className="mt-1 block w-full rounded-md border-gray-300 focus:border-purple-500 focus:ring focus:ring-purple-200 focus:ring-opacity-50"
                 />
