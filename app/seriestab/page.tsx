@@ -465,8 +465,8 @@ return 'L';
   const EventType=e.target.name;
  
   const temp=[...dataSeriesEvent];
-  var dd=temp.find(i=>i.EventType===EventType);
-  dd!.FrequencyVal=parseInt(e.target.value);
+  var dd=temp.find(i=>i.eventtype===EventType);
+  dd!.frequencyval=parseInt(e.target.value);
   setdataSeriesEvent([...temp]);
 };
 

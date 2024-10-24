@@ -36,9 +36,11 @@ interface reportrow {
   return_elsereport: boolean;
   deleted: boolean;
   comment: string;
-  completedDate: Date;
+
   date: Date;
-  DaysInLab: number;
+
+  completeddate: Date
+  daysinlab: number
 }
 
 interface Sample {
@@ -141,7 +143,7 @@ const ReportDet = ({ report, closeModal }: Props) => {
   const [reportDate, setReportDate] = useState<Date | null>(new Date(report.date));
   const [data, setData] = useState<reportrow>(report);
   const [units] = useState(["N", "A", "C", "S"]);
-  const [completedDate, setCompletedDate] = useState<Date | null>((report.completedDate==null)?null:new Date(report.completedDate));
+  const [completedDate, setCompletedDate] = useState<Date | null>((report.completeddate==null)?null:new Date(report.completeddate));
   const [dirty, setDirty] = useState(false);
 
   const handleChangeReport = (e: ChangeEvent<HTMLInputElement>) => {
@@ -169,7 +171,7 @@ const ReportDet = ({ report, closeModal }: Props) => {
     }
     if (e.target.value.toLowerCase()=='c')
     {
-      setData({ ...data, 'completedDate': new Date() });
+      setData({ ...data,completeddate: new Date() });
       sendEmail();
     }
     setData({ ...data, 'reportstatus': e.target.value as string });
@@ -185,7 +187,7 @@ const ReportDet = ({ report, closeModal }: Props) => {
     const updatedData = { 
       ...data, 
       date: reportDate || new Date(), 
-      completedDate: completedDate || new Date() 
+      completeddate: completedDate || new Date() 
     };
     setData(updatedData);
 
