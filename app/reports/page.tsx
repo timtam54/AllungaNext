@@ -16,14 +16,14 @@ import { ExportAsExcel } from 'react-export-table'
 interface ReportRow {
   reportid: number
   reportname: string
+  date: Date
   bookandpage: string
   reportstatus: string
   return_elsereport: boolean
   deleted: boolean
   comment: string
-  completedDate: Date
-  date: Date
-  DaysInLab: number
+  completeddate: Date
+  daysinlab: number
 }
 
 export default function Reports() {
@@ -46,7 +46,7 @@ export default function Reports() {
     setLoading(true)
     try {
       const token = await getToken()
-      const response = await fetch(`https://allungawebapi.azurewebsites.net/api/Reports/${SeriesID}`, {
+      const response = await fetch(`https://allungaapi.azurewebsites.net/api/Report/all/${SeriesID}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
