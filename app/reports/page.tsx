@@ -118,7 +118,7 @@ export default function Reports() {
     },
     {
       name: 'Days In Lab',
-      selector: (row: ReportRow) => row.DaysInLab,
+      selector: (row: ReportRow) => row.daysinlab,
       sortable: true,
       width: '80px',
     },
@@ -216,7 +216,7 @@ export default function Reports() {
           <div className="px-4 py-2 rounded-md ">
                 <ExportAsExcel
                   data={results}
-                  headers={['id','reportname', 'date', 'reportstatus', 'bookandpage', 'DaysInLab', 'comment']}
+                  headers={['id','reportname', 'date', 'reportstatus', 'bookandpage', 'daysinlab', 'comment']}
                 >
                   {(props) => (
                     <button
